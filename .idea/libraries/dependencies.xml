@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="dependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.dependencies/jna-platform-5.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/oshi-core-3.13.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/slf4j-api-1.7.26.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/slf4j-simple-1.7.26.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/annotations-17.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/ini4j-0.5.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
