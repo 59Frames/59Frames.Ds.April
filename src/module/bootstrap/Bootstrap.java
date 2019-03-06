@@ -8,5 +8,7 @@ package module.bootstrap;
  * @since 1.0
  */
 public class Bootstrap {
-
+    public static void load() {
+        Configuration.load();
+    }
 }
