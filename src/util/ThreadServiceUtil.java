@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.PriorityQueue;
 import java.util.concurrent.*;
 
-public class ThreadService {
+public class ThreadServiceUtil {
     private static ExecutorService threadPool = null;
     private static PriorityQueue<Thread> threadQueue = null;
 
-    private static final int MAX_TIME = 3000, INTERVAL = 1000;
+    private static final int MAX_TIME = 5000, INTERVAL = 1000;
     private static ScheduledExecutorService scheduler;
     private static ScheduledFuture<?> beeperHandle;
     private static int timeSinceLastExecution = 0;
@@ -33,7 +33,7 @@ public class ThreadService {
     }
 
     private static void startShutdownTimer() {
-        Debugger.info("ThreadService was resumed");
+        Debugger.info("ThreadServiceUtil was resumed");
         shutdownTimerIsRunning = true;
         scheduler = Executors.newScheduledThreadPool(1);
         final Runnable beeper = () -> {
@@ -45,7 +45,7 @@ public class ThreadService {
     }
 
     private static void stopShutdownTimer() {
-        Debugger.info("ThreadService was paused");
+        Debugger.info("ThreadServiceUtil was paused");
         isShuttingDown = true;
         beeperHandle.cancel(true);
         awaitTermination(scheduler);

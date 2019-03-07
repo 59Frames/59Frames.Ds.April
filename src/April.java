@@ -7,7 +7,5 @@ public class April {
         Bootstrap.load();
         CentralProcessor cpu = Arc.getCPU();
         System.out.println(cpu.getName());
-        System.out.println(Arc.getSensors().getCpuVoltage());
-        System.out.println(Arc.getSensors().getCpuTemperature());
     }
 }
