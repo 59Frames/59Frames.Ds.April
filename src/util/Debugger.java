@@ -22,4 +22,8 @@ public final class Debugger {
     public static void warning(@NotNull String warning) {
         LOGGER.warning(warning);
     }
+
+    public static void exception(@NotNull Exception e) {
+        LOGGER.warning(e.toString());
+    }
 }

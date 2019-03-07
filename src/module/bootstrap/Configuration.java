@@ -2,9 +2,11 @@ package module.bootstrap;
 
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
+import util.Debugger;
 import util.FileUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.prefs.Preferences;
 
 /**
@@ -15,22 +17,36 @@ import java.util.prefs.Preferences;
  * @since 1.0
  */
 public final class Configuration {
-    private static final String SECTION_APRIL = "APRIL";
-    private static final String SECTION_BOOTSTRAP = "BOOTSTRAP";
-    private static final String SECTION_EMOTION = "EMOTION";
-    private static final String SECTION_KNOWLEDGE = "KNOWLEDGE";
-    private static final String SECTION_MOTORIUM = "MOTORIUM";
-    private static final String SECTION_SENSORIUM = "SENSORIUM";
-    private static final String SECTION_SPEECH = "SPEECH";
-    private static final String SECTION_VOLITION = "VOLITION";
+    public static final String SECTION_APRIL = "APRIL";
+    public static final String SECTION_BOOTSTRAP = "BOOTSTRAP";
+    public static final String SECTION_EMOTION = "EMOTION";
+    public static final String SECTION_KNOWLEDGE = "KNOWLEDGE";
+    public static final String SECTION_MOTORIUM = "MOTORIUM";
+    public static final String SECTION_SENSORIUM = "SENSORIUM";
+    public static final String SECTION_SPEECH = "SPEECH";
+    public static final String SECTION_VOLITION = "VOLITION";
+
+    private static Preferences iniPrefs = null;
 
     public static void load() {
+        if (iniPrefs != null)
+            return;
+
         try {
             final Ini aprilIni = new Ini(FileUtil.load("config/april.ini"));
-            Preferences prefs = new IniPreferences(aprilIni);
-            System.out.println(prefs.node(SECTION_APRIL).get("NAME", null));
+            iniPrefs = new IniPreferences(aprilIni);
         } catch (IOException e) {
-            e.printStackTrace();
+            Debugger.exception(e);
         }
+    }
+
+    public static String get(String section, String key) {
+        checkIfWasLoaded();
+        return iniPrefs.node(section).get(key, "");
+    }
+
+    private static void checkIfWasLoaded() {
+        if (iniPrefs == null)
+            load();
     }
 }
