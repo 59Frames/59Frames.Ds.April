@@ -1,9 +1,12 @@
 <component name="ProjectDictionaryState">
   <dictionary name="info">
     <words>
+      <w>chunking</w>
+      <w>lemmatization</w>
       <w>motorium</w>
       <w>sensorium</w>
       <w>thens</w>
+      <w>tokenization</w>
     </words>
   </dictionary>
 </component>
