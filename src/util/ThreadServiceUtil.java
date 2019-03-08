@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.PriorityQueue;
 import java.util.concurrent.*;
 
+@Deprecated
 public class ThreadServiceUtil {
     private static ExecutorService threadPool = null;
     private static PriorityQueue<Thread> threadQueue = null;

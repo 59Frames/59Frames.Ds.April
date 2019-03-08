@@ -1,6 +1,6 @@
 package concurrent;
 
-import util.ThreadServiceUtil;
+import util.ThreadService;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class Promise<T> {
 
     public Promise(final Processable<T> p) {
         this.processable = p;
-        ThreadServiceUtil.execute(new Thread(() -> {
+        ThreadService.execute(new Thread(() -> {
             isDone = false;
             isProcessing = true;
             try {
