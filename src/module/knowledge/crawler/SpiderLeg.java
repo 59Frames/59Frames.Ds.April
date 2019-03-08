@@ -1,11 +1,8 @@
 package module.knowledge.crawler;
 
 import org.jetbrains.annotations.NotNull;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,15 +28,12 @@ public class SpiderLeg {
 
     public void crawl(String url) {
         try {
-            Connection connection = Jsoup.connect(url).userAgent(USER_AGENT);
-            Document htmlDocument = connection.get();
+            var connection = Jsoup.connect(url).userAgent(USER_AGENT);
+            var htmlDocument = connection.get();
             this.htmlDocument = htmlDocument;
 
-            System.out.println("Received web page at " + url);
-
-            Elements linksOnPage = htmlDocument.select("a[href]");
-            System.out.println("Found (" + linksOnPage.size() + ") links");
-            for (Element link : linksOnPage) {
+            var linksOnPage = htmlDocument.select("a[href]");
+            for (var link : linksOnPage) {
                 this.links.add(link.absUrl("href"));
             }
         } catch (IOException ioe) {
@@ -48,20 +42,22 @@ public class SpiderLeg {
     }
 
     public boolean searchForWord(String word) {
+        if (this.htmlDocument == null)
+            return false;
         return this.htmlDocument.body().text().toLowerCase().contains(word.toLowerCase());
     }
 
     public List<String> getSentencesWithMatchingWord(String word) {
-        final List<String> foundSentences = new ArrayList<>();
+        final var foundSentences = new ArrayList<String>();
 
-        Elements bodyElements = this.htmlDocument.body().getAllElements();
+        var bodyElements = this.htmlDocument.body().getAllElements();
 
         bodyElements.forEach(element -> {
-            String el = element.text();
-            Scanner scanner = new Scanner(el);
+            var el = element.text();
+            var scanner = new Scanner(el);
 
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
+                var line = scanner.nextLine().trim();
 
                 if (line.contains(word)) {
                     foundSentences.add(getSentence(line, word));
@@ -74,7 +70,7 @@ public class SpiderLeg {
     }
 
     private String getSentence(String text, @NotNull String word) {
-        final String lowerCasedWord = word.toLowerCase().trim();
+        final var lowerCasedWord = word.toLowerCase().trim();
         return END_OF_SENTENCE_REGEX.splitAsStream(text)
                 .filter(s -> s.toLowerCase().contains(lowerCasedWord))
                 .findAny()

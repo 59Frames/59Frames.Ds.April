@@ -4,6 +4,10 @@ public class April {
     public static void main(String[] args) {
         final var spider = new Spider();
 
-        spider.search("https://www.bwdbern.ch/bwd/", "IMS");
+        var matches = spider.search("https://www.bwdbern.ch/bwd/", "IMS");
+
+        for (var match : matches) {
+            System.out.println(match);
+        }
     }
 }

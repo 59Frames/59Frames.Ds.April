@@ -6,7 +6,6 @@ import util.Debugger;
 import util.FileUtil;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.prefs.Preferences;
 
 /**

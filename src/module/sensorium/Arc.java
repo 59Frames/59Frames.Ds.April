@@ -9,6 +9,7 @@ import oshi.software.os.OperatingSystem;
 import oshi.software.os.OperatingSystemVersion;
 
 public final class Arc {
+
     private static final SystemInfo INFO = new SystemInfo();
     private static final HardwareAbstractionLayer HARDWARE = INFO.getHardware();
     private static final OperatingSystem OS = INFO.getOperatingSystem();

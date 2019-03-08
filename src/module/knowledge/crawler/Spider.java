@@ -2,11 +2,12 @@ package module.knowledge.crawler;
 
 import util.Debugger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@link Spider}
@@ -20,12 +21,13 @@ public class Spider {
     private static final int MAX_PAGES_TO_SEARCH_THROUGH = 1000;
     public LinkedList<String> pagesToVisit = new LinkedList<>();
     public HashSet<String> visitedPages = new HashSet<>();
-    public Pattern httpPattern = Pattern.compile("http[s]*://(\\w+\\.)*(\\w+)");
 
-    public void search(String url, String searchWord) {
+    public Match[] search(String url, String searchWord) {
+        final var matches = new ArrayList<Match>();
+
         while (this.visitedPages.size() < MAX_PAGES_TO_SEARCH_THROUGH) {
             String currentUrl;
-            SpiderLeg leg = new SpiderLeg();
+            final var leg = new SpiderLeg();
 
             if (this.pagesToVisit.isEmpty()) {
                 currentUrl = url;
@@ -37,14 +39,15 @@ public class Spider {
             leg.crawl(currentUrl);
 
             if (leg.searchForWord(searchWord)) {
-                List<String> sentences = leg.getSentencesWithMatchingWord(searchWord);
-
-                sentences.forEach(System.out::println);
+                final var sentences = leg.getSentencesWithMatchingWord(searchWord);
+                matches.addAll(sentences.stream().map(Match::new).collect(Collectors.toList()));
                 break;
             }
             this.pagesToVisit.addAll(leg.getLinks());
         }
-        System.out.println("\n**Done** Visited " + this.visitedPages.size() + " web page(s)");
+
+        var arr = new Match[matches.size()];
+        return matches.toArray(arr);
     }
 
     private String nextUrl() {
