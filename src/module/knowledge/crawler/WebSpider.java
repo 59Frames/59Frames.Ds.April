@@ -1,33 +1,29 @@
 package module.knowledge.crawler;
 
-import util.Debugger;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * {@link Spider}
+ * {@link WebSpider}
  *
  * @author Daniel Seifert
  * @version 1.0
  * @since 1.0
  */
-public class Spider {
+public class WebSpider {
 
     private static final int MAX_PAGES_TO_SEARCH_THROUGH = 1000;
     public LinkedList<String> pagesToVisit = new LinkedList<>();
     public HashSet<String> visitedPages = new HashSet<>();
 
-    public Match[] search(String url, String searchWord) {
+    public Match[] crawl(String url, String searchWord) {
         final var matches = new ArrayList<Match>();
 
         while (this.visitedPages.size() < MAX_PAGES_TO_SEARCH_THROUGH) {
             String currentUrl;
-            final var leg = new SpiderLeg();
+            final var leg = new WebSpiderLeg();
 
             if (this.pagesToVisit.isEmpty()) {
                 currentUrl = url;
@@ -48,6 +44,10 @@ public class Spider {
 
         var arr = new Match[matches.size()];
         return matches.toArray(arr);
+    }
+
+    public Match[] search(String keyword) {
+        return crawl(String.format("https://www.google.com/search?q=%s", keyword), keyword);
     }
 
     private String nextUrl() {

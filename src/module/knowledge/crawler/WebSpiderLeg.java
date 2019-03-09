@@ -3,6 +3,7 @@ package module.knowledge.crawler;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,13 +13,13 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * {@link SpiderLeg}
+ * {@link WebSpiderLeg}
  *
  * @author Daniel Seifert
  * @version 1.0
  * @since 1.0
  */
-public class SpiderLeg {
+public class WebSpiderLeg {
 
     private static final Pattern END_OF_SENTENCE_REGEX = Pattern.compile("[.?!]\\s+");
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
@@ -57,9 +58,9 @@ public class SpiderLeg {
             var scanner = new Scanner(el);
 
             while (scanner.hasNextLine()) {
-                var line = scanner.nextLine().trim();
+                var line = StringUtil.clean(scanner.nextLine());
 
-                if (line.contains(word)) {
+                if (line.toLowerCase().contains(word.toLowerCase())) {
                     foundSentences.add(getSentence(line, word));
                 }
             }
