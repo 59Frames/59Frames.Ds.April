@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class WebSpider {
 
     private static final int MAX_PAGES_TO_SEARCH_THROUGH = 1000;
-    public LinkedList<String> pagesToVisit = new LinkedList<>();
-    public HashSet<String> visitedPages = new HashSet<>();
+    private LinkedList<String> pagesToVisit = new LinkedList<>();
+    private HashSet<String> visitedPages = new HashSet<>();
 
     public Match[] crawl(String url, String searchWord) {
         final var matches = new ArrayList<Match>();
@@ -36,9 +36,10 @@ public class WebSpider {
 
             if (leg.searchForWord(searchWord)) {
                 final var sentences = leg.getSentencesWithMatchingWord(searchWord);
-                matches.addAll(sentences.stream().map(Match::new).collect(Collectors.toList()));
+                matches.addAll(sentences.stream().map(sentence -> new Match(sentence, searchWord, currentUrl)).collect(Collectors.toList()));
                 break;
             }
+
             this.pagesToVisit.addAll(leg.getLinks());
         }
 

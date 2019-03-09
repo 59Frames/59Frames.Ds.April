@@ -1,4 +1,4 @@
-package module.speech.nlp;
+package module.speech.nlp.tokenization;
 
 /**
  * {@link Token}

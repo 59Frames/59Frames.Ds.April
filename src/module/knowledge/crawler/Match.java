@@ -8,14 +8,18 @@ package module.knowledge.crawler;
  * @since 1.0
  */
 public class Match {
-    private final String match;
+    private final String sentence;
+    private final String keyword;
+    private final String url;
 
-    public Match(String match) {
-        this.match = match;
+    public Match(String sentence, String keyword, String url) {
+        this.sentence = sentence;
+        this.keyword = keyword;
+        this.url = url;
     }
 
     @Override
     public String toString() {
-        return match;
+        return sentence;
     }
 }
