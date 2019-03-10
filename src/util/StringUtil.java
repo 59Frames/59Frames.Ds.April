@@ -10,7 +10,13 @@ import org.jetbrains.annotations.NotNull;
  * @since 1.0
  */
 public class StringUtil {
+
+    @NotNull
     public static String clean(@NotNull String string) {
-        return string.trim().strip();
+        string = string.trim().strip();
+        string = string.replaceAll("\t", " ");
+        string = string.replaceAll("\\s{2,}", " ");
+
+        return string;
     }
 }

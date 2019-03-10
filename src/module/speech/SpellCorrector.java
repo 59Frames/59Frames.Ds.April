@@ -2,6 +2,7 @@ package module.speech;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import util.StringUtil;
 import util.ValidationUtil;
 
 import java.util.*;
@@ -36,6 +37,8 @@ public class SpellCorrector {
 
     @NotNull
     private String validate(String input) {
+        input = StringUtil.clean(input);
+
         String word;
         Scanner spellChecker = new Scanner(input);
         spellChecker.useDelimiter("\\s");
