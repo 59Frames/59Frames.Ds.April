@@ -10,7 +10,7 @@
       <root url="jar://$PROJECT_DIR$/.dependencies/jna-5.2.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/.dependencies/lwjgl-3.2.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/.dependencies/jsoup-1.11.3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/.dependencies/Lando-java11-v0.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/59frames.ds.lando.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
