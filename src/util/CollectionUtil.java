@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 /**
  * {@link CollectionUtil}
@@ -25,7 +26,7 @@ public class CollectionUtil {
 
     @NotNull
     public static <T> T[] removeRedundanciesFrom(@NotNull final T[] data) {
-        HashSet<T> set = new HashSet<>(Arrays.asList(data));
+        final HashSet<T> set = new HashSet<>(Arrays.asList(data));
         @SuppressWarnings("unchecked") final T[] a = (T[]) Array.newInstance(data[0].getClass(), set.size());
         return set.toArray(a);
     }
@@ -56,5 +57,26 @@ public class CollectionUtil {
 
         Collections.reverse(data);
         return data;
+    }
+
+    @NotNull
+    public static <T> List<? extends T> clearAndRemoveIf(@NotNull final List<T> list, @NotNull final Predicate<? super T> filter) {
+        final var clearedList = removeRedundanciesFrom(list);
+        clearedList.removeIf(filter);
+        return clearedList;
+    }
+
+    @SafeVarargs
+    @NotNull
+    public static <T> List<? extends T> clearAndRemoveIf(@NotNull final List<? extends T> list, @NotNull final Predicate<? super T>... filters) {
+        final var clearedList = removeRedundanciesFrom(list);
+
+        if (filters.length < 1)
+            return clearedList;
+
+        for (var filter : filters)
+            clearedList.removeIf(filter);
+
+        return clearedList;
     }
 }
