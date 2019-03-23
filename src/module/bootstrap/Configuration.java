@@ -16,16 +16,17 @@ import java.util.prefs.Preferences;
  * @since 1.0
  */
 public final class Configuration {
-    public static final String SECTION_APRIL = "APRIL";
-    public static final String SECTION_BOOTSTRAP = "BOOTSTRAP";
-    public static final String SECTION_EMOTION = "EMOTION";
-    public static final String SECTION_KNOWLEDGE = "KNOWLEDGE";
-    public static final String SECTION_MOTORIUM = "MOTORIUM";
-    public static final String SECTION_SENSORIUM = "SENSORIUM";
-    public static final String SECTION_SPEECH = "SPEECH";
-    public static final String SECTION_VOLITION = "VOLITION";
 
     private static Preferences iniPrefs = null;
+
+    public static Section april     = null;
+    public static Section bootstrap = null;
+    public static Section emotion   = null;
+    public static Section knowledge = null;
+    public static Section motorium  = null;
+    public static Section sensorium = null;
+    public static Section speech    = null;
+    public static Section volition  = null;
 
     public static void load() {
         if (iniPrefs != null)
@@ -34,6 +35,8 @@ public final class Configuration {
         try {
             final Ini aprilIni = new Ini(FileUtil.load("config/april.ini"));
             iniPrefs = new IniPreferences(aprilIni);
+
+            april = new Section(iniPrefs.node("APRIL"));
         } catch (IOException e) {
             Debugger.exception(e);
         }
@@ -47,5 +50,17 @@ public final class Configuration {
     private static void checkIfWasLoaded() {
         if (iniPrefs == null)
             load();
+    }
+
+    public static class Section {
+        private final Preferences section;
+
+        private Section(Preferences preferences) {
+            this.section = preferences;
+        }
+
+        public String get(String key) {
+            return section.get(key, "");
+        }
     }
 }
