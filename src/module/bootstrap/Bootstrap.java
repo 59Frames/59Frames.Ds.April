@@ -9,6 +9,7 @@ package module.bootstrap;
  */
 public class Bootstrap {
     public static void load() {
-        Configuration.load();
+        var name = Configuration.april().get("NAME");
+        System.out.println(name);
     }
 }

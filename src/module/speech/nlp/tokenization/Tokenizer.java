@@ -16,8 +16,8 @@ public class Tokenizer {
 
     @NotNull
     public static Token[] tokenize(String sentence) {
-        var tokens = new ArrayList<Token>();
-        var tokenizer = new StringTokenizer(sentence);
+        final var tokens = new ArrayList<Token>();
+        final var tokenizer = new StringTokenizer(sentence);
 
         while (tokenizer.hasMoreTokens())
             tokens.add(new Token(tokenizer.nextToken()));
