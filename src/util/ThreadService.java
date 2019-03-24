@@ -34,6 +34,6 @@ public class ThreadService {
 
     private static void revalidate() {
         if (threadPool == null || threadPool.isShutdown() || threadPool.isTerminated())
-            threadPool = Executors.newFixedThreadPool(256);
+            threadPool = Executors.newFixedThreadPool(16);
     }
 }

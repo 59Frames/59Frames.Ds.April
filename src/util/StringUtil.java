@@ -2,6 +2,8 @@ package util;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 /**
  * {@link StringUtil}
  *
@@ -18,5 +20,10 @@ public class StringUtil {
         string = string.replaceAll("\\s{2,}", " ");
 
         return string;
+    }
+
+    @NotNull
+    public static String randomUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }

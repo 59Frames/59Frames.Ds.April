@@ -19,6 +19,8 @@ import java.util.prefs.Preferences;
  */
 public final class Configuration {
 
+    private static boolean loaded = false;
+
     private static Section april     = null;
     private static Section bootstrap = null;
     private static Section emotion   = null;
@@ -28,11 +30,7 @@ public final class Configuration {
     private static Section speech    = null;
     private static Section volition  = null;
 
-    static {
-        load();
-    }
-
-    private static void load() {
+    public static void load() {
         try {
             final Preferences iniPrefs = new IniPreferences(new Ini(FileUtil.load("config/april.ini")));
 
@@ -44,48 +42,67 @@ public final class Configuration {
             sensorium = new Section(iniPrefs.node("SENSORIUM"));
             speech = new Section(iniPrefs.node("SPEECH"));
             volition = new Section(iniPrefs.node("VOLITION"));
+
+            loaded = true;
         } catch (IOException e) {
             Debugger.exception(e);
+            loaded = false;
         }
     }
 
     @Contract(pure = true)
     public static synchronized Section april() {
+        if (!loaded)
+            load();
         return april;
     }
 
     @Contract(pure = true)
     public static synchronized Section bootstrap() {
+        if (!loaded)
+            load();
         return bootstrap;
     }
 
     @Contract(pure = true)
     public static synchronized Section emotion() {
+        if (!loaded)
+            load();
         return emotion;
     }
 
     @Contract(pure = true)
     public static synchronized Section knowledge() {
+        if (!loaded)
+            load();
         return knowledge;
     }
 
     @Contract(pure = true)
     public static synchronized Section motorium() {
+        if (!loaded)
+            load();
         return motorium;
     }
 
     @Contract(pure = true)
     public static synchronized Section sensorium() {
+        if (!loaded)
+            load();
         return sensorium;
     }
 
     @Contract(pure = true)
     public static synchronized Section speech() {
+        if (!loaded)
+            load();
         return speech;
     }
 
     @Contract(pure = true)
     public static synchronized Section volition() {
+        if (!loaded)
+            load();
         return volition;
     }
 
@@ -98,6 +115,18 @@ public final class Configuration {
 
         public String get(@NotNull final String key) {
             return section.get(key.toUpperCase(), "");
+        }
+
+        public boolean getBoolean(@NotNull final String key) {
+            return section.getBoolean(key, false);
+        }
+
+        public int getInteger(@NotNull final String key) {
+            return section.getInt(key, 0);
+        }
+
+        public double getDouble(@NotNull final String key) {
+            return section.getDouble(key, 0d);
         }
     }
 }

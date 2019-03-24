@@ -1,7 +1,6 @@
 package module.sensorium;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import oshi.SystemInfo;
 import oshi.hardware.*;
 import oshi.software.os.FileSystem;
@@ -31,6 +30,16 @@ public final class Arc {
     private static final OperatingSystemVersion VERSION = OS.getVersion();
 
     private Arc() {
+    }
+
+    @Contract(pure = true)
+    public static OperatingSystem getOS() {
+        return OS;
+    }
+
+    @Contract(pure = true)
+    public static HardwareAbstractionLayer getHardware() {
+        return HARDWARE;
     }
 
     @Contract(pure = true)
