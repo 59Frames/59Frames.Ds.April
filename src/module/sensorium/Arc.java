@@ -1,6 +1,9 @@
 package module.sensorium;
 
+import _59frames.ds.lando.model.Command;
+import model.Interactable;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import oshi.SystemInfo;
 import oshi.hardware.*;
 import oshi.software.os.FileSystem;
@@ -8,7 +11,10 @@ import oshi.software.os.NetworkParams;
 import oshi.software.os.OperatingSystem;
 import oshi.software.os.OperatingSystemVersion;
 
-public final class Arc {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class Arc implements Interactable {
 
     private static final SystemInfo INFO = new SystemInfo();
     private static final HardwareAbstractionLayer HARDWARE = INFO.getHardware();
@@ -105,5 +111,12 @@ public final class Arc {
     @Contract(pure = true)
     public static UsbDevice[] getUsbDevices() {
         return USB_DEVICES;
+    }
+
+    @Contract(pure = true)
+    @Override
+    public List<Command> getInteractableCommands() {
+        
+        return new ArrayList<>();
     }
 }
