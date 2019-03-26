@@ -3,9 +3,15 @@ package module.bootstrap;
 import _59frames.ds.lando.CommandListener;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Constraint;
-import model.StaticClass;
+import model.annotation.StaticClass;
+import model.exception.IllegalClassModifierException;
 import module.sensorium.Arc;
+import org.reflections.Reflections;
 import util.CommandUtil;
+import util.Debugger;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * {@link Bootstrap}
@@ -18,10 +24,22 @@ import util.CommandUtil;
 @StaticClass
 public class Bootstrap {
     public static void load() {
+        validateClasses();
         loadConfiguration();
 
         registerCommandListener();
         registerDefaultCommands();
+    }
+
+    private static void validateClasses() {
+        Reflections reflections = new Reflections("");
+        for (var cl : reflections.getTypesAnnotatedWith(StaticClass.class)) {
+            var ann = cl.getAnnotation(StaticClass.class);
+            for (Method m : cl.getMethods()) {
+                if (!Modifier.isStatic(m.getModifiers()))
+                    Debugger.exception(new IllegalClassModifierException(ann.value()));
+            }
+        }
     }
 
     private static void loadConfiguration() {

@@ -1,4 +1,4 @@
-package model;
+package model.interfaceable;
 
 import _59frames.ds.lando.model.Command;
 

@@ -1,9 +1,8 @@
 package module.sensorium;
 
 import _59frames.ds.lando.model.Command;
-import model.Interactable;
+import model.interfaceable.Interactable;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 import oshi.SystemInfo;
 import oshi.hardware.*;
 import oshi.software.os.FileSystem;

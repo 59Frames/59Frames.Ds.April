@@ -1,4 +1,4 @@
-package model;
+package model.annotation;
 
 import java.lang.annotation.*;
 
@@ -10,10 +10,8 @@ import java.lang.annotation.*;
  * @since 1.0
  */
 @Documented
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface StaticClass {
-    String value() default "";
-
-    Class<? extends Exception> exception() default Exception.class;
+    String value() default "Illegal class modifier";
 }
