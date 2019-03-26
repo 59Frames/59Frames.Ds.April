@@ -3,6 +3,7 @@ package module.bootstrap;
 import _59frames.ds.lando.CommandListener;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Constraint;
+import model.StaticClass;
 import module.sensorium.Arc;
 import util.CommandUtil;
 
@@ -13,6 +14,8 @@ import util.CommandUtil;
  * @version 1.0
  * @since 1.0
  */
+
+@StaticClass
 public class Bootstrap {
     public static void load() {
         loadConfiguration();
