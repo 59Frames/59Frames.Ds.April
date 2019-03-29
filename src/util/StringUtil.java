@@ -2,8 +2,6 @@ package util;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 /**
  * {@link StringUtil}
  *
@@ -24,6 +22,6 @@ public class StringUtil {
 
     @NotNull
     public static String randomUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
+        return RandomUtil.randomUID();
     }
 }
