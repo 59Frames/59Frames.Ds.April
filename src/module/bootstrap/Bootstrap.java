@@ -6,7 +6,6 @@ import _59frames.ds.lando.model.Constraint;
 import model.annotation.StaticClass;
 import model.exception.IllegalClassModifierException;
 import module.sensorium.Arc;
-import org.reflections.Reflections;
 import util.CommandUtil;
 import util.Debugger;
 
@@ -32,14 +31,7 @@ public class Bootstrap {
     }
 
     private static void validateClasses() {
-        Reflections reflections = new Reflections("");
-        for (var cl : reflections.getTypesAnnotatedWith(StaticClass.class)) {
-            var ann = cl.getAnnotation(StaticClass.class);
-            for (Method m : cl.getMethods()) {
-                if (!Modifier.isStatic(m.getModifiers()))
-                    Debugger.exception(new IllegalClassModifierException(ann.value()));
-            }
-        }
+
     }
 
     private static void loadConfiguration() {

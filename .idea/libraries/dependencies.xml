@@ -11,7 +11,6 @@
       <root url="jar://$PROJECT_DIR$/.dependencies/lwjgl-3.2.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/.dependencies/jsoup-1.11.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/.dependencies/59frames-ds-lando.v1.0.0.jar!/" />
-      <root url="jar://$PROJECT_DIR$/.dependencies/reflections-0.9.11.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
