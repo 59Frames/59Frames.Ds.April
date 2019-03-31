@@ -4,13 +4,9 @@ import _59frames.ds.lando.CommandListener;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Constraint;
 import model.annotation.StaticClass;
-import model.exception.IllegalClassModifierException;
-import module.sensorium.Arc;
+import module.Module;
+import module.sensorium.physical.Arc;
 import util.CommandUtil;
-import util.Debugger;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 /**
  * {@link Bootstrap}
@@ -21,24 +17,23 @@ import java.lang.reflect.Modifier;
  */
 
 @StaticClass
-public class Bootstrap {
-    public static void load() {
-        validateClasses();
-        loadConfiguration();
-
-        registerCommandListener();
-        registerDefaultCommands();
+public class Bootstrap extends Module {
+    /**
+     * Constructs a new instance of type Module
+     */
+    public Bootstrap() {
+        super("Bootstrap");
     }
 
-    private static void validateClasses() {
+    private void validateClasses() {
 
     }
 
-    private static void loadConfiguration() {
+    private void loadConfiguration() {
         Configuration.load();
     }
 
-    private static void registerCommandListener() {
+    private void registerCommandListener() {
         final boolean hasNamedArguments = Configuration.bootstrap().getBoolean("COMMAND_HAS_NAMED_ARGUMENTS");
         final boolean hasDefaultHelpCommand = Configuration.bootstrap().getBoolean("COMMAND_HAS_HELP_COMMAND");
         final boolean hasDefaultExitCommand = Configuration.bootstrap().getBoolean("COMMAND_HAS_EXIT_COMMAND");
@@ -56,7 +51,7 @@ public class Bootstrap {
         );
     }
 
-    private static void registerDefaultCommands() {
+    private void registerDefaultCommands() {
         final var getCommand = new Command("get", arguments -> {
             final var type = arguments.get("type").getValue().toLowerCase();
             final var object = arguments.get("of").getValue().toLowerCase();
@@ -88,5 +83,14 @@ public class Bootstrap {
         }, new Constraint("type", true), new Constraint("of", true));
 
         CommandUtil.add(getCommand);
+    }
+
+    @Override
+    protected void bootUp() {
+        validateClasses();
+        loadConfiguration();
+
+        registerCommandListener();
+        registerDefaultCommands();
     }
 }

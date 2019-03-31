@@ -30,6 +30,10 @@ public final class Configuration {
     private static Section speech    = null;
     private static Section volition  = null;
 
+    static {
+        load();
+    }
+
     public static void load() {
         try {
             final Preferences iniPrefs = new IniPreferences(new Ini(FileUtil.load("config/april.ini")));

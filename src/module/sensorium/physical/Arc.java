@@ -1,7 +1,6 @@
-package module.sensorium;
+package module.sensorium.physical;
 
 import _59frames.ds.lando.model.Command;
-import model.interfaceable.Interactable;
 import org.jetbrains.annotations.Contract;
 import oshi.SystemInfo;
 import oshi.hardware.*;
@@ -13,7 +12,7 @@ import oshi.software.os.OperatingSystemVersion;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Arc implements Interactable {
+public final class Arc {
 
     private static final SystemInfo INFO = new SystemInfo();
     private static final HardwareAbstractionLayer HARDWARE = INFO.getHardware();
@@ -113,8 +112,7 @@ public final class Arc implements Interactable {
     }
 
     @Contract(pure = true)
-    @Override
-    public List<Command> getInteractableCommands() {
+    public static List<Command> getInteractableCommands() {
         
         return new ArrayList<>();
     }

@@ -2,6 +2,7 @@
   <dictionary name="info">
     <words>
       <w>chunking</w>
+      <w>interactables</w>
       <w>lemmatization</w>
       <w>motorium</w>
       <w>sensorium</w>

@@ -1,4 +1,4 @@
-package module.speech;
+package module.speech.language;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

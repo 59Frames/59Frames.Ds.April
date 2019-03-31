@@ -2,6 +2,9 @@ package util;
 
 import _59frames.ds.lando.CommandListener;
 import _59frames.ds.lando.model.Command;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * {@link CommandUtil}
@@ -13,13 +16,19 @@ import _59frames.ds.lando.model.Command;
 public class CommandUtil {
     private static CommandListener listener = null;
 
-    public static synchronized void registerListener(CommandListener newListener) {
+    public static synchronized void registerListener(@NotNull final CommandListener newListener) {
         listener = newListener;
     }
 
-    public static void add(Command command) {
+    public static void add(@NotNull final Command command) {
         if (listener != null)
             listener.add(command);
+    }
+
+    public static void add(@NotNull final List<Command> commands) {
+        if (listener != null)
+            if (!commands.isEmpty())
+                for (var c : commands) add(c);
     }
 
     public static void stop() {

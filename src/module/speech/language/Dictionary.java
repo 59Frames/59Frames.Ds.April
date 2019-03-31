@@ -1,4 +1,4 @@
-package module.speech;
+package module.speech.language;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,5 +1,6 @@
 package concurrent;
 
+import model.interfaceable.Processable;
 import util.ThreadService;
 
 import java.util.ArrayList;
