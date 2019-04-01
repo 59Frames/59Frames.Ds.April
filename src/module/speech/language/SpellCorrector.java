@@ -27,7 +27,6 @@ public class SpellCorrector {
 
     private SpellCorrector() {
         train(Dictionaries.english());
-        train(Dictionaries.sherlock());
     }
 
     @NotNull

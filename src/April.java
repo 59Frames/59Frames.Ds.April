@@ -1,21 +1,15 @@
 import management.ModuleManagement;
+import model.interfaceable.Interactable;
 import module.Module;
-import module.bootstrap.Bootstrap;
-import module.emotion.Emotion;
-import module.knowledge.Knowledge;
-import module.motorium.Motorium;
-import module.sensorium.Sensorium;
-import module.speech.Speech;
-import module.volition.Volition;
-import org.jetbrains.annotations.NotNull;
-import util.CommandUtil;
+import module.speech.language.SpellCorrector;
 
-import java.util.LinkedHashMap;
+import java.util.ServiceLoader;
 
 public class April {
 
     public static void main(String[] args) {
-        registerNativeModules();
+        System.out.println(SpellCorrector.check("youu hav faund me"));
+
     }
 
     private static void registerNativeModules() {

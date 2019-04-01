@@ -38,12 +38,6 @@ public class Dictionaries {
         return DE;
     }
 
-    public static synchronized Dictionary sherlock() {
-        if (SHERLOCK == null)
-            SHERLOCK = loadDictionary("sherlock");
-        return SHERLOCK;
-    }
-
     @NotNull
     @Contract("_ -> new")
     private static Dictionary loadDictionary(@NotNull final String dictionary) {
@@ -56,10 +50,16 @@ public class Dictionaries {
 
             BufferedReader reader = new BufferedReader(new FileReader(file));
             Pattern p = Pattern.compile("\\w+");
+            String[] row;
             for (String temp = ""; temp != null; temp = reader.readLine()) {
-                temp = temp.strip();
-                Matcher m = p.matcher(temp.toLowerCase());
-                while (m.find()) nWords.put((temp = m.group()), nWords.containsKey(temp) ? nWords.get(temp) + 1 : 1);
+                if (temp.isEmpty() || temp.isBlank())
+                    continue;
+
+                row = temp.strip().split(" ");
+                var key = row.length > 0 ? row[0] : "";
+                int n = row.length > 1 ? Integer.valueOf(row[1]) : 1;
+                Matcher m = p.matcher(key);
+                while (m.find()) nWords.put((key = m.group()), nWords.containsKey(key) ? nWords.get(key) + 1 : n);
             }
             reader.close();
         } catch (Exception e) {
