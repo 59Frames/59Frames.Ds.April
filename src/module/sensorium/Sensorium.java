@@ -3,6 +3,7 @@ package module.sensorium;
 import _59frames.ds.lando.model.Command;
 import module.Module;
 import module.sensorium.physical.Arc;
+import module.sensorium.sense.hearing.Recorder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

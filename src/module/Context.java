@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class Context {
     protected State state;
 
+    @Contract(pure = true)
     public Context() {
         this.state = State.OFFLINE;
     }

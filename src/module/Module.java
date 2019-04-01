@@ -100,6 +100,11 @@ public abstract class Module extends AsyncBootSequence {
     protected void onResume() {
     }
 
+    @Override
+    protected void onHasBeenBootedUp() {
+        System.out.printf("Booted Up: %s \n", this.moduleName);
+    }
+
     /**
      * gets called when the module gets booted to add interactable Commands
      */
