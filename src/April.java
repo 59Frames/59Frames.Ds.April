@@ -1,14 +1,15 @@
 import management.ModuleManagement;
 import model.interfaceable.Interactable;
 import module.Module;
+import module.speech.language.Dictionaries;
 import module.speech.language.SpellCorrector;
-
-import java.util.ServiceLoader;
 
 public class April {
 
     public static void main(String[] args) {
-        System.out.println(SpellCorrector.check("youu hav faund me"));
+        var corrector = SpellCorrector.load(Dictionaries.german());
+
+        System.out.println(corrector.check("duuu hst nich gefundn"));
 
     }
 

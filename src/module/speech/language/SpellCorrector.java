@@ -15,23 +15,19 @@ import java.util.*;
  * @since 1.0
  */
 public class SpellCorrector {
-    private static SpellCorrector instance = null;
+    private final Map<String, Integer> nWords = new HashMap<>(1);
 
-    public static synchronized SpellCorrector getInstance() {
-        if (instance == null)
-            instance = new SpellCorrector();
-        return instance;
+    private SpellCorrector(Dictionary dictionary) {
+        train(dictionary);
     }
 
-    private Map<String, Integer> nWords = new HashMap<>(1);
-
-    private SpellCorrector() {
-        train(Dictionaries.english());
+    public static synchronized SpellCorrector load(Dictionary dictionary) {
+        return new SpellCorrector(dictionary);
     }
 
     @NotNull
-    public static String check(String input) {
-        return getInstance().validate(input);
+    public String check(String input) {
+        return validate(input);
     }
 
     @NotNull
