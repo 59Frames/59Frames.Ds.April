@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -170,6 +171,14 @@ public final class Silvester {
             sum += n;
 
         return (sum / arr.length);
+    }
+
+    public static double median(@NotNull final List<Double> values) {
+        Collections.sort(values);
+        int mid = values.size()/2;
+        return values.size() % 2 == 1
+                ? values.get(mid)
+                : (values.get(mid-1) + values.get(mid)) / 2;
     }
 
     public static double random() {

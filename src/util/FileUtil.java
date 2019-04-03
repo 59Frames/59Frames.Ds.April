@@ -3,7 +3,7 @@ package util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.io.*;
 import java.util.Objects;
 
 /**
@@ -21,6 +21,27 @@ public class FileUtil {
     @Contract("_ -> new")
     public static File load(String filepath) {
         return new File(Objects.requireNonNull(classLoader.getResource(filepath)).getFile());
+    }
+
+    public static void serialize(@NotNull final String path, @NotNull final Object obj) throws Exception {
+        final FileOutputStream fileOut = new FileOutputStream(load(path));
+        final ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(obj);
+        out.close();
+        fileOut.close();
+    }
+
+    public static <T> T deserialize(@NotNull final String path, Class<T> tClass) throws Exception {
+        return tClass.cast(deserialize(path));
+    }
+
+    public static Object deserialize(@NotNull final String path) throws Exception {
+        final FileInputStream fileIn = new FileInputStream(load(path));
+        final ObjectInputStream in = new ObjectInputStream(fileIn);
+        Object result = in.readObject();
+        in.close();
+        fileIn.close();
+        return result;
     }
 
     @NotNull

@@ -1,6 +1,6 @@
 package module.knowledge.crawler;
 
-import concurrent.Promise;
+import model.concurrent.Promise;
 
 import java.util.ArrayList;
 import java.util.HashSet;

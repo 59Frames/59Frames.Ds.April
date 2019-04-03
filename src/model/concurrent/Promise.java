@@ -1,4 +1,4 @@
-package concurrent;
+package model.concurrent;
 
 import model.interfaceable.Processable;
 import util.ThreadService;
