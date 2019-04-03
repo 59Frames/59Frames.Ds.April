@@ -10,6 +10,7 @@ import model.networks.NetworkModel;
 import model.networks.unit.Nonlinearity;
 import model.networks.unit.SigmoidUnit;
 import model.networks.unit.TanhUnit;
+import org.jetbrains.annotations.NotNull;
 
 public class LstmLayer implements NetworkModel {
 
@@ -50,7 +51,7 @@ public class LstmLayer implements NetworkModel {
     }
 
     @Override
-    public Matrix forward(Matrix input, Graph g) throws Exception {
+    public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
 
         //input gate
         Matrix sum0 = g.mul(Wix, input);

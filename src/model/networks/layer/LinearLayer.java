@@ -3,6 +3,7 @@ package model.networks.layer;
 import model.networks.Graph;
 import model.networks.Matrix;
 import model.networks.NetworkModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class LinearLayer implements NetworkModel {
     }
 
     @Override
-    public Matrix forward(Matrix input, Graph g) throws Exception {
+    public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
         return g.mul(W, input);
     }
 

@@ -4,6 +4,7 @@ import model.networks.Graph;
 import model.networks.Matrix;
 import model.networks.NetworkModel;
 import model.networks.unit.Nonlinearity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class FeedForwardLayer implements NetworkModel {
     }
 
     @Override
-    public Matrix forward(Matrix input, Graph g) throws Exception {
+    public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
         Matrix sum = g.add(g.mul(W, input), b);
         return g.nonlin(f, sum);
     }

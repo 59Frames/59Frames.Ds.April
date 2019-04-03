@@ -1,5 +1,7 @@
 package model.networks;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class NeuralNetwork implements NetworkModel {
     }
 
     @Override
-    public Matrix forward(Matrix input, Graph g) throws Exception {
+    public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
         Matrix prev = input;
         for (NetworkModel layer : layers) {
             prev = layer.forward(prev, g);

@@ -6,6 +6,7 @@ import model.networks.NetworkModel;
 import model.networks.unit.Nonlinearity;
 import model.networks.unit.SigmoidUnit;
 import model.networks.unit.TanhUnit;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
@@ -42,7 +43,7 @@ public class GruLayer implements NetworkModel {
     }
 
     @Override
-    public Matrix forward(Matrix input, Graph g) throws Exception {
+    public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
 
         Matrix sum0 = g.mul(IHmix, input);
         Matrix sum1 = g.mul(HHmix, context);

@@ -16,8 +16,8 @@ public class April {
         boolean initFromSaved = false; //set this to false to start with a fresh model
         boolean overwriteSaved = true;
 
-        TextGeneration.reportSequenceLength = 100;
-        TextGeneration.singleWordAutocorrect = false; //set this to true to constrain generated sentences to contain only words observed in the training data.
+        TextGeneration.REPORT_SEQUENCE_LENGTH = 100;
+        TextGeneration.SINGLE_WORD_AUTO_CORRECT = false; //set this to true to constrain generated sentences to contain only words observed in the training data.
 
         int bottleneckSize = 10; //one-hot input is squeezed through this
         int hiddenDimension = 200;

@@ -20,15 +20,16 @@ import model.networks.datastructs.DataStep;
 import model.networks.loss.LossSoftmax;
 import model.networks.unit.LinearUnit;
 import model.networks.unit.Nonlinearity;
+import util.Debugger;
 import util.FileUtil;
-import util.MatrixUtil;
 
 
 public class TextGeneration extends DataSet {
 
-    public static int reportSequenceLength = 100;
-    public static boolean singleWordAutocorrect = false;
-    public static boolean reportPerplexity = true;
+    public static int REPORT_SEQUENCE_LENGTH = 100;
+    public static boolean SINGLE_WORD_AUTO_CORRECT = false;
+    public static boolean REPORT_PERPLEXITY = true;
+
     private static Map<String, Integer> charToIndex = new HashMap<>();
     private static Map<Integer, String> indexToChar = new HashMap<>();
     private static int dimension;
@@ -48,7 +49,7 @@ public class TextGeneration extends DataSet {
             Matrix logprobs = model.forward(input, g);
             Matrix probs = LossSoftmax.getSoftmaxProbs(logprobs, temperature);
 
-            if (singleWordAutocorrect) {
+            if (SINGLE_WORD_AUTO_CORRECT) {
                 Matrix possible = Matrix.ones(dimension, 1);
                 try {
                     possible = singleWordAutocorrect(line);
@@ -74,19 +75,8 @@ public class TextGeneration extends DataSet {
                 }
             }
 
-            int indxChosen = -1;
-            if (argmax) {
-                double high = Double.NEGATIVE_INFINITY;
-                for (int i = 0; i < probs.w.length; i++) {
-                    if (probs.w[i] > high) {
-                        high = probs.w[i];
-                        indxChosen = i;
-                    }
-                }
-            } else {
-                indxChosen = MatrixUtil.pickIndexFromRandomVector(probs, rng);
-            }
-            if (indxChosen == START_END_TOKEN_INDEX) {
+            int indexChosen = TextGenerationUnbroken.pickRandomIndex(argmax, rng, probs);
+            if (indexChosen == START_END_TOKEN_INDEX) {
                 lines.add(line);
                 line = "";
                 input = start.clone();
@@ -94,12 +84,12 @@ public class TextGeneration extends DataSet {
                 model.resetState();
                 input = start.clone();
             } else {
-                String ch = indexToChar.get(indxChosen);
+                String ch = indexToChar.get(indexChosen);
                 line += ch;
                 for (int i = 0; i < input.w.length; i++) {
                     input.w[i] = 0;
                 }
-                input.w[indxChosen] = 1.0;
+                input.w[indexChosen] = 1.0;
             }
         }
         if (!line.isBlank() && !line.isEmpty()) {
@@ -252,40 +242,40 @@ public class TextGeneration extends DataSet {
     }
 
     @Override
-    public void DisplayReport(NetworkModel model, Random rng) throws Exception {
-        System.out.println("========================================");
-        System.out.println("REPORT:");
-        if (reportPerplexity) {
-            System.out.println("\ncalculating perplexity over entire data set...");
+    public void displayReport(NetworkModel model, Random rng) throws Exception {
+        Debugger.info("========================================");
+        Debugger.info("Text Generation Report:");
+        if (REPORT_PERPLEXITY) {
+            Debugger.info("\ncalculating perplexity over entire data set...");
             double perplexity = LossSoftmax.calculateMedianPerplexity(model, training);
-            System.out.println("\nMedian Perplexity = " + String.format("%.4f", perplexity));
+            Debugger.info("\nMedian Perplexity = " + String.format("%.4f", perplexity));
         }
         double[] temperatures = {1, 0.75, 0.5, 0.25, 0.1};
         for (double temperature : temperatures) {
-            if (TextGeneration.singleWordAutocorrect) {
-                System.out.println("\nTemperature " + temperature + " prediction (with single word autocorrect):");
+            if (TextGeneration.SINGLE_WORD_AUTO_CORRECT) {
+                Debugger.info("\nTemperature " + temperature + " prediction (with single word autocorrect):");
             } else {
-                System.out.println("\nTemperature " + temperature + " prediction:");
+                Debugger.info("\nTemperature " + temperature + " prediction:");
             }
-            List<String> guess = TextGeneration.generateText(model, reportSequenceLength, false, temperature, rng);
+            List<String> guess = TextGeneration.generateText(model, REPORT_SEQUENCE_LENGTH, false, temperature, rng);
             printGuess(guess);
         }
-        if (TextGeneration.singleWordAutocorrect) {
-            System.out.println("\nArgmax prediction (with single word autocorrect):");
+        if (TextGeneration.SINGLE_WORD_AUTO_CORRECT) {
+            Debugger.info("\nArgmax prediction (with single word autocorrect):");
         } else {
-            System.out.println("\nArgmax prediction:");
+            Debugger.info("\nArgmax prediction:");
         }
-        List<String> guess = TextGeneration.generateText(model, reportSequenceLength, true, 1.0, rng);
+        List<String> guess = TextGeneration.generateText(model, REPORT_SEQUENCE_LENGTH, true, 1.0, rng);
         printGuess(guess);
-        System.out.println("========================================");
+        Debugger.info("========================================");
     }
 
     private void printGuess(List<String> guess) {
         for (int i = 0; i < guess.size(); i++) {
             if (i == guess.size() - 1) {
-                System.out.println("\t\"" + guess.get(i) + "...\"");
+                Debugger.info("\t\"" + guess.get(i) + "...\"");
             } else {
-                System.out.println("\t\"" + guess.get(i) + "\"");
+                Debugger.info("\t\"" + guess.get(i) + "\"");
             }
 
         }

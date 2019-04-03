@@ -60,7 +60,7 @@ public class SequentialParity extends DataSet {
     }
 
     @Override
-    public void DisplayReport(NetworkModel model, Random rng) throws Exception {
+    public void displayReport(NetworkModel model, Random rng) throws Exception {
         // TODO Auto-generated method stub
     }
 

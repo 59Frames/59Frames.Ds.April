@@ -28,7 +28,7 @@ public class Trainer {
             System.out.println("initializing model from saved state...");
             try {
                 model = FileUtil.deserialize(savePath, NetworkModel.class);
-                data.DisplayReport(model, rng);
+                data.displayReport(model, rng);
             } catch (Exception e) {
                 System.out.println("Oops. Unable to load from a saved state.");
                 System.out.println("WARNING: " + e.getMessage());
@@ -65,7 +65,7 @@ public class Trainer {
             System.out.println(show);
 
             if (epoch % reportEveryNthEpoch == reportEveryNthEpoch - 1) {
-                data.DisplayReport(model, rng);
+                data.displayReport(model, rng);
             }
 
             if (overwriteSaved) {
