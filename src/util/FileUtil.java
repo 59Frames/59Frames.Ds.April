@@ -27,7 +27,9 @@ public class FileUtil {
         final FileOutputStream fileOut = new FileOutputStream(load(path));
         final ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(obj);
+        out.flush();
         out.close();
+        fileOut.flush();
         fileOut.close();
     }
 

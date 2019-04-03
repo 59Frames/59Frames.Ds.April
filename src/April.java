@@ -6,6 +6,7 @@ import model.networks.datastructs.DataSet;
 import util.NeuralNetworkHelper;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class April {
 
@@ -19,13 +20,13 @@ public class April {
         TextGeneration.REPORT_SEQUENCE_LENGTH = 100;
         TextGeneration.SINGLE_WORD_AUTO_CORRECT = false; //set this to true to constrain generated sentences to contain only words observed in the training data.
 
-        int bottleneckSize = 10; //one-hot input is squeezed through this
+        int bottleneckSize = 1; //one-hot input is squeezed through this
         int hiddenDimension = 200;
         int hiddenLayers = 1;
         double learningRate = 0.001;
         double initParamsStdDev = 0.08;
 
-        Random rng = new Random();
+        Random rng = ThreadLocalRandom.current();
         NeuralNetwork network = NeuralNetworkHelper.makeLongShortTermMemoryNetworkWithBottleneck(
                 data.inputDimension,
                 bottleneckSize,
@@ -35,8 +36,8 @@ public class April {
                 data.getModelOutputUnitToUse(),
                 initParamsStdDev, rng);
 
-        int reportEveryNthEpoch = 10;
-        int trainingEpochs = 10;
+        int reportEveryNthEpoch = 1;
+        int trainingEpochs = 1;
 
         Trainer.train(trainingEpochs, learningRate, network, data, reportEveryNthEpoch, initFromSaved, overwriteSaved, savePath, rng);
 
