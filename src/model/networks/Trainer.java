@@ -40,26 +40,26 @@ public class Trainer {
 
             String show = "epoch[" + (epoch + 1) + "/" + trainingEpochs + "]";
 
-            double reportedLossTrain = pass(learningRate, model, data.training, true, data.lossTraining, data.lossReporting);
+            double reportedLossTrain = pass(learningRate, model, data.getTraining(), true, data.getLossTraining(), data.getLossReporting());
             result = reportedLossTrain;
             if (Double.isNaN(reportedLossTrain) || Double.isInfinite(reportedLossTrain)) {
                 throw new Exception("WARNING: invalid value for training loss. Try lowering learning rate.");
             }
             double reportedLossValidation = 0;
             double reportedLossTesting = 0;
-            if (data.validation != null) {
-                reportedLossValidation = pass(learningRate, model, data.validation, false, data.lossTraining, data.lossReporting);
+            if (data.getValidation() != null) {
+                reportedLossValidation = pass(learningRate, model, data.getValidation(), false, data.getLossTraining(), data.getLossReporting());
                 result = reportedLossValidation;
             }
-            if (data.testing != null) {
-                reportedLossTesting = pass(learningRate, model, data.testing, false, data.lossTraining, data.lossReporting);
+            if (data.getTesting() != null) {
+                reportedLossTesting = pass(learningRate, model, data.getTesting(), false, data.getLossTraining(), data.getLossReporting());
                 result = reportedLossTesting;
             }
             show += "\ttrain loss = " + String.format("%.5f", reportedLossTrain);
-            if (data.validation != null) {
+            if (data.getValidation() != null) {
                 show += "\tvalid loss = " + String.format("%.5f", reportedLossValidation);
             }
-            if (data.testing != null) {
+            if (data.getTesting() != null) {
                 show += "\ttest loss  = " + String.format("%.5f", reportedLossTesting);
             }
             System.out.println(show);

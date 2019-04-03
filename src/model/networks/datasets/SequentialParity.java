@@ -18,16 +18,16 @@ import model.networks.unit.SigmoidUnit;
 public class SequentialParity extends DataSet {
 
     public SequentialParity(Random r, int total_sequences, int max_sequence_length_train, int max_sequence_length_test) {
-        inputDimension = 1;
-        outputDimension = 1;
-        lossTraining = new LossSumOfSquares();
-        lossReporting = new LossMultiDimensionalBinary();
-        training = generateSequences(r, total_sequences, max_sequence_length_train);
+        this.inputDimension = 1;
+        this.outputDimension = 1;
+        this.lossTraining = new LossSumOfSquares();
+        this.lossReporting = new LossMultiDimensionalBinary();
+        this.training = generateSequences(r, total_sequences, max_sequence_length_train);
 
         //training.addAll(generateSequences(r, total_sequences, max_sequence_length_test));
 
-        validation = generateSequences(r, total_sequences, max_sequence_length_train);
-        testing = generateSequences(r, total_sequences, max_sequence_length_test);
+        this.validation = generateSequences(r, total_sequences, max_sequence_length_train);
+        this.testing = generateSequences(r, total_sequences, max_sequence_length_test);
     }
 
     private static List<DataSequence> generateSequences(Random r, int total_sequences, int max_sequence_length) {
