@@ -39,7 +39,7 @@ public class RnnLayer implements NetworkModel {
 
         Matrix sum = g.mul(W, concat);
         sum = g.add(sum, b);
-        Matrix output = g.nonlin(f, sum);
+        Matrix output = g.applyNonlinearity(f, sum);
 
         //rollover activations for next iteration
         context = output;

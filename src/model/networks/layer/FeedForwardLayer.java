@@ -27,7 +27,7 @@ public class FeedForwardLayer implements NetworkModel {
     @Override
     public Matrix forward(@NotNull Matrix input, @NotNull Graph g) throws Exception {
         Matrix sum = g.add(g.mul(W, input), b);
-        return g.nonlin(f, sum);
+        return g.applyNonlinearity(f, sum);
     }
 
     @Override

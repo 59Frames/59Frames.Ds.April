@@ -13,24 +13,6 @@ import model.networks.unit.SigmoidUnit;
 
 public class EmbeddedReberGrammar extends DataSet {
 
-    static public class State {
-        public State(Transition[] transitions) {
-            this.transitions = transitions;
-        }
-
-        public Transition[] transitions;
-    }
-
-    static public class Transition {
-        public Transition(int next_state_id, int token) {
-            this.next_state_id = next_state_id;
-            this.token = token;
-        }
-
-        public int next_state_id;
-        public int token;
-    }
-
     public EmbeddedReberGrammar(Random r) throws Exception {
         int total_sequences = 1000;
         inputDimension = 7;
@@ -77,27 +59,26 @@ public class EmbeddedReberGrammar extends DataSet {
 
         for (int sequence = 0; sequence < sequences; sequence++) {
             List<DataStep> steps = new ArrayList<>();
-            ;
             int state_id = 0;
             while (true) {
                 int transition = -1;
-                if (states[state_id].transitions.length == 1) {
+                if (states[state_id].getTransitionLength() == 1) {
                     transition = 0;
-                } else if (states[state_id].transitions.length == 2) {
+                } else if (states[state_id].getTransitionLength() == 2) {
                     transition = r.nextInt(2);
                 }
-                double[] observation = null;
+                double[] observation;
 
                 observation = new double[7];
-                observation[states[state_id].transitions[transition].token] = 1.0;
+                observation[states[state_id].get(transition).getToken()] = 1.0;
 
-                state_id = states[state_id].transitions[transition].next_state_id;
+                state_id = states[state_id].get(transition).getNextStateId();
                 if (state_id == 0) { //exit at end of sequence
                     break;
                 }
                 double[] target_output = new double[7];
-                for (int i = 0; i < states[state_id].transitions.length; i++) {
-                    target_output[states[state_id].transitions[i].token] = 1.0;
+                for (int i = 0; i < states[state_id].getTransitionLength(); i++) {
+                    target_output[states[state_id].get(i).getToken()] = 1.0;
                 }
                 steps.add(new DataStep(observation, target_output));
             }

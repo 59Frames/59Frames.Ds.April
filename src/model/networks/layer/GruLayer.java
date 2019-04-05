@@ -47,16 +47,16 @@ public class GruLayer implements NetworkModel {
 
         Matrix sum0 = g.mul(IHmix, input);
         Matrix sum1 = g.mul(HHmix, context);
-        Matrix actMix = g.nonlin(fMix, g.add(g.add(sum0, sum1), Bmix));
+        Matrix actMix = g.applyNonlinearity(fMix, g.add(g.add(sum0, sum1), Bmix));
 
         Matrix sum2 = g.mul(IHreset, input);
         Matrix sum3 = g.mul(HHreset, context);
-        Matrix actReset = g.nonlin(fReset, g.add(g.add(sum2, sum3), Breset));
+        Matrix actReset = g.applyNonlinearity(fReset, g.add(g.add(sum2, sum3), Breset));
 
         Matrix sum4 = g.mul(IHnew, input);
         Matrix gatedContext = g.elmul(actReset, context);
         Matrix sum5 = g.mul(HHnew, gatedContext);
-        Matrix actNewPlusGatedContext = g.nonlin(fNew, g.add(g.add(sum4, sum5), Bnew));
+        Matrix actNewPlusGatedContext = g.applyNonlinearity(fNew, g.add(g.add(sum4, sum5), Bnew));
 
         Matrix memvals = g.elmul(actMix, context);
         Matrix newvals = g.elmul(g.oneMinus(actMix), actNewPlusGatedContext);
