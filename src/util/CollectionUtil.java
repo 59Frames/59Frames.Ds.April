@@ -16,6 +16,39 @@ import java.util.function.Predicate;
  * @since 1.0
  */
 public class CollectionUtil {
+    public static double[] createRandomDoubleArray(final int size, final double lower_bound, final double upper_bound){
+        if(size < 1){
+            return null;
+        }
+        double[] ar = new double[size];
+        for(int i = 0; i < size; i++){
+            ar[i] = RandomUtil.random(lower_bound,upper_bound);
+        }
+        return ar;
+    }
+
+    public static int[] createRandomIntegerArray(final int size, final int lower_bound, final int upper_bound){
+        if(size < 1){
+            return null;
+        }
+        int[] ar = new int[size];
+        for(int i = 0; i < size; i++){
+            ar[i] = RandomUtil.random(lower_bound,upper_bound);
+        }
+        return ar;
+    }
+
+    public static double[][] createRandomDoubleMatrix(final int sizeX, final int sizeY, final double lower_bound, final double upper_bound){
+        if(sizeX < 1 || sizeY < 1){
+            return null;
+        }
+        double[][] ar = new double[sizeX][sizeY];
+        for(int i = 0; i < sizeX; i++){
+            ar[i] = createRandomDoubleArray(sizeY, lower_bound, upper_bound);
+        }
+        return ar;
+    }
+
     public static <T> T pickRandom(@NotNull List<T> list) {
         return list.get(ThreadLocalRandom.current().nextInt(0, list.size()));
     }
