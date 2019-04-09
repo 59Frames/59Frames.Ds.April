@@ -16,6 +16,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 
+import static util.FileUtil.load;
+
 
 public class bAbI extends DataSet {
 
@@ -29,7 +31,7 @@ public class bAbI extends DataSet {
     }
 
     public bAbI(int setId, int totalExamples, boolean onlySupportingFacts, Random rng) throws Exception {
-        final File folder = FileUtil.load("datasets/bAbI/en");
+        final File folder = load("datasets/bAbI/en");
         List<String> fileNamesTrain = new ArrayList<>();
         List<String> fileNamesTest = new ArrayList<>();
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
@@ -188,7 +190,7 @@ public class bAbI extends DataSet {
     List<Story> getStories(List<String> fileNames, boolean onlySupportingFacts) throws Exception {
         List<Statement> statements = new ArrayList<>();
         for (String fileName : fileNames) {
-            File file = new File(fileName);
+            File file = load(fileName);
             List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
             for (String line : lines) {
                 statements.add(new Statement(line));

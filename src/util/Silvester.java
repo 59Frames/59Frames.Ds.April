@@ -17,9 +17,16 @@ public final class Silvester {
     private Silvester() {
     }
 
-    public static final double E = 2.7182818284590452354D;
-    public static final double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164D;
-    public static final double TWO_PI = PI * 2;
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final double E = 2.71828182845904523536028747135266249D; // e, Napier's constant, or Euler's number
+    public static final double Y = 0.57721566490153286060651209008240243D; // Euler-Mascheroni-Constant
+    public static final double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164D; // Pi, Archimedes' constant or Ludolph's number
+    public static final double TWO_PI = PI * 2; // Two times Pi
+    public static final double ROOT_2 = 1.41421356237309504880168872420969807D; // Pythagoras' constant, square root of 2
+    public static final double ROOT_3 = 1.73205080756887729352744634150587236D; // Theodorus' constant, square root of 3
+    public static final double ROOT_5 = 2.23606797749978969640917366873127623D; // square root of 5
+    public static final double GOLDEN_RATIO = 1.61803398874989484820458683436563811D; // Golden Ration
 
     @Contract(pure = true)
     public static int round(float n) {

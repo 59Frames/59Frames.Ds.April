@@ -8,11 +8,35 @@ public class Matrix implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public int rows;
-    public int cols;
-    public double[] w;
-    public double[] dw;
-    public double[] stepCache;
+    public final int rows;
+    public final int cols;
+    public final double[] w;
+    public final double[] dw;
+    public final double[] stepCache;
+
+    public Matrix(int dim) {
+        this.rows = dim;
+        this.cols = 1;
+        this.w = new double[rows * cols];
+        this.dw = new double[rows * cols];
+        this.stepCache = new double[rows * cols];
+    }
+
+    public Matrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.w = new double[rows * cols];
+        this.dw = new double[rows * cols];
+        this.stepCache = new double[rows * cols];
+    }
+
+    public Matrix(double[] vector) {
+        this.rows = vector.length;
+        this.cols = 1;
+        this.w = vector;
+        this.dw = new double[vector.length];
+        this.stepCache = new double[vector.length];
+    }
 
     @Override
     public String toString() {
@@ -26,7 +50,7 @@ public class Matrix implements Serializable {
         return result.toString();
     }
 
-    public Matrix clone() {
+    public Matrix cloneMatrix() {
         Matrix result = new Matrix(rows, cols);
         for (int i = 0; i < w.length; i++) {
             result.w[i] = w[i];
@@ -86,32 +110,8 @@ public class Matrix implements Serializable {
         return uniform(rows, cols, 1.0);
     }
 
-    public static Matrix negones(int rows, int cols) {
+    public static Matrix negOnes(int rows, int cols) {
         return uniform(rows, cols, -1.0);
-    }
-
-    public Matrix(int dim) {
-        this.rows = dim;
-        this.cols = 1;
-        this.w = new double[rows * cols];
-        this.dw = new double[rows * cols];
-        this.stepCache = new double[rows * cols];
-    }
-
-    public Matrix(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
-        this.w = new double[rows * cols];
-        this.dw = new double[rows * cols];
-        this.stepCache = new double[rows * cols];
-    }
-
-    public Matrix(double[] vector) {
-        this.rows = vector.length;
-        this.cols = 1;
-        this.w = vector;
-        this.dw = new double[vector.length];
-        this.stepCache = new double[vector.length];
     }
 
     private int index(int row, int col) {

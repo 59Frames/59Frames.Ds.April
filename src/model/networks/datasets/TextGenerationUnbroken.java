@@ -39,7 +39,7 @@ public class TextGenerationUnbroken extends DataSet {
         Matrix start = new Matrix(dimension);
         model.resetState();
         Graph g = new Graph(false);
-        Matrix input = start.clone();
+        Matrix input = start.cloneMatrix();
         StringBuilder result = new StringBuilder();
         for (int s = 0; s < steps; s++) {
             Matrix logProbs = model.forward(input, g);

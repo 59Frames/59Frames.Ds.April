@@ -43,7 +43,7 @@ public class TextGeneration extends DataSet {
         start.w[START_END_TOKEN_INDEX] = 1.0;
         model.resetState();
         Graph g = new Graph(false);
-        Matrix input = start.clone();
+        Matrix input = start.cloneMatrix();
         String line = "";
         for (int s = 0; s < steps; s++) {
             Matrix logprobs = model.forward(input, g);
@@ -79,10 +79,10 @@ public class TextGeneration extends DataSet {
             if (indexChosen == START_END_TOKEN_INDEX) {
                 lines.add(line);
                 line = "";
-                input = start.clone();
+                input = start.cloneMatrix();
                 g = new Graph(false);
                 model.resetState();
-                input = start.clone();
+                input = start.cloneMatrix();
             } else {
                 String ch = indexToChar.get(indexChosen);
                 line += ch;

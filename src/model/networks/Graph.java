@@ -145,7 +145,7 @@ public class Graph {
     }
 
     public Matrix neg(final Matrix m) throws Exception {
-        return elmul(Matrix.negones(m.rows, m.cols), m);
+        return elmul(Matrix.negOnes(m.rows, m.cols), m);
     }
 
     public Matrix elmul(final Matrix m1, final Matrix m2) throws Exception {
