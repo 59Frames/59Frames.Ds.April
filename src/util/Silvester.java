@@ -22,6 +22,7 @@ public final class Silvester {
     public static final double E = 2.71828182845904523536028747135266249D; // e, Napier's constant, or Euler's number
     public static final double Y = 0.57721566490153286060651209008240243D; // Euler-Mascheroni-Constant
     public static final double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164D; // Pi, Archimedes' constant or Ludolph's number
+    public static final double HALF_PI = PI / 2; // Half Pi
     public static final double TWO_PI = PI * 2; // Two times Pi
     public static final double ROOT_2 = 1.41421356237309504880168872420969807D; // Pythagoras' constant, square root of 2
     public static final double ROOT_3 = 1.73205080756887729352744634150587236D; // Theodorus' constant, square root of 3
