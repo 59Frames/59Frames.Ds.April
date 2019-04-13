@@ -2,6 +2,9 @@ package util;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
+import java.util.stream.Stream;
+
 /**
  * {@link StringUtil}
  *
@@ -20,32 +23,18 @@ public class StringUtil {
         return string;
     }
 
-    public static String timeString(final double milliseconds) {
-        String result = "";
+    public static String timeString(final long milliseconds) {
+        Duration duration = Duration.ofMillis(milliseconds);
+        long days = duration.toDays();
+        long years = days / 365;
+        days = days % 365;
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes();
+        long seconds = duration.toSeconds();
+        long millis = duration.toMillis();
+        long nanos = duration.toNanos();
 
-        int m = (int) milliseconds;
-
-        int hours = 0;
-        while (m >= 1000*60*60) {
-            m -= 1000*60*60;
-            hours++;
-        }
-        int minutes = 0;
-        while (m >= 1000*60) {
-            m -= 1000*60;
-            minutes++;
-        }
-        if (hours > 0) {
-            result += hours + " hours, ";
-        }
-        int seconds = 0;
-        while (m >= 1000) {
-            m -= 1000;
-            seconds ++;
-        }
-        result += minutes + " minutes and ";
-        result += seconds + " seconds.";
-        return result;
+        return String.format("%d Years, %d days, %d hours, %d minutes, %d seconds, %d milliseconds and %d nanoseconds", years, days, hours, minutes, seconds, millis, nanos);
     }
 
     @NotNull

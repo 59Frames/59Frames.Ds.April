@@ -1,6 +1,6 @@
 CC License
 
-bAbI tasks data
+bAbI tasks value
 
 Copyright (c) 2015-present, Facebook, Inc. All rights reserved.
 
@@ -82,7 +82,7 @@ CONDITIONS.
     expressed by a process analogous to photography; a work of applied
     art; an illustration, map, plan, sketch or three-dimensional work
     relative to geography, topography, architecture or science; a
-    performance; a broadcast; a phonogram; a compilation of data to the
+    performance; a broadcast; a phonogram; a compilation of value to the
     extent it is protected as a copyrightable work; or a work performed by
     a variety or circus performer to the extent it is not otherwise
     considered a literary or artistic work.

@@ -1,5 +1,10 @@
 package util;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Array;
+import java.util.List;
+
 /**
  * {@link CastUtil}
  *
@@ -8,6 +13,7 @@ package util;
  * @since 1.0
  */
 public final class CastUtil {
+
     public static <T> T cast(final Object o, Class<T> to) {
         return to.cast(o);
     }

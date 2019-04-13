@@ -5,11 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public final class Silvester {
 
@@ -149,6 +147,17 @@ public final class Silvester {
         return (sum / arr.length);
     }
 
+    public static double average(@NotNull final Number[] list) {
+        double sum = 0.0;
+        if (list.length == 0)
+            return sum;
+
+        for (Number n : list)
+            sum += n.doubleValue();
+
+        return (sum / list.length);
+    }
+
     public static double average(@NotNull final List<? extends Number> list) {
         double sum = 0.0;
         if (list.isEmpty())
@@ -181,12 +190,17 @@ public final class Silvester {
         return (sum / arr.length);
     }
 
-    public static double median(@NotNull final List<Double> values) {
-        Collections.sort(values);
+    public static double median(@NotNull List<? extends Number> values) {
+        values = values.parallelStream().sorted((Comparator<Number>) (o1, o2) -> {
+            Double d1 = (o1 == null) ? Double.POSITIVE_INFINITY : o1.doubleValue();
+            Double d2 = (o2 == null) ? Double.POSITIVE_INFINITY : o2.doubleValue();
+            return  d1.compareTo(d2);
+        }).collect(Collectors.toList());
+
         int mid = values.size()/2;
         return values.size() % 2 == 1
-                ? values.get(mid)
-                : (values.get(mid-1) + values.get(mid)) / 2;
+                ? values.get(mid).doubleValue()
+                : (values.get(mid-1).doubleValue() + values.get(mid).doubleValue()) / 2;
     }
 
     public static double random() {

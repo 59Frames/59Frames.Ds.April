@@ -1,4 +1,4 @@
-package module.bootstrap;
+package module.bootstrap.environment;
 
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
@@ -108,29 +108,5 @@ public final class Configuration {
         if (!loaded)
             load();
         return volition;
-    }
-
-    public static class Section {
-        private final Preferences section;
-
-        private Section(@NotNull final Preferences preferences) {
-            this.section = preferences;
-        }
-
-        public String get(@NotNull final String key) {
-            return section.get(key.toUpperCase(), "");
-        }
-
-        public boolean getBoolean(@NotNull final String key) {
-            return section.getBoolean(key, false);
-        }
-
-        public int getInteger(@NotNull final String key) {
-            return section.getInt(key, 0);
-        }
-
-        public double getDouble(@NotNull final String key) {
-            return section.getDouble(key, 0d);
-        }
     }
 }

@@ -5,6 +5,7 @@ import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Constraint;
 import model.annotation.StaticClass;
 import module.Module;
+import module.bootstrap.environment.Configuration;
 import module.sensorium.physical.Arc;
 import util.CommandUtil;
 

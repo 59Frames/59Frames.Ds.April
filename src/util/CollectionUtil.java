@@ -7,6 +7,9 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * {@link CollectionUtil}
@@ -59,15 +62,13 @@ public class CollectionUtil {
 
     @NotNull
     public static <T> T[] removeRedundanciesFrom(@NotNull final T[] data) {
-        final HashSet<T> set = new HashSet<>(Arrays.asList(data));
-        @SuppressWarnings("unchecked") final T[] a = (T[]) Array.newInstance(data[0].getClass(), set.size());
-        return set.toArray(a);
+        return asArray(Arrays.stream(data).distinct().collect(Collectors.toList()));
     }
 
     @NotNull
     @Contract("_ -> new")
     public static <T> List<T> removeRedundanciesFrom(@NotNull final List<T> data) {
-        return new ArrayList<>(new HashSet<>(data));
+        return data.parallelStream().distinct().collect(Collectors.toList());
     }
 
     @Contract("_ -> param1")
@@ -75,12 +76,7 @@ public class CollectionUtil {
         if (data.length < 2)
             return data;
 
-        T[] clone = data.clone();
-        for (int i = 0; i < clone.length; ++i) {
-            data[i] = clone[clone.length - 1 - i];
-        }
-
-        return data;
+        return streamReverse(Arrays.stream(data)).toArray(size -> data.clone());
     }
 
     @Contract("_ -> param1")
@@ -88,8 +84,13 @@ public class CollectionUtil {
         if (data.size() < 2)
             return data;
 
-        Collections.reverse(data);
-        return data;
+        return streamReverse(data.parallelStream()).collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Stream<T> streamReverse(Stream<T> input) {
+        Object[] temp = input.toArray();
+        return (Stream<T>) IntStream.range(0, temp.length).mapToObj(i -> temp[temp.length - i - 1]);
     }
 
     @NotNull
@@ -111,5 +112,21 @@ public class CollectionUtil {
             clearedList.removeIf(filter);
 
         return clearedList;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] asArray(@NotNull final List<T> list) {
+        if (list.isEmpty())
+            throw new IllegalArgumentException("List is empty");
+
+        T[] arr = (T[]) Array.newInstance(list.get(0).getClass(), list.size());
+        for (int i = 0; i < list.size(); ++i) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+    }
+
+    public static <T> List<T> asList(@NotNull final T[] arr) {
+        return Arrays.asList(arr);
     }
 }

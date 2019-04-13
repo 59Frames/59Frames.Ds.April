@@ -1,5 +1,7 @@
 package model.lang;
 
+import java.util.Comparator;
+
 /**
  * {@link Node}
  *
@@ -8,29 +10,33 @@ package model.lang;
  * @since 1.0
  */
 public class Node<T extends Comparable<T>> {
-    private final T data;
+
+    private static final int LEFT = -0x1;
+    private static final int RIGHT = 0x1;
+
+    private final T value;
 
     private Node<T> left;
     private Node<T> right;
 
-    public Node(T data) {
-        this.data = data;
+    public Node(T value) {
+        this.value = value;
         this.left = null;
         this.right = null;
     }
 
     public void visit() {
         if (this.left != null) this.left.visit();
-        System.out.println(this.data);
+        System.out.println(this.value);
         if (this.right != null) this.right.visit();
     }
 
     public Node<T> find(final T val) {
-        if (this.data == val)
+        if (this.value.equals(val))
             return this;
 
         Node<T> n = null;
-        if (this.data.compareTo(val) > 0) {
+        if (this.value.compareTo(val) > 0) {
             if (this.left != null)
                 n = this.left.find(val);
         } else {
@@ -41,14 +47,30 @@ public class Node<T extends Comparable<T>> {
         return n;
     }
 
+    public T getValue() {
+        return this.value;
+    }
+
     public void insert(Node<T> node) {
-        final int result = node.data.compareTo(this.data);
-        if (result < 0) {
-            if (this.left == null) this.left = node;
-            else this.left.insert(node);
-        } else if (result > 0) {
-            if (this.right == null) this.right = node;
-            else this.right.insert(node);
+        final int result = node.value.compareTo(this.value);
+
+        if (result == 0) return;
+
+        checkAndOrInsert(result < 0 ? LEFT : RIGHT, node);
+    }
+
+    private void checkAndOrInsert(int pos, Node<T> node) {
+        switch (pos) {
+            case LEFT: {
+                if (this.left == null) this.left = node;
+                else this.left.insert(node);
+                break;
+            }
+            case RIGHT: {
+                if (this.right == null) this.right = node;
+                else this.right.insert(node);
+                break;
+            }
         }
     }
 }
