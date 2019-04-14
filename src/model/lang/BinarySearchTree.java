@@ -24,7 +24,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
             this.root.visit();
     }
 
-    public Node<T> find(final T val) {
+    public Node<T> search(final T val) {
         return this.root != null
                 ? this.root.find(val)
                 : null;
