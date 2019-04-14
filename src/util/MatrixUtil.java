@@ -12,6 +12,10 @@ import java.util.Random;
  * @since 1.0
  */
 public final class MatrixUtil {
+
+    private MatrixUtil() {
+    }
+
     public static int pickIndexFromRandomVector(Matrix matrix, Random r) throws Exception {
         double mass = 1.0;
         for (int i = 0; i < matrix.w.length; i++) {

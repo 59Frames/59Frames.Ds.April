@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since 1.0
  */
-public class ValidationUtil {
+public final class ValidationUtil {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w-+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$");
     private static final Pattern IPV4_PATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
     private static final Pattern IPV6_STD_PATTERN = Pattern.compile("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$");
@@ -24,6 +24,9 @@ public class ValidationUtil {
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$");
     private static final Pattern ENHANCED_DOMAIN_PATTERN = Pattern.compile("^(http[s]*://)?([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$");
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[^A-Za-z0-9]");
+
+    private ValidationUtil() {
+    }
 
     public static boolean isEmail(@NotNull final String email) {
         return EMAIL_PATTERN.matcher(email).matches();

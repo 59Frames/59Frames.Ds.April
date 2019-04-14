@@ -13,7 +13,11 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-public class CommandUtil {
+public final class CommandUtil {
+
+    private CommandUtil() {
+    }
+
     private static CommandListener listener = null;
 
     public static synchronized void registerListener(@NotNull final CommandListener newListener) {

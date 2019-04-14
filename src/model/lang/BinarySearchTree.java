@@ -1,5 +1,7 @@
 package model.lang;
 
+import java.util.List;
+
 /**
  * {@link BinarySearchTree}
  *
@@ -28,7 +30,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
                 : null;
     }
 
-    public Node<T> insert(final T val) {
+    public void insert(final T val) {
         final Node<T> node = new Node<>(val);
 
         if (this.root == null) {
@@ -36,7 +38,17 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } else {
             this.root.insert(node);
         }
+    }
 
-        return node;
+    public void insert(final T[] values) {
+        for (T t : values) {
+            insert(t);
+        }
+    }
+
+    public void insert(final List<T> values) {
+        for (T t : values) {
+            insert(t);
+        }
     }
 }

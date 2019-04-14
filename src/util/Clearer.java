@@ -23,22 +23,18 @@ public final class Clearer<T> {
         this.stream = stream;
     }
 
-    public static <T> Clearer init(List<T> list) {
+    public static <T> Clearer<T> init(List<T> list) {
         return new Clearer<>(list.parallelStream());
     }
 
-    public static <T> Clearer init(T[] arr) {
+    public static <T> Clearer<T> init(T[] arr) {
         return new Clearer<>(Arrays.stream(arr));
     }
 
-    public Clearer<T> removeIf(@NotNull final Predicate<? super T>... filters) {
+    public final Clearer<T> removeIf(@NotNull final Predicate<? super T> filter) {
         var list = stream.collect(Collectors.toList());
 
-        if (filters.length < 1)
-            return this;
-
-        for (var filter : filters)
-            list.removeIf(filter);
+        list.removeIf(filter);
 
         this.stream = list.parallelStream();
         return this;

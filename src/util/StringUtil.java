@@ -12,7 +12,10 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 1.0
  */
-public class StringUtil {
+public final class StringUtil {
+
+    private StringUtil() {
+    }
 
     @NotNull
     public static String clean(@NotNull String string) {

@@ -13,6 +13,9 @@ import java.util.logging.Logger;
  */
 public final class Debugger {
 
+    private Debugger() {
+    }
+
     private static final Logger LOGGER = Logger.getGlobal();
 
     public static void info(@NotNull String info) {

@@ -14,7 +14,10 @@ import java.util.Objects;
  * @version 1.0
  * @since 1.0
  */
-public class FileUtil {
+public final class FileUtil {
+
+    private FileUtil() {
+    }
 
     private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 

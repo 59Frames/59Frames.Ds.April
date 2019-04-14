@@ -1,5 +1,4 @@
 import management.ModuleManagement;
-import model.lang.BinarySearchTree;
 import util.*;
 
 import java.util.ArrayList;
@@ -8,20 +7,22 @@ import java.util.Arrays;
 public class April {
 
     public static void main(String[] args) throws Exception {
-        var bst = new BinarySearchTree<String>();
 
-        var strings = new ArrayList<String>();
+        var list = new ArrayList<Integer>();
 
-        for (int i = 0; i < 10; i++) {
-            bst.insert(RandomUtil.randomString(RandomUtil.random(1, 10)));
-
-            strings.add(String.valueOf(i));
+        for (int i = 0; i < 100; i++) {
+            list.add(RandomUtil.random(i));
         }
 
-        System.out.println(strings);
-        System.out.println(CollectionUtil.reverse(strings));
+        System.out.println(list);
 
-        System.out.println(StringUtil.timeString(System.currentTimeMillis()));
+        var l = Clearer.init(list)
+                .removeRedundancies()
+                .removeIf(val -> val < 10)
+                .removeIf(val -> val >= 20)
+                .toArray();
+
+        System.out.println(Arrays.asList(l));
     }
 
     private static void registerNativeModules() {

@@ -18,7 +18,11 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 1.0
  */
-public class CollectionUtil {
+public final class CollectionUtil {
+
+    private CollectionUtil(){
+    }
+
     public static double[] createRandomDoubleArray(final int size, final double lower_bound, final double upper_bound){
         if(size < 1){
             return null;
