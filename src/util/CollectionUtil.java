@@ -29,7 +29,7 @@ public final class CollectionUtil {
         }
         double[] ar = new double[size];
         for(int i = 0; i < size; i++){
-            ar[i] = RandomUtil.random(lower_bound,upper_bound);
+            ar[i] = Toolbox.random(lower_bound,upper_bound);
         }
         return ar;
     }
@@ -40,7 +40,7 @@ public final class CollectionUtil {
         }
         int[] ar = new int[size];
         for(int i = 0; i < size; i++){
-            ar[i] = RandomUtil.random(lower_bound,upper_bound);
+            ar[i] = Toolbox.integer(Toolbox.random(lower_bound,upper_bound));
         }
         return ar;
     }

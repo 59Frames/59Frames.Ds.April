@@ -3,41 +3,58 @@ package util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
-public final class RandomUtil {
+/**
+ * {@link Toolbox}
+ *
+ * @author Daniel Seifert
+ * @version 1.0
+ * @since 1.0
+ */
+public final class Toolbox {
 
-    private RandomUtil() {
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+    public static final double E = 2.71828182845904523536028747135266249D; // e, Napier's constant, or Euler's number
+    public static final double Y = 0.57721566490153286060651209008240243D; // Euler-Mascheroni-Constant
+    public static final double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164D; // Pi, Archimedes' constant or Ludolph's number
+    public static final double HALF_PI = PI / 2; // Half Pi
+    public static final double TWO_PI = PI * 2; // Two times Pi
+    public static final double ROOT_2 = 1.41421356237309504880168872420969807D; // Pythagoras' constant, square root of 2
+    public static final double ROOT_3 = 1.73205080756887729352744634150587236D; // Theodorus' constant, square root of 3
+    public static final double ROOT_5 = 2.23606797749978969640917366873127623D; // square root of 5
+    public static final double GOLDEN_RATIO = 1.61803398874989484820458683436563811D; // Golden Ration
+
+    private static Toolbox.PerlinNoiseGenerator generator = new Toolbox.PerlinNoiseGenerator();
+
+    private Toolbox() {
     }
 
-    private static PerlinNoiseGenerator generator = new PerlinNoiseGenerator();
+    public static float map(float value, float iStart, float iStop, float oStart, float oStop) {
+        return oStart + (oStop - oStart) * ((value - iStart) / (iStop - iStart));
+    }
 
     public static double random() {
-        return Silvester.random();
+        return Toolbox.RandomNumberGeneratorHolder.randomNumberGenerator.nextDouble();
     }
 
-    public static int random(final int bound) {
-        return Silvester.randomInt(bound);
+    public static double random(double bound) {
+        return random() * bound;
     }
 
-    public static double random(final double bound) {
-        return Silvester.random(bound);
-    }
-
-    public static int random(final int min, final int max) {
-        return Silvester.randomInt(min, max);
-    }
-
-    public static double random(final double min, final double max) {
-        return Silvester.random(min, max);
+    public static double random(double a, double b) {
+        final double max = max(a, b);
+        final double min = min(a, b);
+        return random() * (max - min) + min;
     }
 
     public static void noiseSeed(int seed) {
-        generator = new PerlinNoiseGenerator(seed);
+        generator = new Toolbox.PerlinNoiseGenerator(seed);
     }
 
     public static double improvedNoise(double x, double y, double z) {
@@ -60,6 +77,264 @@ public final class RandomUtil {
         return generator.improvedTurbulence(x, y, z, loF, hiF);
     }
 
+    public static int round(float n) {
+        return Math.round(n);
+    }
+
+    public static long round(double n) {
+        return Math.round(n);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static float round(float value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.floatValue();
+    }
+
+    public static long max(long a, long b) {
+        return Math.max(a, b);
+    }
+
+    public static int max(int a, int b) {
+        return Math.max(a, b);
+    }
+
+    public static double max(double a, double b) {
+        return Math.max(a, b);
+    }
+
+    public static float max(float a, float b) {
+        return Math.max(a, b);
+    }
+
+    public static <T extends Comparable<T>> T max(@NotNull final T a, @NotNull final T b) {
+        return (a.compareTo(b) >= 0) ? a : b;
+    }
+
+    public static long min(long a, long b) {
+        return Math.min(a, b);
+    }
+
+    public static int min(int a, int b) {
+        return Math.min(a, b);
+    }
+
+    public static double min(double a, double b) {
+        return Math.min(a, b);
+    }
+
+    public static float min(float a, float b) {
+        return Math.min(a, b);
+    }
+
+    public static <T extends Comparable<T>> T min(@NotNull final T a, @NotNull final T b) {
+        return (a.compareTo(b) <= 0) ? a : b;
+    }
+
+    public static double copySign(double magnitude, double sign) {
+        return Math.copySign(magnitude, sign);
+    }
+
+    public static float copySign(float magnitude, float sign) {
+        return Math.copySign(magnitude, sign);
+    }
+
+    public static double pow(double a, double b) {
+        return StrictMath.pow(a, b);
+    }
+
+    public static double average(@NotNull final int[] arr) {
+        double sum = 0.0;
+
+        for (int n : arr)
+            sum += n;
+
+        return (sum / arr.length);
+    }
+
+    public static double average(@NotNull final long[] arr) {
+        double sum = 0.0;
+
+        for (long n : arr)
+            sum += n;
+
+        return (sum / arr.length);
+    }
+
+    public static double average(@NotNull final double[] arr) {
+        double sum = 0.0;
+
+        for (double n : arr)
+            sum += n;
+
+        return (sum / arr.length);
+    }
+
+    public static double average(@NotNull final Number[] list) {
+        double sum = 0.0;
+        if (list.length == 0)
+            return sum;
+
+        for (Number n : list)
+            sum += n.doubleValue();
+
+        return (sum / list.length);
+    }
+
+    public static double average(@NotNull final List<? extends Number> list) {
+        double sum = 0.0;
+        if (list.isEmpty())
+            return sum;
+
+        for (Number n : list)
+            sum += n.doubleValue();
+
+        return (sum / list.size());
+    }
+
+    public static double average(@NotNull final Map<?, ? extends Number> map) {
+        final double[] sum = new double[1];
+        sum[0] = 0.0;
+        if (map.isEmpty())
+            return sum[0];
+
+        map.forEach((key, value) -> sum[0] += value.doubleValue());
+
+        return (sum[0] / map.size());
+    }
+
+    public static double average(@NotNull final float[] arr) {
+        double sum = 0.0;
+
+        for (float n : arr)
+            sum += n;
+
+        return (sum / arr.length);
+    }
+
+    public static double median(@NotNull List<? extends Number> values) {
+        values = values.parallelStream().sorted((Comparator<Number>) (o1, o2) -> {
+            Double d1 = (o1 == null) ? Double.POSITIVE_INFINITY : o1.doubleValue();
+            Double d2 = (o2 == null) ? Double.POSITIVE_INFINITY : o2.doubleValue();
+            return d1.compareTo(d2);
+        }).collect(Collectors.toList());
+
+        int mid = values.size() / 2;
+        return values.size() % 2 == 1
+                ? values.get(mid).doubleValue()
+                : (values.get(mid - 1).doubleValue() + values.get(mid).doubleValue()) / 2;
+    }
+
+    public static double exp(final double d) {
+        return StrictMath.exp(d);
+    }
+
+    public static double volume(final double width, final double length, final double height) {
+        return width * length * height;
+    }
+
+    public static double surface(final double width, final double length) {
+        return width * length;
+    }
+
+    public static double cylinderSurface(final double radius, final double height) {
+        return (circular(radius) * 2) + (circumference(radius) * height);
+    }
+
+    public static double cylinderVolume(final double radius, double height) {
+        return circular(radius) * height;
+    }
+
+    public static double circumference(final double radius) {
+        return (radius * 2) * PI;
+    }
+
+    public static double circular(final double radius) {
+        return (pow(radius, 2)) * PI;
+    }
+
+    public static double rectangleSurface(final double width, final double length, final double height) {
+        return ((surface(width, length) * 2) + (surface(width, height) * 2) + (surface(length, height) * 2));
+    }
+
+    public static double rectangleVolume(final double width, final double length, final double height) {
+        return volume(width, length, height);
+    }
+
+    public static double kmh2mph(final double kmh) {
+        return (kmh / 1.609);
+    }
+
+    public static double mph2kmh(final double mph) {
+        return (mph * 1.609);
+    }
+
+    public static double mph2knots(final double mph) {
+        return (mph / 1.151);
+    }
+
+    public static double knots2mph(final double knots) {
+        return (knots * 1.151);
+    }
+
+    public static double kmh2knots(final double kmh) {
+        return (kmh / 1.852);
+    }
+
+    public static double knots2kmh(final double knots) {
+        return (knots * 1.852);
+    }
+
+    public static double kmh2mps(final double kmh) {
+        return (kmh / 3.6);
+    }
+
+    public static double mps2kmh(final double mps) {
+        return (mps * 3.6);
+    }
+
+    public static double mph2mps(final double mph) {
+        return (mph / 2.237);
+    }
+
+    public static double mps2mph(final double mps) {
+        return (mps * 2.237);
+    }
+
+    public static double celsius2fahrenheit(final double celsius) {
+        return ((celsius * 9 / 5) + 32);
+    }
+
+    public static double celsius2kelvin(final double celsius) {
+        return (celsius + 273.15);
+    }
+
+    public static double fahrenheit2kelvin(final double fahrenheit) {
+        return celsius2kelvin(fahrenheit2celsius(fahrenheit));
+    }
+
+    public static double fahrenheit2celsius(final double fahrenheit) {
+        return ((fahrenheit - 32) * 5 / 9);
+    }
+
+    public static double kelvin2celsius(final double kelvin) {
+        return (kelvin - 273.15);
+    }
+
+    public static double kelvin2fahrenheit(final double kelvin) {
+        return celsius2fahrenheit(kelvin2celsius(kelvin));
+    }
+
     @NotNull
     public static String randomUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
@@ -67,12 +342,32 @@ public final class RandomUtil {
 
     @NotNull
     public static String randomString() {
-        return RandomString.randomString();
+        return Toolbox.RandomString.randomString();
     }
 
     @NotNull
     public static String randomString(final int length) {
-        return RandomString.randomString(length);
+        return Toolbox.RandomString.randomString(length);
+    }
+
+    public static <T> T cast(final Object o, Class<T> to) {
+        return to.cast(o);
+    }
+
+    public static String str(final Object o) {
+        return String.valueOf(o);
+    }
+
+    public static double num(final Object n) {
+        return Double.parseDouble(str(n));
+    }
+
+    public static int integer(final Object n) {
+        return round(Float.parseFloat(str(n)));
+    }
+
+    public static boolean bool(@NotNull final String val) {
+        return Boolean.parseBoolean(val);
     }
 
     private static final class RandomString {
@@ -92,7 +387,7 @@ public final class RandomUtil {
         }
 
         /**
-         * Constructs a new instance of type {@link util.RandomUtil.RandomString}
+         * Constructs a new instance of type {@link util.Toolbox.RandomString}
          *
          * @param length - the length of the desired string
          */
@@ -104,7 +399,7 @@ public final class RandomUtil {
         }
 
         /**
-         * Constructs a new instance of type {@link util.RandomUtil.RandomString}
+         * Constructs a new instance of type {@link util.Toolbox.RandomString}
          *
          * @param length  - the length of the desired string
          * @param random  - the random to pick chars
@@ -131,7 +426,7 @@ public final class RandomUtil {
 
         @NotNull
         private static String randomString() {
-            return new RandomString().nextString();
+            return new Toolbox.RandomString().nextString();
         }
 
         /**
@@ -140,7 +435,7 @@ public final class RandomUtil {
          */
         @NotNull
         private static String randomString(int length) {
-            return new RandomString(length).nextString();
+            return new Toolbox.RandomString(length).nextString();
         }
     }
 
@@ -699,6 +994,14 @@ public final class RandomUtil {
                 for (j = 0; j < 3; j++)
                     g3[B + i][j] = g3[i][j];
             }
+        }
+    }
+
+    private static final class RandomNumberGeneratorHolder {
+        private static final Random randomNumberGenerator = ThreadLocalRandom.current();
+
+        @Contract(pure = true)
+        private RandomNumberGeneratorHolder() {
         }
     }
 }

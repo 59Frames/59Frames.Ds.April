@@ -5,7 +5,7 @@ import model.networks.Matrix;
 import model.networks.NetworkModel;
 import model.networks.datastructs.DataSequence;
 import model.networks.datastructs.DataStep;
-import util.Silvester;
+import util.Toolbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class LossSoftmax implements Loss {
             double ppl = Math.pow(2, (neglog2ppl / (n - 1)));
             ppls.add(ppl);
         }
-        return Silvester.median(ppls);
+        return Toolbox.median(ppls);
     }
 
     public static Matrix getSoftmaxProbs(Matrix logprobs, double temperature) throws Exception {

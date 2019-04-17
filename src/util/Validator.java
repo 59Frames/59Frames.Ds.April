@@ -8,13 +8,13 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 /**
- * {@link ValidationUtil}
+ * {@link Validator}
  *
  * @author Daniel Seifert
  * @version 1.0
  * @since 1.0
  */
-public final class ValidationUtil {
+public final class Validator {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w-+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$");
     private static final Pattern IPV4_PATTERN = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
     private static final Pattern IPV6_STD_PATTERN = Pattern.compile("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$");
@@ -25,7 +25,11 @@ public final class ValidationUtil {
     private static final Pattern ENHANCED_DOMAIN_PATTERN = Pattern.compile("^(http[s]*://)?([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$");
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[^A-Za-z0-9]");
 
-    private ValidationUtil() {
+    private Validator() {
+    }
+
+    public static boolean isBool(@NotNull final String val) {
+        return (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false"));
     }
 
     public static boolean isEmail(@NotNull final String email) {
@@ -97,7 +101,7 @@ public final class ValidationUtil {
         try {
             sdf.parse(date);
             return true;
-        } catch (ParseException e) {
+        } catch (ParseException ignore) {
             return false;
         }
     }

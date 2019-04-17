@@ -3,7 +3,7 @@ package module.speech.language;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import util.StringUtil;
-import util.ValidationUtil;
+import util.Validator;
 
 import java.util.*;
 
@@ -126,7 +126,7 @@ public class SpellCorrector {
     }
 
     private boolean isSpelledCorrectly(String input) {
-        if (!ValidationUtil.isSpecialCharacter(input) && !ValidationUtil.isNumber(input))
+        if (!Validator.isSpecialCharacter(input) && !Validator.isNumber(input))
             return nWords.containsKey(input) || Dictionaries.english().containsWord(input);
         return true;
     }
