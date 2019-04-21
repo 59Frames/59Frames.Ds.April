@@ -3,6 +3,7 @@ package module;
 import _59frames.ds.lando.model.Command;
 import org.jetbrains.annotations.NotNull;
 import util.CommandUtil;
+import util.Debugger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +103,7 @@ public abstract class Module extends AsyncBootSequence {
 
     @Override
     protected void onHasBeenBootedUp() {
-        System.out.printf("Booted Up: %s \n", this.moduleName);
+        Debugger.info(String.format("Booted Up: %s \n", this.moduleName));
     }
 
     /**

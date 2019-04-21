@@ -25,6 +25,7 @@ public final class Validator {
     private static final Pattern ENHANCED_DOMAIN_PATTERN = Pattern.compile("^(http[s]*://)?([a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,}$");
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[^A-Za-z0-9]");
 
+    @Contract(pure = true)
     private Validator() {
     }
 

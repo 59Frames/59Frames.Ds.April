@@ -14,6 +14,12 @@ import java.util.concurrent.TimeUnit;
 public class ThreadService {
     private static ExecutorService threadPool = null;
 
+    public static ExecutorService getThreadPool() {
+        if (threadPool == null)
+            revalidate();
+        return threadPool;
+    }
+
     public static void execute(Thread thread) {
         revalidate();
         threadPool.execute(thread);

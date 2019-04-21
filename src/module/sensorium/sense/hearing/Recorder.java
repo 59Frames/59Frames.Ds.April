@@ -1,12 +1,18 @@
 package module.sensorium.sense.hearing;
 
+import module.sensorium.sense.hearing.buffer.CircularBuffer;
+import module.sensorium.sense.hearing.buffer.CircularByteBuffer;
+import module.sensorium.sense.hearing.buffer.CircularByteBufferHolder;
 import org.jetbrains.annotations.Contract;
+import util.Debugger;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 import java.util.Objects;
+
+import static util.Toolbox.cast;
 
 /**
  * {@link Recorder}
@@ -27,34 +33,32 @@ public class Recorder extends Thread {
 
     @Override
     public void run() {
-        CircularBuffer buf;
-        TargetDataLine targetDataLine = null;
+        CircularByteBuffer buf;
+        TargetDataLine microphone = null;
         try {
-            targetDataLine = (TargetDataLine) AudioSystem.getLine(targetInfo);
-            targetDataLine.open(format);
-            targetDataLine.start();
-        }
-        catch(Exception e) {
-            System.out.println(e.toString());
+            microphone = cast(AudioSystem.getLine(targetInfo), TargetDataLine.class);
+            microphone.open(format);
+            microphone.start();
+        } catch (Exception e) {
+            Debugger.exception(e);
         }
 
         int dataRead;
-        byte[] targetData = new byte[Objects.requireNonNull(targetDataLine).getBufferSize() / 5];
+        byte[] targetData = new byte[Objects.requireNonNull(microphone).getBufferSize() / 5];
 
-        while(true) {
+        while (true) {
             try {
                 //read from mic
-                dataRead = targetDataLine.read(targetData, 0, targetData.length);
-                if(dataRead == -1) {
+                dataRead = microphone.read(targetData, 0, targetData.length);
+                if (dataRead == -1) {
                     System.out.println("Error reading microphone input");
-                }
-                else {
+                } else {
                     //write to buffer
-                    buf = CircularBuffer.getBuffer();
-                    buf.writeToBuffer(targetData);
+                    buf = CircularByteBufferHolder.getBuffer();
+                    buf.write(targetData);
                 }
             } catch (Exception e) {
-                System.out.println(e.toString());
+                Debugger.exception(e);
             }
         }
     }

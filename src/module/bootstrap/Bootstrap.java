@@ -3,11 +3,12 @@ package module.bootstrap;
 import _59frames.ds.lando.CommandListener;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Constraint;
-import model.annotation.StaticClass;
+import environment.Environment;
 import module.Module;
-import module.bootstrap.environment.Configuration;
 import module.sensorium.physical.Arc;
+import module.sensorium.sense.hearing.buffer.CircularByteBufferHolder;
 import util.CommandUtil;
+import util.Debugger;
 
 /**
  * {@link Bootstrap}
@@ -17,8 +18,7 @@ import util.CommandUtil;
  * @since 1.0
  */
 
-@StaticClass
-public class Bootstrap extends Module {
+public final class Bootstrap extends Module {
     /**
      * Constructs a new instance of type Module
      */
@@ -26,19 +26,15 @@ public class Bootstrap extends Module {
         super("Bootstrap");
     }
 
-    private void validateClasses() {
-
-    }
-
-    private void loadConfiguration() {
-        Configuration.load();
+    private void loadEnvironment() {
+        Environment.load();
     }
 
     private void registerCommandListener() {
-        final boolean hasNamedArguments = Configuration.bootstrap().getBoolean("COMMAND_HAS_NAMED_ARGUMENTS");
-        final boolean hasDefaultHelpCommand = Configuration.bootstrap().getBoolean("COMMAND_HAS_HELP_COMMAND");
-        final boolean hasDefaultExitCommand = Configuration.bootstrap().getBoolean("COMMAND_HAS_EXIT_COMMAND");
-        final boolean startsWithBuild = Configuration.bootstrap().getBoolean("COMMAND_STARTS_WITH_BUILD");
+        final boolean hasNamedArguments = Environment.getBoolean("lando.named");
+        final boolean hasDefaultHelpCommand = Environment.getBoolean("lando.help");
+        final boolean hasDefaultExitCommand = Environment.getBoolean("lando.exit");
+        final boolean startsWithBuild = Environment.getBoolean("lando.swb");
 
         CommandUtil.registerListener(
                 CommandListener.builder()
@@ -50,6 +46,8 @@ public class Bootstrap extends Module {
                         .errorOutput(System.err)
                         .build()
         );
+
+        Debugger.info("Command Listener Registered");
     }
 
     private void registerDefaultCommands() {
@@ -84,14 +82,34 @@ public class Bootstrap extends Module {
         }, new Constraint("type", true), new Constraint("of", true));
 
         CommandUtil.add(getCommand);
+
+        Debugger.info("Default Commands Registered");
     }
 
     @Override
     protected void bootUp() {
-        validateClasses();
-        loadConfiguration();
+        loadEnvironment();
+        loadArc();
 
         registerCommandListener();
+        registerBuffers();
+
         registerDefaultCommands();
+    }
+
+    private void loadArc() {
+        try {
+            Class.forName("module.sensorium.physical.Arc");
+
+            Debugger.info("Arc Registered");
+        } catch (ClassNotFoundException e) {
+            Debugger.exception(e);
+        }
+    }
+
+    private void registerBuffers() {
+        CircularByteBufferHolder.registerCircularBuffer(Environment.getInteger("module.sensorium.sense.hearing.buffer.capacity"));
+
+        Debugger.info("Buffers Registered");
     }
 }

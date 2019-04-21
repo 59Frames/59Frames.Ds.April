@@ -19,7 +19,7 @@ public final class FileUtil {
     private FileUtil() {
     }
 
-    private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    private static final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     @NotNull
     @Contract("_ -> new")

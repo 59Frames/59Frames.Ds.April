@@ -33,6 +33,7 @@ public final class Arc {
     private static final NetworkParams NETWORK_PARAMS = OS.getNetworkParams();
     private static final OperatingSystemVersion VERSION = OS.getVersion();
 
+    @Contract(pure = true)
     private Arc() {
     }
 
