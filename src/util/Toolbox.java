@@ -3,6 +3,7 @@ package util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Documented;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 1.0
  */
+@SuppressWarnings("unused")
 public final class Toolbox {
 
     public static final int ZERO = 0;
@@ -32,10 +34,12 @@ public final class Toolbox {
 
     private static Toolbox.PerlinNoiseGenerator generator = new Toolbox.PerlinNoiseGenerator();
 
+    @Contract(pure = true)
     private Toolbox() {
     }
 
-    public static float map(float value, float iStart, float iStop, float oStart, float oStop) {
+    @Contract(pure = true)
+    public static double map(final double value, final double iStart, final double iStop, final double oStart, final double oStop) {
         return oStart + (oStop - oStart) * ((value - iStart) / (iStop - iStart));
     }
 
@@ -43,49 +47,51 @@ public final class Toolbox {
         return Toolbox.RandomNumberGeneratorHolder.randomNumberGenerator.nextDouble();
     }
 
-    public static double random(double bound) {
+    public static double random(final double bound) {
         return random() * bound;
     }
 
-    public static double random(double a, double b) {
+    public static double random(final double a, final double b) {
         final double max = max(a, b);
         final double min = min(a, b);
         return random() * (max - min) + min;
     }
 
-    public static void noiseSeed(int seed) {
+    public static void noiseSeed(final int seed) {
         generator = new Toolbox.PerlinNoiseGenerator(seed);
     }
 
-    public static double improvedNoise(double x, double y, double z) {
+    public static double improvedNoise(final double x, final double y, final double z) {
         return generator.improvedNoise(x, y, z);
     }
 
-    public static double noise(float x) {
+    public static double noise(final float x) {
         return generator.noise(x);
     }
 
-    public static double noise(float x, float y) {
+    public static double noise(final float x, final float y) {
         return generator.noise(x, y);
     }
 
-    public static double noise(float x, float y, float z) {
+    public static double noise(final float x, final float y, final float z) {
         return generator.noise(x, y, z);
     }
 
-    public static double improvedTurbulence(double x, double y, double z, float loF, float hiF) {
+    public static double improvedTurbulence(final double x, final double y, final double z, final float loF, final float hiF) {
         return generator.improvedTurbulence(x, y, z, loF, hiF);
     }
 
-    public static int round(float n) {
+    @Contract(pure = true)
+    public static int round(final float n) {
         return Math.round(n);
     }
 
-    public static long round(double n) {
+    @Contract(pure = true)
+    public static long round(final double n) {
         return Math.round(n);
     }
 
-    public static double round(double value, int places) {
+    public static double round(final double value, final int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(Double.toString(value));
@@ -93,7 +99,7 @@ public final class Toolbox {
         return bd.doubleValue();
     }
 
-    public static float round(float value, int places) {
+    public static float round(final float value, final int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(Double.toString(value));
@@ -101,58 +107,71 @@ public final class Toolbox {
         return bd.floatValue();
     }
 
-    public static long max(long a, long b) {
+    @Contract(pure = true)
+    public static long max(final long a, final long b) {
         return Math.max(a, b);
     }
 
-    public static int max(int a, int b) {
+    @Contract(pure = true)
+    public static int max(final int a, final int b) {
         return Math.max(a, b);
     }
 
-    public static double max(double a, double b) {
+    @Contract(pure = true)
+    public static double max(final double a, final double b) {
         return Math.max(a, b);
     }
 
-    public static float max(float a, float b) {
+    @Contract(pure = true)
+    public static float max(final float a, final float b) {
         return Math.max(a, b);
     }
 
+    @Contract(pure = true)
     public static <T extends Comparable<T>> T max(@NotNull final T a, @NotNull final T b) {
         return (a.compareTo(b) >= 0) ? a : b;
     }
 
-    public static long min(long a, long b) {
+    @Contract(pure = true)
+    public static long min(final long a, final long b) {
         return Math.min(a, b);
     }
 
-    public static int min(int a, int b) {
+    @Contract(pure = true)
+    public static int min(final int a, final int b) {
         return Math.min(a, b);
     }
 
-    public static double min(double a, double b) {
+    @Contract(pure = true)
+    public static double min(final double a, final double b) {
         return Math.min(a, b);
     }
 
-    public static float min(float a, float b) {
+    @Contract(pure = true)
+    public static float min(final float a, final float b) {
         return Math.min(a, b);
     }
 
+    @Contract(pure = true)
     public static <T extends Comparable<T>> T min(@NotNull final T a, @NotNull final T b) {
         return (a.compareTo(b) <= 0) ? a : b;
     }
 
-    public static double copySign(double magnitude, double sign) {
+    @Contract(pure = true)
+    public static double copySign(final double magnitude, final double sign) {
         return Math.copySign(magnitude, sign);
     }
 
-    public static float copySign(float magnitude, float sign) {
+    @Contract(pure = true)
+    public static float copySign(final float magnitude, final float sign) {
         return Math.copySign(magnitude, sign);
     }
 
-    public static double pow(double a, double b) {
+    public static double pow(final double a, final double b) {
         return StrictMath.pow(a, b);
     }
 
+    @Contract(pure = true)
     public static double average(@NotNull final int[] arr) {
         double sum = 0.0;
 
@@ -162,6 +181,7 @@ public final class Toolbox {
         return (sum / arr.length);
     }
 
+    @Contract(pure = true)
     public static double average(@NotNull final long[] arr) {
         double sum = 0.0;
 
@@ -171,6 +191,7 @@ public final class Toolbox {
         return (sum / arr.length);
     }
 
+    @Contract(pure = true)
     public static double average(@NotNull final double[] arr) {
         double sum = 0.0;
 
@@ -213,6 +234,7 @@ public final class Toolbox {
         return (sum[0] / map.size());
     }
 
+    @Contract(pure = true)
     public static double average(@NotNull final float[] arr) {
         double sum = 0.0;
 
@@ -235,14 +257,17 @@ public final class Toolbox {
                 : (values.get(mid - 1).doubleValue() + values.get(mid).doubleValue()) / 2;
     }
 
+    @Contract(pure = true)
     public static double exp(final double d) {
         return StrictMath.exp(d);
     }
 
+    @Contract(pure = true)
     public static double volume(final double width, final double length, final double height) {
         return width * length * height;
     }
 
+    @Contract(pure = true)
     public static double surface(final double width, final double length) {
         return width * length;
     }
@@ -255,6 +280,7 @@ public final class Toolbox {
         return circular(radius) * height;
     }
 
+    @Contract(pure = true)
     public static double circumference(final double radius) {
         return (radius * 2) * PI;
     }
@@ -267,54 +293,67 @@ public final class Toolbox {
         return ((surface(width, length) * 2) + (surface(width, height) * 2) + (surface(length, height) * 2));
     }
 
+    @Contract(pure = true)
     public static double rectangleVolume(final double width, final double length, final double height) {
         return volume(width, length, height);
     }
 
+    @Contract(pure = true)
     public static double kmh2mph(final double kmh) {
         return (kmh / 1.609);
     }
 
+    @Contract(pure = true)
     public static double mph2kmh(final double mph) {
         return (mph * 1.609);
     }
 
+    @Contract(pure = true)
     public static double mph2knots(final double mph) {
         return (mph / 1.151);
     }
 
+    @Contract(pure = true)
     public static double knots2mph(final double knots) {
         return (knots * 1.151);
     }
 
+    @Contract(pure = true)
     public static double kmh2knots(final double kmh) {
         return (kmh / 1.852);
     }
 
+    @Contract(pure = true)
     public static double knots2kmh(final double knots) {
         return (knots * 1.852);
     }
 
+    @Contract(pure = true)
     public static double kmh2mps(final double kmh) {
         return (kmh / 3.6);
     }
 
+    @Contract(pure = true)
     public static double mps2kmh(final double mps) {
         return (mps * 3.6);
     }
 
+    @Contract(pure = true)
     public static double mph2mps(final double mph) {
         return (mph / 2.237);
     }
 
+    @Contract(pure = true)
     public static double mps2mph(final double mps) {
         return (mps * 2.237);
     }
 
+    @Contract(pure = true)
     public static double celsius2fahrenheit(final double celsius) {
         return ((celsius * 9 / 5) + 32);
     }
 
+    @Contract(pure = true)
     public static double celsius2kelvin(final double celsius) {
         return (celsius + 273.15);
     }
@@ -323,10 +362,12 @@ public final class Toolbox {
         return celsius2kelvin(fahrenheit2celsius(fahrenheit));
     }
 
+    @Contract(pure = true)
     public static double fahrenheit2celsius(final double fahrenheit) {
         return ((fahrenheit - 32) * 5 / 9);
     }
 
+    @Contract(pure = true)
     public static double kelvin2celsius(final double kelvin) {
         return (kelvin - 273.15);
     }
