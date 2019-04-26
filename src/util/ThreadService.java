@@ -23,11 +23,10 @@ public class ThreadService {
     public static void execute(Thread thread) {
         revalidate();
         threadPool.execute(thread);
-
     }
 
     public static void shutdownAndAwaitTermination() {
-        if (threadPool == null)
+        if (threadPool == null || threadPool.isShutdown() || threadPool.isTerminated())
             return;
 
         threadPool.shutdown();

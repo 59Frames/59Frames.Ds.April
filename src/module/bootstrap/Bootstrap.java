@@ -7,8 +7,11 @@ import environment.Environment;
 import module.Module;
 import module.sensorium.physical.Arc;
 import module.sensorium.sense.hearing.buffer.CircularByteBufferHolder;
+import module.speech.language.Dictionaries;
+import module.speech.language.SpellCorrector;
 import util.CommandUtil;
 import util.Debugger;
+import util.ThreadService;
 
 /**
  * {@link Bootstrap}
@@ -31,10 +34,10 @@ public final class Bootstrap extends Module {
     }
 
     private void registerCommandListener() {
-        final boolean hasNamedArguments = Environment.getBoolean("lando.named");
-        final boolean hasDefaultHelpCommand = Environment.getBoolean("lando.help");
-        final boolean hasDefaultExitCommand = Environment.getBoolean("lando.exit");
-        final boolean startsWithBuild = Environment.getBoolean("lando.swb");
+        final boolean hasNamedArguments = Environment.getBoolean("commands.named");
+        final boolean hasDefaultHelpCommand = Environment.getBoolean("commands.help");
+        final boolean hasDefaultExitCommand = Environment.getBoolean("commands.exit");
+        final boolean startsWithBuild = Environment.getBoolean("commands.swb");
 
         CommandUtil.registerListener(
                 CommandListener.builder()
@@ -51,6 +54,16 @@ public final class Bootstrap extends Module {
     }
 
     private void registerDefaultCommands() {
+        final var exitCommand = new Command("exit", arguments -> {
+            ThreadService.shutdownAndAwaitTermination();
+            CommandUtil.stop();
+
+            if (arguments.has("kill")) {
+                System.gc();
+                System.exit(-1);
+            }
+        }, new Constraint("kill", false));
+
         final var getCommand = new Command("get", arguments -> {
             final var type = arguments.get("type").getValue().toLowerCase();
             final var object = arguments.get("of").getValue().toLowerCase();
@@ -82,6 +95,7 @@ public final class Bootstrap extends Module {
         }, new Constraint("type", true), new Constraint("of", true));
 
         CommandUtil.add(getCommand);
+        CommandUtil.add(exitCommand);
 
         Debugger.info("Default Commands Registered");
     }
@@ -89,7 +103,7 @@ public final class Bootstrap extends Module {
     @Override
     protected void bootUp() {
         loadEnvironment();
-        loadArc();
+        //loadArc();
 
         registerCommandListener();
         registerBuffers();
@@ -108,8 +122,12 @@ public final class Bootstrap extends Module {
     }
 
     private void registerBuffers() {
-        CircularByteBufferHolder.registerCircularBuffer(Environment.getInteger("module.sensorium.sense.hearing.buffer.capacity"));
+        CircularByteBufferHolder.registerCircularBuffer(Environment.getInteger("sensorium.sense.hearing.buffer.capacity"));
 
         Debugger.info("Buffers Registered");
+    }
+
+    private void registerVocabulary() {
+        SpellCorrector.load(Dictionaries.valueOf(Environment.get("speech.default.dictionary")));
     }
 }

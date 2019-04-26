@@ -26,6 +26,15 @@ public class Dictionaries {
     private static Dictionary DE = null;
     private static Dictionary SHERLOCK = null;
 
+    public static synchronized Dictionary valueOf(@NotNull final String key) {
+        switch (key.toLowerCase()) {
+            case "de":
+                return german();
+            default:
+                return english();
+        }
+    }
+
     public static synchronized Dictionary english() {
         if (EN == null)
             EN = loadDictionary("en");

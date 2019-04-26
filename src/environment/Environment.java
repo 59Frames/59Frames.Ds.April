@@ -7,6 +7,7 @@ import util.Validator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -18,7 +19,8 @@ import java.util.Properties;
  */
 public class Environment {
 
-    private static final Properties PROPERTIES = new Properties();
+    private static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
+    private static final String[] PROPERTIES_FILE_NAMES = {"april", "bootstrap", "emotion", "knowledge", "motorium", "sensorium", "speech", "volition"};
 
     private static boolean loaded = false;
 
@@ -30,7 +32,12 @@ public class Environment {
         if (loaded) return;
 
         try {
-            PROPERTIES.load(new FileInputStream(FileUtil.load("config/app.properties")));
+            Properties tmpProps;
+            for (String key : PROPERTIES_FILE_NAMES) {
+                tmpProps = new Properties();
+                tmpProps.load(new FileInputStream(FileUtil.load(String.format("config/%s.properties", key))));
+                PROPERTIES.put(key.toLowerCase(), tmpProps);
+            }
             loaded = true;
         } catch (IOException e) {
             Debugger.exception(e);
@@ -38,18 +45,38 @@ public class Environment {
         }
     }
 
+    public static String get(@NotNull final String section, @NotNull final String key, @NotNull final String defaultValue) {
+        if (!PROPERTIES.containsKey(section.toLowerCase()))
+            return defaultValue;
+
+        return PROPERTIES.get(section.toLowerCase()).getProperty(key, defaultValue);
+    }
+
+    public static String get(@NotNull final String key, @NotNull final String defaultValue) {
+        String[] tokens = key.split("\\.");
+        if (tokens.length > 1) {
+            final String module = tokens[0];
+            if (PROPERTIES.containsKey(module)) {
+                return get(module, key, defaultValue);
+            }
+        }
+
+        final String[] result = new String[1];
+        PROPERTIES.forEach((propKey, prop) -> result[0] = prop.getProperty(key, defaultValue));
+        return result[0];
+    }
+
     public static String get(@NotNull final String key) {
-        return PROPERTIES.getProperty(key, "");
+        return get(key, "");
     }
 
     public static boolean getBoolean(@NotNull final String key) {
-        final String val = PROPERTIES.getProperty(key, "false");
-
+        final String val = get(key, "false");
         return Validator.isBool(val) && Boolean.parseBoolean(val);
     }
 
     public static double getDouble(@NotNull final String key) {
-        final String val = PROPERTIES.getProperty(key, "-1.0");
+        final String val = get(key, "-1.0");
 
         return Validator.isNumber(val)
                 ? Double.parseDouble(val)
@@ -57,7 +84,7 @@ public class Environment {
     }
 
     public static int getInteger(@NotNull final String key) {
-        final String val = PROPERTIES.getProperty(key, "-1");
+        final String val = get(key, "-1");
 
         return Validator.isNumber(val)
                 ? Integer.parseInt(val)
