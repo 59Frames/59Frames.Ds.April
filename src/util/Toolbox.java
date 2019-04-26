@@ -54,10 +54,25 @@ public final class Toolbox {
     public static double random(final double a, final double b) {
         final double max = max(a, b);
         final double min = min(a, b);
-        return random() * (max - min) + min;
+        return random(max) * (max - min) + min;
     }
 
-    public static void noiseSeed(final int seed) {
+    public static int randomInt() {
+        return RandomNumberGeneratorHolder.randomNumberGenerator.nextInt();
+    }
+
+    public static int randomInt(int bound) {
+        return RandomNumberGeneratorHolder.randomNumberGenerator.nextInt(bound);
+    }
+
+    public static int randomInt(int a, int b) {
+        final int min = min(a, b);
+        final int max = max(a, b);
+
+        return randomInt(max) * (max - min) + min;
+    }
+
+    public static synchronized void noiseSeed(final int seed) {
         generator = new Toolbox.PerlinNoiseGenerator(seed);
     }
 
@@ -133,6 +148,21 @@ public final class Toolbox {
     }
 
     @Contract(pure = true)
+    public static double max(final Number[] col) {
+        return max(CollectionUtil.asList(col));
+    }
+
+    @Contract(pure = true)
+    public static double max(final List<? extends Number> col) {
+        double result = Double.MIN_VALUE;
+        for (Number n : col) {
+            if (n.doubleValue() > result)
+                result = n.doubleValue();
+        }
+        return result;
+    }
+
+    @Contract(pure = true)
     public static long min(final long a, final long b) {
         return Math.min(a, b);
     }
@@ -155,6 +185,36 @@ public final class Toolbox {
     @Contract(pure = true)
     public static <T extends Comparable<T>> T min(@NotNull final T a, @NotNull final T b) {
         return (a.compareTo(b) <= 0) ? a : b;
+    }
+
+    @Contract(pure = true)
+    public static double min(final Number[] col) {
+        return min(CollectionUtil.asList(col));
+    }
+
+    @Contract(pure = true)
+    public static double min(final List<? extends Number> col) {
+        double result = Double.MAX_VALUE;
+        for (Number n : col) {
+            if (n.doubleValue() < result)
+                result = n.doubleValue();
+        }
+        return result;
+    }
+
+    @Contract(pure = true)
+    public static double sum(final List<? extends Number> col) {
+        double result = 0.0;
+
+        for (Number n : col)
+            result += n.doubleValue();
+
+        return result;
+    }
+
+    @Contract(pure = true)
+    public static double sum(final Number[] col) {
+        return sum(CollectionUtil.asList(col));
     }
 
     @Contract(pure = true)
@@ -409,6 +469,14 @@ public final class Toolbox {
 
     public static boolean bool(@NotNull final String val) {
         return Boolean.parseBoolean(val);
+    }
+
+    public static <T> T[] asArray(@NotNull final List<T> list) {
+        return CollectionUtil.asArray(list);
+    }
+
+    public static <T> List<T> asList(@NotNull final T[] arr) {
+        return CollectionUtil.asList(arr);
     }
 
     private static final class RandomString {

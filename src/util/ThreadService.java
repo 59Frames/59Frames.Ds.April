@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class ThreadService {
+public final class ThreadService {
     private static ExecutorService threadPool = null;
 
     public static ExecutorService getThreadPool() {
