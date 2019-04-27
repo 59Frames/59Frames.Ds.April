@@ -76,6 +76,6 @@ public class Dictionaries {
             e.printStackTrace();
         }
 
-        return new Dictionary(nWords);
+        return new Dictionary(dictionary, nWords);
     }
 }

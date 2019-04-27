@@ -1,12 +1,6 @@
 package module;
 
-import _59frames.ds.lando.model.Command;
-import org.jetbrains.annotations.NotNull;
-import util.CommandUtil;
 import util.Debugger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A Module is one small part of April.
@@ -21,16 +15,12 @@ import java.util.List;
 public abstract class Module extends AsyncBootSequence {
 
     private final String moduleName;
-    private final ArrayList<Command> interactableCommands;
 
     /**
      * Constructs a new instance of type Module
      */
     public Module(String moduleName) {
         this.moduleName = moduleName;
-        this.interactableCommands = new ArrayList<>();
-        this.onRegisteringCommands(interactableCommands);
-        CommandUtil.add(this.interactableCommands);
     }
 
     /**
@@ -77,13 +67,6 @@ public abstract class Module extends AsyncBootSequence {
     }
 
     /**
-     * @return - new list with interactable commands
-     */
-    public List<Command> getInteractables() {
-        return this.interactableCommands;
-    }
-
-    /**
      * gets called when the module gets disposed
      */
     protected void onDispose() {
@@ -104,11 +87,5 @@ public abstract class Module extends AsyncBootSequence {
     @Override
     protected void onHasBeenBootedUp() {
         Debugger.info(String.format("Booted Up: %s \n", this.moduleName));
-    }
-
-    /**
-     * gets called when the module gets booted to add interactable Commands
-     */
-    protected void onRegisteringCommands(@NotNull final List<Command> commands) {
     }
 }

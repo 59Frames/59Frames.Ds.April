@@ -1,5 +1,7 @@
 package module.speech.language;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,30 +13,41 @@ import java.util.Map;
  * @since 1.0
  */
 public class Dictionary {
-    private final Map<String, Integer> nWords = new HashMap<>();
+    private final String name;
+    private final Map<String, Integer> nWords = new HashMap<>(1);
 
-    Dictionary(Map<String, Integer> words) {
+    public Dictionary(@NotNull final String name, @NotNull final Map<String, Integer> words) {
+        this.name = name;
         this.nWords.putAll(words);
     }
 
-    int wordCount() {
+    public int wordCount() {
         return nWords.size();
     }
 
-    boolean containsWord(String input) {
-        input = input.trim();
-        return nWords.containsKey(input);
+    public boolean containsWord(@NotNull final String key) {
+        return nWords.containsKey(key.strip());
     }
 
-    Map<String, Integer> getMap() {
+    public int getOccurrences(@NotNull final String key) {
+        return containsWord(key)
+                ? nWords.get(key)
+                :0;
+    }
+
+    public Map<String, Integer> getMap() {
         return nWords;
     }
 
-    void add(String word) {
+    public void addOrUpdate(@NotNull final String word) {
         if (containsWord(word)) {
             this.nWords.put(word, this.nWords.get(word) + 1);
         } else {
             this.nWords.put(word, 1);
         }
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

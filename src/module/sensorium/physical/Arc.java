@@ -1,6 +1,5 @@
 package module.sensorium.physical;
 
-import _59frames.ds.lando.model.Command;
 import org.jetbrains.annotations.Contract;
 import oshi.SystemInfo;
 import oshi.hardware.*;
@@ -10,7 +9,6 @@ import oshi.software.os.OperatingSystem;
 import oshi.software.os.OperatingSystemVersion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public final class Arc {
 
@@ -110,11 +108,5 @@ public final class Arc {
     @Contract(pure = true)
     public static UsbDevice[] getUsbDevices() {
         return USB_DEVICES;
-    }
-
-    @Contract(pure = true)
-    public static List<Command> getInteractableCommands() {
-        
-        return new ArrayList<>();
     }
 }
