@@ -261,6 +261,16 @@ public final class Toolbox {
         return (sum / arr.length);
     }
 
+    @Contract(pure = true)
+    public static double average(@NotNull final float[] arr) {
+        double sum = 0.0;
+
+        for (float n : arr)
+            sum += n;
+
+        return (sum / arr.length);
+    }
+
     public static double average(@NotNull final Number[] list) {
         double sum = 0.0;
         if (list.length == 0)
@@ -292,16 +302,6 @@ public final class Toolbox {
         map.forEach((key, value) -> sum[0] += value.doubleValue());
 
         return (sum[0] / map.size());
-    }
-
-    @Contract(pure = true)
-    public static double average(@NotNull final float[] arr) {
-        double sum = 0.0;
-
-        for (float n : arr)
-            sum += n;
-
-        return (sum / arr.length);
     }
 
     public static double median(@NotNull List<? extends Number> values) {
