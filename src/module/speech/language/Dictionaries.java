@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static util.Debugger.exception;
 import static util.Debugger.warning;
 
 /**
@@ -24,7 +25,6 @@ import static util.Debugger.warning;
 public class Dictionaries {
     private static Dictionary EN = null;
     private static Dictionary DE = null;
-    private static Dictionary SHERLOCK = null;
 
     public static synchronized Dictionary valueOf(@NotNull final String key) {
         switch (key.toLowerCase()) {
@@ -72,8 +72,8 @@ public class Dictionaries {
             }
             reader.close();
         } catch (Exception e) {
-            warning(String.format("Unable to load dictionary {%s}", dictionary));
-            e.printStackTrace();
+            warning(String.format("Unable to load dictionary { %s }", dictionary));
+            exception(e);
         }
 
         return new Dictionary(dictionary, nWords);
