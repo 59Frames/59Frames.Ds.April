@@ -29,6 +29,10 @@ public final class Validator {
     private Validator() {
     }
 
+    public static boolean isNull(final Object o) {
+        return o == null;
+    }
+
     public static boolean isBool(@NotNull final String val) {
         return (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false"));
     }

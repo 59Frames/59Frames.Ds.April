@@ -45,24 +45,13 @@ public class Environment {
         }
     }
 
-    public static String get(@NotNull final String module, @NotNull final String key, @NotNull final String defaultValue) {
-        if (!PROPERTIES.containsKey(module.toLowerCase()))
-            return defaultValue;
-
-        return PROPERTIES.get(module.toLowerCase()).getProperty(key, defaultValue);
-    }
-
     public static String get(@NotNull final String key, @NotNull final String defaultValue) {
-        String[] tokens = key.split("\\.");
-        if (tokens.length > 1) {
-            final String module = tokens[0];
-            if (PROPERTIES.containsKey(module)) {
-                return get(module, key, defaultValue);
+        final String[] result = {defaultValue};
+        PROPERTIES.forEach((propKey, prop) -> {
+            if (prop.containsKey(key)) {
+                result[0] = prop.getProperty(key, defaultValue);
             }
-        }
-
-        final String[] result = new String[1];
-        PROPERTIES.forEach((propKey, prop) -> result[0] = prop.getProperty(key, defaultValue));
+        });
         return result[0];
     }
 
