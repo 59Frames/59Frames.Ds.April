@@ -47,13 +47,13 @@ public final class Bootstrap extends Module {
     }
 
     private void registerBuffers() {
-        CircularByteBufferHolder.registerCircularBuffer(Environment.getInteger("sensorium.sense.hearing.buffer.capacity"));
+        CircularByteBufferHolder.registerCircularBuffer(Environment.getInteger("sense.hearing.buffer.capacity"));
 
         Debugger.info("Buffers Registered");
     }
 
     private void registerVocabulary() {
-        SpellCorrector.load(Dictionaries.valueOf(Environment.get("speech.default.dictionary")));
+        SpellCorrector.load(Dictionaries.valueOf(Environment.get("default.dictionary")));
 
         Debugger.info(String.format("Vocabulary { %s } Loaded", SpellCorrector.getCurrentDictionary().getName()));
     }
