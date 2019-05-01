@@ -1,3 +1,6 @@
+import data.DataAnalysis;
+import util.CollectionUtil;
+
 import static util.Toolbox.*;
 
 public class April {
@@ -9,5 +12,7 @@ public class April {
         // TODO: 28/04/2019 knowledge
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
+
+        new DataAnalysis(CollectionUtil.createRandomDoubleArray(50, 1, 10, 1)).printAnalysis();
     }
 }

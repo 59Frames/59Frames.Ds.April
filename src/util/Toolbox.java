@@ -106,19 +106,21 @@ public final class Toolbox {
         return Math.round(n);
     }
 
-    public static double round(final double value, final int places) {
-        if (places < 0) throw new IllegalArgumentException();
+    public static double round(final double value, int fractionalPlaces) {
+        if (fractionalPlaces < 0)
+            fractionalPlaces = 0;
 
         BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(fractionalPlaces, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    public static float round(final float value, final int places) {
-        if (places < 0) throw new IllegalArgumentException();
+    public static float round(final float value, int fractionalPlaces) {
+        if (fractionalPlaces < 0)
+            fractionalPlaces = 0;
 
         BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(fractionalPlaces, RoundingMode.HALF_UP);
         return bd.floatValue();
     }
 

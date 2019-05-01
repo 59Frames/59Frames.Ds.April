@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static util.Toolbox.*;
+
 /**
  * {@link CollectionUtil}
  *
@@ -23,13 +25,19 @@ public final class CollectionUtil {
     private CollectionUtil(){
     }
 
-    public static double[] createRandomDoubleArray(final int size, final double lower_bound, final double upper_bound){
+    @NotNull
+    public static double[] createRandomDoubleArray(final int size, final double min, final double max){
+        return createRandomDoubleArray(size, min, max, 16);
+    }
+
+    @NotNull
+    public static double[] createRandomDoubleArray(final int size, final double min, final double max, final int fractionalPlaces){
         if(size < 1){
-            return null;
+            return new double[size];
         }
         double[] ar = new double[size];
         for(int i = 0; i < size; i++){
-            ar[i] = Toolbox.random(lower_bound,upper_bound);
+            ar[i] = round(random(min, max), fractionalPlaces);
         }
         return ar;
     }
@@ -40,7 +48,7 @@ public final class CollectionUtil {
         }
         int[] ar = new int[size];
         for(int i = 0; i < size; i++){
-            ar[i] = Toolbox.integer(Toolbox.random(lower_bound,upper_bound));
+            ar[i] = integer(random(lower_bound,upper_bound));
         }
         return ar;
     }
