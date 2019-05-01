@@ -1,3 +1,5 @@
+import data.DataAnalysis;
+
 import static util.Toolbox.*;
 
 public class April {
@@ -9,5 +11,13 @@ public class April {
         // TODO: 28/04/2019 knowledge
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
+
+        var arr = new double[25];
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = round(random(1, 50));
+        }
+
+        new DataAnalysis(arr).printAnalysis();
     }
 }

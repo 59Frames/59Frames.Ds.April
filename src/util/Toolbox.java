@@ -44,32 +44,32 @@ public final class Toolbox {
     }
 
     public static double random() {
-        return Toolbox.RandomNumberGeneratorHolder.randomNumberGenerator.nextDouble();
+        return ThreadLocalRandom.current().nextDouble();
     }
 
     public static double random(final double bound) {
-        return random() * bound;
+        return ThreadLocalRandom.current().nextDouble(bound);
     }
 
     public static double random(final double a, final double b) {
         final double max = max(a, b);
         final double min = min(a, b);
-        return random(max) * (max - min) + min;
+
+        return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
     public static int randomInt() {
-        return RandomNumberGeneratorHolder.randomNumberGenerator.nextInt();
+        return ThreadLocalRandom.current().nextInt();
     }
 
     public static int randomInt(int bound) {
-        return RandomNumberGeneratorHolder.randomNumberGenerator.nextInt(bound);
+        return ThreadLocalRandom.current().nextInt(bound);
     }
 
     public static int randomInt(int a, int b) {
         final int min = min(a, b);
         final int max = max(a, b);
-
-        return randomInt(max) * (max - min) + min;
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
     public static synchronized void noiseSeed(final int seed) {
@@ -1103,14 +1103,6 @@ public final class Toolbox {
                 for (j = 0; j < 3; j++)
                     g3[B + i][j] = g3[i][j];
             }
-        }
-    }
-
-    private static final class RandomNumberGeneratorHolder {
-        private static final Random randomNumberGenerator = ThreadLocalRandom.current();
-
-        @Contract(pure = true)
-        private RandomNumberGeneratorHolder() {
         }
     }
 }
