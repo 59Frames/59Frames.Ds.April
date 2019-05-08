@@ -1,5 +1,8 @@
 package data;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -11,6 +14,7 @@ import java.util.*;
  */
 public class DataAnalysis {
 
+    private final String exercise;
     private final double[] unsortedArray;
     private final double[] sortedArray;
     private final HashMap<Double, Integer> occurrences;
@@ -25,10 +29,15 @@ public class DataAnalysis {
     private final double upperWhisker;
     private final double lowerWhisker;
 
-    public DataAnalysis(double... arr) {
+    public DataAnalysis(final double... arr) {
+        this("", arr);
+    }
+
+    public DataAnalysis(@NotNull final String exercise, final double... arr) {
         if (arr.length < 2)
             throw new IllegalArgumentException("Array must contain more than 2 Values");
 
+        this.exercise = exercise;
         this.unsortedArray = arr.clone();
         this.sortedArray = arr.clone();
         Arrays.sort(sortedArray);
@@ -48,6 +57,12 @@ public class DataAnalysis {
     public void printAnalysis() {
 
         final String format = "%-24s%-15s\n";
+
+        if (!exercise.isBlank() || !exercise.isEmpty()) {
+            System.out.printf(format, "Aufgabe", exercise.toUpperCase());
+
+            System.out.println();
+        }
 
         System.out.printf(format, "Eingegebene Liste", Arrays.toString(unsortedArray));
         System.out.printf(format, "Sortierte Liste", Arrays.toString(sortedArray));
@@ -72,10 +87,23 @@ public class DataAnalysis {
         System.out.printf(format, "Oberer Whisker", upperWhisker);
         System.out.printf(format, "Spannweite", range);
         System.out.printf(format, "Standardabweichung", defaultDeviation);
+
+        System.out.printf(format, "Ausreisser", calcMisfits());
+    }
+
+    private ArrayList<Double> calcMisfits() {
+        final ArrayList<Double> list = new ArrayList<>();
+
+        for (double n : sortedArray) {
+            if (n < lowerWhisker || n > upperWhisker)
+                list.add(n);
+        }
+
+        return list;
     }
 
     private double calcLowerWhisker() {
-        double result = q3 - 1.5 * iqr;
+        double result = q1 - 1.5 * iqr;
 
         for (double v : sortedArray) {
             if (v > result)
@@ -96,14 +124,14 @@ public class DataAnalysis {
         return 0;
     }
 
+    // Standardabweichung
     private double getDefaultDeviation() {
-        double result = 0d;
+        double result = 0;
 
-        for (double val : sortedArray) {
+        for (double val : sortedArray)
             result += Math.pow(val - average, 2);
-        }
 
-        return Math.sqrt(result / sortedArray.length - 1);
+        return Math.sqrt(result / (sortedArray.length - 1));
     }
 
     private double getRange() {

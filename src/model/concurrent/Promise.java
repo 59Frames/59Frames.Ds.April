@@ -4,6 +4,7 @@ import model.interfaceable.Processable;
 import util.ThreadService;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 /**
  * {@link Promise}
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public class Promise<T> {
 
     private final Processable<T> processable;
@@ -36,6 +38,10 @@ public class Promise<T> {
             isDone = true;
             isProcessing = false;
         }));
+    }
+
+    public Promise(final Callable<T> c) {
+        this((Processable<T>) c::call);
     }
 
     public Promise<T> then(Then<T> aThen) {
