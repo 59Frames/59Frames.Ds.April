@@ -56,8 +56,21 @@ public final class FileUtil {
         return result;
     }
 
+    public static String removeExtension(@NotNull final File file) {
+        return removeExtension(file.getName());
+    }
+
+    public static String removeExtension(@NotNull final String filename) {
+        int pos = filename.lastIndexOf(".");
+
+        if (pos == -1)
+            return filename;
+
+        return filename.substring(0, pos);
+    }
+
     @NotNull
-    public static String getFileExtension(String fileName) {
+    public static String getExtension(@NotNull final String fileName) {
         final char ch;
         final int len;
         if (fileName == null || (len = fileName.length()) == 0 || (ch = fileName.charAt(len - 1)) == '/' || ch == '\\' || ch == '.')
@@ -70,7 +83,23 @@ public final class FileUtil {
     }
 
     @NotNull
-    public static String getFileExtension(@NotNull File file) {
-        return getFileExtension(file.getName());
+    public static String getExtension(@NotNull final File file) {
+        return getExtension(file.getName());
+    }
+
+    public static String readAllLines(@NotNull final File file) {
+        BufferedReader reader;
+        final StringBuilder builder = new StringBuilder();
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
     }
 }

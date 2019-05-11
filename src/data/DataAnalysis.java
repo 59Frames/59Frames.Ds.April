@@ -1,5 +1,7 @@
 package data;
 
+import util.Toolbox;
+
 import java.util.*;
 
 /**
@@ -125,12 +127,7 @@ public class DataAnalysis {
     }
 
     private double calcAverage() {
-        double sum = 0.0;
-
-        for (double n : sortedArray)
-            sum += n;
-
-        return (sum / sortedArray.length);
+        return Toolbox.average(sortedArray);
     }
 
     private Map.Entry<Double, Integer> getModusEntry() {

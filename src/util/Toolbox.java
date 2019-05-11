@@ -306,19 +306,6 @@ public final class Toolbox {
         return (sum[0] / map.size());
     }
 
-    public static double median(@NotNull List<? extends Number> values) {
-        values = values.parallelStream().sorted((Comparator<Number>) (o1, o2) -> {
-            Double d1 = (o1 == null) ? Double.POSITIVE_INFINITY : o1.doubleValue();
-            Double d2 = (o2 == null) ? Double.POSITIVE_INFINITY : o2.doubleValue();
-            return d1.compareTo(d2);
-        }).collect(Collectors.toList());
-
-        int mid = values.size() / 2;
-        return values.size() % 2 == 1
-                ? values.get(mid).doubleValue()
-                : (values.get(mid - 1).doubleValue() + values.get(mid).doubleValue()) / 2;
-    }
-
     @Contract(pure = true)
     public static double exp(final double d) {
         return StrictMath.exp(d);

@@ -1,12 +1,20 @@
 package module.sensorium.physical;
 
+import module.sensorium.physical.hardware.GPU;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 
 public final class Arc {
+    private static final SystemInformationGatherer GATHERER = new SystemInformationGatherer();
 
-//    private static final SystemInfo INFO = new SystemInfo();
+    private static final GPU[] GPUS = GATHERER.getGraphicCards();
+
+    public static GPU[] getGPUS() {
+        return GPUS;
+    }
+
+    //    private static final SystemInfo INFO = new SystemInfo();
 //    private static final HardwareAbstractionLayer HARDWARE = INFO.getHardware();
 //    private static final OperatingSystem OS = INFO.getOperatingSystem();
 //
