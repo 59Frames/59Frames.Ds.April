@@ -468,6 +468,14 @@ public final class Toolbox {
         return CollectionUtil.asList(arr);
     }
 
+    public static void sleep(final long timeMilliseconds) {
+        try {
+            Thread.sleep(timeMilliseconds);
+        } catch (InterruptedException e) {
+            Debugger.exception(e);
+        }
+    }
+
     private static final class RandomString {
 
         private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
