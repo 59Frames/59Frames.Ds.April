@@ -1,6 +1,8 @@
+import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
 import model.progress.ProgressManager;
+import util.CollectionUtil;
 
 import java.util.concurrent.Callable;
 
@@ -16,18 +18,10 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
+        System.out.println(Environment.get("name"));
+        System.out.println(Environment.get("version"));
+        System.out.println(Environment.get("author"));
 
-
-        long total = 512;
-
-        ProgressManager progressManager = new ProgressManager(total);
-        progressManager.start();
-        for (int i = 1; i <= total; i+=randomInt(1, 3)) {
-            try {
-                Thread.sleep(randomInt(10, 100));
-                progressManager.update(i);
-            } catch (InterruptedException ignore) {
-            }
-        }
+        System.out.println(Environment.get("util.thread.pool"));
     }
 }
