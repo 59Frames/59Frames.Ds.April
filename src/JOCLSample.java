@@ -1,4 +1,5 @@
 import model.parallel.Kernel;
+import module.sensorium.physical.Arc;
 import org.jocl.*;
 
 import static org.jocl.CL.*;
@@ -14,7 +15,7 @@ public class JOCLSample {
     /**
      * The source code of the OpenCL program to execute
      */
-    private static final Kernel kernel = Kernel.load("kernels/matrixMultiplication.cl");
+    private static final Kernel kernel = Kernel.load("matrixMultiplication.cl");
 
 
     /**
@@ -60,14 +61,7 @@ public class JOCLSample {
         contextProperties.addProperty(CL_CONTEXT_PLATFORM, platform);
 
         // Obtain the number of devices for the platform
-        int[] numDevicesArray = new int[1];
-        clGetDeviceIDs(platform, deviceType, 0, null, numDevicesArray);
-        int numDevices = numDevicesArray[0];
-
-        // Obtain a device ID
-        cl_device_id[] devices = new cl_device_id[numDevices];
-        clGetDeviceIDs(platform, deviceType, numDevices, devices, null);
-        cl_device_id device = devices[deviceIndex];
+        cl_device_id device = Arc.getGPUS()[0].getDevice();
 
         // Create a context for the selected device
         cl_context context = clCreateContext(

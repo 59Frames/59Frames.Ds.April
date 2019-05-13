@@ -18,9 +18,6 @@ class SystemInformationGatherer {
         final int platformIndex = 0;
         final long deviceType = CL_DEVICE_TYPE_ALL;
 
-        // Enable exceptions and subsequently omit error checks in this sample
-        CL.setExceptionsEnabled(true);
-
         // Obtain the number of platforms
         int[] numPlatformsArray = new int[1];
         clGetPlatformIDs(0, null, numPlatformsArray);
@@ -46,53 +43,10 @@ class SystemInformationGatherer {
 
         final GPU[] gpus = new GPU[allDevices.length];
 
-        // Find the first device that supports OpenCL 2.0
-
         for (int i = 0; i < gpus.length; i++) {
-            cl_device_id currentDevice = allDevices[i];
-            String deviceName = getDeviceInfoParameterString(currentDevice, CL_DEVICE_NAME);
-            String vendor = getDeviceInfoParameterString(currentDevice, CL_DEVICE_VENDOR);
-            String driverVersion = getDeviceInfoParameterString(currentDevice, CL_DRIVER_VERSION);
-            String profile = getDeviceInfoParameterString(currentDevice, CL_DEVICE_PROFILE);
-            String devicePlatform = getDeviceInfoParameterString(currentDevice, CL_DEVICE_PLATFORM);
-            float openCLVersion = getOpenCLVersion(currentDevice);
-            gpus[i] = new GPU(deviceName, vendor, driverVersion, profile, devicePlatform, openCLVersion);
+            gpus[i] = new GPU(allDevices[i]);
         }
 
         return gpus;
-    }
-
-
-    /**
-     * Returns the OpenCL version of the given device, as a float
-     * value
-     *
-     * @param device The device
-     * @return The OpenCL version
-     */
-    private float getOpenCLVersion(cl_device_id device) {
-        String deviceVersion = getDeviceInfoParameterString(device, CL_DEVICE_VERSION);
-        String versionString = deviceVersion.substring(7, 10);
-        return Float.parseFloat(versionString);
-    }
-
-    /**
-     * Returns the value of the device info parameter with the given name
-     *
-     * @param device    The device
-     * @param paramName The parameter name
-     * @return The value
-     */
-    private String getDeviceInfoParameterString(cl_device_id device, int paramName) {
-        // Obtain the length of the string that will be queried
-        long[] size = new long[1];
-        clGetDeviceInfo(device, paramName, 0, null, size);
-
-        // Create a buffer of the appropriate size and fill it with the info
-        byte[] buffer = new byte[(int) size[0]];
-        clGetDeviceInfo(device, paramName, buffer.length, Pointer.to(buffer), null);
-
-        // Create a string from the buffer (excluding the trailing \0 byte)
-        return new String(buffer, 0, buffer.length - 1);
     }
 }

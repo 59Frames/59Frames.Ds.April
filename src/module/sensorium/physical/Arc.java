@@ -6,9 +6,17 @@ import org.jetbrains.annotations.Contract;
 import java.util.ArrayList;
 
 public final class Arc {
-    private static final SystemInformationGatherer GATHERER = new SystemInformationGatherer();
 
-    private static final GPU[] GPUS = GATHERER.getGraphicCards();
+    private static GPU[] GPUS = null;
+
+    static {
+        load();
+    }
+
+    public static void load() {
+        final SystemInformationGatherer GATHERER = new SystemInformationGatherer();
+        GPUS = GATHERER.getGraphicCards();
+    }
 
     public static GPU[] getGPUS() {
         return GPUS;

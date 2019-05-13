@@ -1,5 +1,7 @@
 package model.progress;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -13,11 +15,17 @@ import java.util.concurrent.TimeUnit;
 public class ProgressManager {
 
     private final long total;
+    private final String processName;
 
     private long startTime;
     private long current;
 
     public ProgressManager(final long total) {
+        this("", total);
+    }
+
+    public ProgressManager(@NotNull final String processName, final long total) {
+        this.processName = processName;
         this.total = total;
         this.current = 0;
         this.startTime = System.currentTimeMillis();
@@ -61,6 +69,7 @@ public class ProgressManager {
         int percent = getProgressPercentage();
 
         return '\r' +
+                this.processName +
                 String.join("", Collections.nCopies(percent == 0 ? 2 : 2 - (int) (Math.log10(percent)), " ")) +
                 String.format(" %d%% [", percent) +
                 String.join("", Collections.nCopies(percent, "=")) +

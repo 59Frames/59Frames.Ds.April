@@ -58,36 +58,36 @@ public class DataAnalysis {
         final String format = "%-24s%-15s\n";
 
         if (!exercise.isBlank() || !exercise.isEmpty()) {
-            System.out.printf(format, "Aufgabe", exercise.toUpperCase());
+            System.out.printf(format, "Exercise", exercise.toUpperCase());
 
             System.out.println();
         }
 
-        System.out.printf(format, "Eingegebene Liste", Arrays.toString(unsortedArray));
-        System.out.printf(format, "Sortierte Liste", Arrays.toString(sortedArray));
+        System.out.printf(format, "Input", Arrays.toString(unsortedArray));
+        System.out.printf(format, "Sorted", Arrays.toString(sortedArray));
 
         System.out.println();
 
-        System.out.printf(format, "Anzahl Daten", sortedArray.length);
-        System.out.printf(format, "Tiefster Wert", sortedArray[0]);
-        System.out.printf(format, "Höchster Wert", sortedArray[sortedArray.length - 1]);
+        System.out.printf(format, "N", sortedArray.length);
+        System.out.printf(format, "Lowest value", sortedArray[0]);
+        System.out.printf(format, "Highest value", sortedArray[sortedArray.length - 1]);
 
         System.out.println();
 
         System.out.printf(format, "Median", median);
-        System.out.printf(format, "Modus [Wert]", modusEntry.getKey());
-        System.out.printf(format, "Modus [Häufigkeit]", modusEntry.getValue());
-        System.out.printf(format, "Mittelwert", average);
+        System.out.printf(format, "Modus [Value]", modusEntry.getKey());
+        System.out.printf(format, "Modus [Occurrence]", modusEntry.getValue());
+        System.out.printf(format, "Average", average);
         System.out.printf(format, "Q1", q1);
         System.out.printf(format, "Q2", median);
         System.out.printf(format, "Q3", q3);
         System.out.printf(format, "IQR", iqr);
-        System.out.printf(format, "Unterer Whisker", lowerWhisker);
-        System.out.printf(format, "Oberer Whisker", upperWhisker);
-        System.out.printf(format, "Spannweite", range);
-        System.out.printf(format, "Standardabweichung", defaultDeviation);
+        System.out.printf(format, "Lower whisker", lowerWhisker);
+        System.out.printf(format, "Upper Whisker", upperWhisker);
+        System.out.printf(format, "Range", range);
+        System.out.printf(format, "Default deviation", defaultDeviation);
 
-        System.out.printf(format, "Ausreisser", calcMisfits());
+        System.out.printf(format, "Misfits", calcMisfits());
     }
 
     private ArrayList<Double> calcMisfits() {
