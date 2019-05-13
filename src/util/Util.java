@@ -3,22 +3,20 @@ package util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Documented;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
- * {@link Toolbox}
+ * {@link Util}
  *
  * @author Daniel Seifert
  * @version 1.0
  * @since 1.0
  */
 @SuppressWarnings("unused")
-public final class Toolbox {
+public final class Util {
 
     public static final int ZERO = 0;
     public static final int ONE = 1;
@@ -32,10 +30,10 @@ public final class Toolbox {
     public static final double ROOT_5 = 2.23606797749978969640917366873127623D; // square root of 5
     public static final double GOLDEN_RATIO = 1.61803398874989484820458683436563811D; // Golden Ration
 
-    private static Toolbox.PerlinNoiseGenerator generator = new Toolbox.PerlinNoiseGenerator();
+    private static Util.PerlinNoiseGenerator generator = new Util.PerlinNoiseGenerator();
 
     @Contract(pure = true)
-    private Toolbox() {
+    private Util() {
     }
 
     @Contract(pure = true)
@@ -73,7 +71,7 @@ public final class Toolbox {
     }
 
     public static synchronized void noiseSeed(final int seed) {
-        generator = new Toolbox.PerlinNoiseGenerator(seed);
+        generator = new Util.PerlinNoiseGenerator(seed);
     }
 
     public static double improvedNoise(final double x, final double y, final double z) {
@@ -347,6 +345,16 @@ public final class Toolbox {
         return volume(width, length, height);
     }
 
+    public static double median(List<Double> vals) {
+        Collections.sort(vals);
+        int mid = vals.size() / 2;
+        if (vals.size() % 2 == 1) {
+            return vals.get(mid);
+        } else {
+            return (vals.get(mid - 1) + vals.get(mid)) / 2;
+        }
+    }
+
     @Contract(pure = true)
     public static double kmh2mph(final double kmh) {
         return (kmh / 1.609);
@@ -432,12 +440,12 @@ public final class Toolbox {
 
     @NotNull
     public static String randomString() {
-        return Toolbox.RandomString.randomString();
+        return Util.RandomString.randomString();
     }
 
     @NotNull
     public static String randomString(final int length) {
-        return Toolbox.RandomString.randomString(length);
+        return Util.RandomString.randomString(length);
     }
 
     public static <T> T cast(final Object o, Class<T> to) {
@@ -493,7 +501,7 @@ public final class Toolbox {
         }
 
         /**
-         * Constructs a new instance of type {@link util.Toolbox.RandomString}
+         * Constructs a new instance of type {@link Util.RandomString}
          *
          * @param length - the length of the desired string
          */
@@ -505,7 +513,7 @@ public final class Toolbox {
         }
 
         /**
-         * Constructs a new instance of type {@link util.Toolbox.RandomString}
+         * Constructs a new instance of type {@link Util.RandomString}
          *
          * @param length  - the length of the desired string
          * @param random  - the random to pick chars
@@ -532,7 +540,7 @@ public final class Toolbox {
 
         @NotNull
         private static String randomString() {
-            return new Toolbox.RandomString().nextString();
+            return new Util.RandomString().nextString();
         }
 
         /**
@@ -541,7 +549,7 @@ public final class Toolbox {
          */
         @NotNull
         private static String randomString(int length) {
-            return new Toolbox.RandomString(length).nextString();
+            return new Util.RandomString(length).nextString();
         }
     }
 

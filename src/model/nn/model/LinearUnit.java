@@ -1,19 +1,18 @@
-package model.nn.unit;
+package model.nn.model;
 
 
-import model.nn.Nonlinearity;
+public class LinearUnit implements Nonlinearity {
 
-public class SineUnit implements Nonlinearity {
 
     private static final long serialVersionUID = 1L;
 
     @Override
     public double forward(double x) {
-        return Math.sin(x);
+        return x;
     }
 
     @Override
     public double backward(double x) {
-        return Math.cos(x);
+        return 1.0;
     }
 }

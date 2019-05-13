@@ -1,7 +1,5 @@
-package model.nn.unit;
+package model.nn.model;
 
-
-import model.nn.Nonlinearity;
 
 public class SigmoidUnit implements Nonlinearity {
 

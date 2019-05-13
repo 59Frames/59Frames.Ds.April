@@ -1,6 +1,5 @@
 package module.sensorium.sense.hearing;
 
-import module.sensorium.sense.hearing.buffer.CircularBuffer;
 import module.sensorium.sense.hearing.buffer.CircularByteBuffer;
 import module.sensorium.sense.hearing.buffer.CircularByteBufferHolder;
 import org.jetbrains.annotations.Contract;
@@ -12,7 +11,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 import java.util.Objects;
 
-import static util.Toolbox.cast;
+import static util.Util.cast;
 
 /**
  * {@link Recorder}

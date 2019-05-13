@@ -1,14 +1,8 @@
-package model.nn;
+package model.nn.model;
 
 import java.io.Serializable;
 
-/**
- * {@link Nonlinearity}
- *
- * @author Daniel Seifert
- * @version 1.0
- * @since 1.0
- */
+
 public interface Nonlinearity extends Serializable {
     double forward(double x);
 
