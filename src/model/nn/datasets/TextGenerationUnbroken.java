@@ -7,9 +7,9 @@ import model.nn.datastructs.DataStep;
 import model.nn.loss.LossSoftmax;
 import model.nn.matrix.Matrix;
 import model.nn.model.LinearUnit;
-import model.nn.model.Model;
+import model.nn.model.NNModel;
 import model.nn.model.Nonlinearity;
-import model.nn.util.Util;
+import util.NetworkUtil;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -31,7 +31,7 @@ public class TextGenerationUnbroken extends DataSet {
     private static Map<Integer, String> indexToChar = new HashMap<>();
     private static int dimension;
 
-    public static String generateText(Model model, int steps, boolean argmax, double temperature, Random rng) throws Exception {
+    public static String generateText(NNModel model, int steps, boolean argmax, double temperature, Random rng) throws Exception {
         Matrix start = new Matrix(dimension);
         model.resetState();
         Graph g = new Graph(false);
@@ -51,7 +51,7 @@ public class TextGenerationUnbroken extends DataSet {
                     }
                 }
             } else {
-                indxChosen = Util.pickIndexFromRandomVector(probs, rng);
+                indxChosen = NetworkUtil.pickIndexFromRandomVector(probs, rng);
             }
             String ch = indexToChar.get(indxChosen);
             result.append(ch);
@@ -136,7 +136,7 @@ public class TextGenerationUnbroken extends DataSet {
     }
 
     @Override
-    public void DisplayReport(Model model, Random rng) throws Exception {
+    public void DisplayReport(NNModel model, Random rng) throws Exception {
         System.out.println("========================================");
         System.out.println("REPORT:");
         if (reportPerplexity) {

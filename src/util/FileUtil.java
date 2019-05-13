@@ -33,26 +33,37 @@ public final class FileUtil {
         return Paths.get(path).isAbsolute();
     }
 
-    public static void serialize(@NotNull final String path, @NotNull final Serializable obj) throws Exception {
-        final FileOutputStream fileOut = new FileOutputStream(load(path));
-        final ObjectOutputStream out = new ObjectOutputStream(fileOut);
-        out.writeObject(obj);
-        out.flush();
-        out.close();
-        fileOut.flush();
-        fileOut.close();
+    public static void serialize(@NotNull final String path, @NotNull final Serializable obj) {
+        File file = load(path);
+        file.setWritable(true);
+        try {
+            final FileOutputStream fileOut = new FileOutputStream(path);
+            final ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(obj);
+            out.flush();
+            out.close();
+            fileOut.flush();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static <T> T deserialize(@NotNull final String path, Class<T> tClass) throws Exception {
+    public static <T> T deserialize(@NotNull final String path, Class<T> tClass) {
         return tClass.cast(deserialize(path));
     }
 
-    public static Object deserialize(@NotNull final String path) throws Exception {
-        final FileInputStream fileIn = new FileInputStream(load(path));
-        final ObjectInputStream in = new ObjectInputStream(fileIn);
-        Object result = in.readObject();
-        in.close();
-        fileIn.close();
+    public static Object deserialize(@NotNull final String path) {
+        Object result = new Object();
+        try {
+            final FileInputStream fileIn = new FileInputStream(load(path));
+            final ObjectInputStream in = new ObjectInputStream(fileIn);
+            result = in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException | ClassNotFoundException e) {
+            Debugger.exception(e);
+        }
         return result;
     }
 

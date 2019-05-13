@@ -5,7 +5,7 @@ import model.nn.datastructs.DataSet;
 import model.nn.datastructs.DataStep;
 import model.nn.loss.LossMultiDimensionalBinary;
 import model.nn.loss.LossSumOfSquares;
-import model.nn.model.Model;
+import model.nn.model.NNModel;
 import model.nn.model.Nonlinearity;
 import model.nn.model.SigmoidUnit;
 
@@ -107,7 +107,7 @@ public class EmbeddedReberGrammar extends DataSet {
     }
 
     @Override
-    public void DisplayReport(Model model, Random rng) throws Exception {
+    public void DisplayReport(NNModel model, Random rng) throws Exception {
         // TODO Auto-generated method stub
 
     }

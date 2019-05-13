@@ -1,7 +1,7 @@
 package model.nn.datastructs;
 
 import model.nn.loss.Loss;
-import model.nn.model.Model;
+import model.nn.model.NNModel;
 import model.nn.model.Nonlinearity;
 
 import java.io.Serializable;
@@ -17,7 +17,7 @@ public abstract class DataSet implements Serializable {
     public List<DataSequence> validation;
     public List<DataSequence> testing;
 
-    public abstract void DisplayReport(Model model, Random rng) throws Exception;
+    public abstract void DisplayReport(NNModel model, Random rng) throws Exception;
 
     public abstract Nonlinearity getModelOutputUnitToUse();
 }

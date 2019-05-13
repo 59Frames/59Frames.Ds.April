@@ -7,9 +7,9 @@ import model.nn.datastructs.DataStep;
 import model.nn.loss.LossSoftmax;
 import model.nn.matrix.Matrix;
 import model.nn.model.LinearUnit;
-import model.nn.model.Model;
+import model.nn.model.NNModel;
 import model.nn.model.Nonlinearity;
-import model.nn.util.Util;
+import util.NetworkUtil;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -35,7 +35,7 @@ public class TextGeneration extends DataSet {
     private static final int START_END_TOKEN_INDEX = 0;
     private static Set<String> words = new HashSet<>();
 
-    public static List<String> generateText(Model model, int steps, boolean argmax, double temperature, Random rng) throws Exception {
+    public static List<String> generateText(NNModel model, int steps, boolean argmax, double temperature, Random rng) throws Exception {
         List<String> lines = new ArrayList<>();
         Matrix start = new Matrix(dimension);
         start.w[START_END_TOKEN_INDEX] = 1.0;
@@ -83,7 +83,7 @@ public class TextGeneration extends DataSet {
                     }
                 }
             } else {
-                indxChosen = Util.pickIndexFromRandomVector(probs, rng);
+                indxChosen = NetworkUtil.pickIndexFromRandomVector(probs, rng);
             }
             if (indxChosen == START_END_TOKEN_INDEX) {
                 lines.add(line);
@@ -251,7 +251,7 @@ public class TextGeneration extends DataSet {
     }
 
     @Override
-    public void DisplayReport(Model model, Random rng) throws Exception {
+    public void DisplayReport(NNModel model, Random rng) throws Exception {
         System.out.println("========================================");
         System.out.println("REPORT:");
         if (reportPerplexity) {

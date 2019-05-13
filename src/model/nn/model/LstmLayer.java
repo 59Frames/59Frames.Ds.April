@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class LstmLayer implements Model {
+public class LstmLayer implements NNModel {
 
     private static final long serialVersionUID = 1L;
     int inputDimension;

@@ -6,8 +6,8 @@ import model.nn.datastructs.DataSet;
 import model.nn.datastructs.DataStep;
 import model.nn.loss.Loss;
 import model.nn.matrix.Matrix;
-import model.nn.model.Model;
-import model.nn.util.FileIO;
+import model.nn.model.NNModel;
+import util.FileUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,16 @@ public class Trainer {
     public static double gradientClipValue = 5;
     public static double regularization = 0.000001; // L2 regularization strength
 
-    public static double train(int trainingEpochs, double learningRate, Model model, DataSet data, int reportEveryNthEpoch, Random rng) throws Exception {
+    public static double train(int trainingEpochs, double learningRate, NNModel model, DataSet data, int reportEveryNthEpoch, Random rng) throws Exception {
         return train(trainingEpochs, learningRate, model, data, reportEveryNthEpoch, false, false, null, rng);
     }
 
-    public static double train(int trainingEpochs, double learningRate, Model model, DataSet data, int reportEveryNthEpoch, boolean initFromSaved, boolean overwriteSaved, String savePath, Random rng) throws Exception {
+    public static double train(int trainingEpochs, double learningRate, NNModel model, DataSet data, int reportEveryNthEpoch, boolean initFromSaved, boolean overwriteSaved, String savePath, Random rng) throws Exception {
         System.out.println("--------------------------------------------------------------");
         if (initFromSaved) {
             System.out.println("initializing model from saved state...");
             try {
-                model = (Model) FileIO.deserialize(savePath);
+                model = FileUtil.deserialize(savePath, NNModel.class);
                 data.DisplayReport(model, rng);
             } catch (Exception e) {
                 System.out.println("Oops. Unable to load from a saved state.");
@@ -71,7 +71,7 @@ public class Trainer {
             }
 
             if (overwriteSaved) {
-                FileIO.serialize(savePath, model);
+                FileUtil.serialize(savePath, model);
             }
 
             if (reportedLossTrain == 0 && reportedLossValidation == 0) {
@@ -83,7 +83,7 @@ public class Trainer {
         return result;
     }
 
-    public static double pass(double learningRate, Model model, List<DataSequence> sequences, boolean applyTraining, Loss lossTraining, Loss lossReporting) throws Exception {
+    public static double pass(double learningRate, NNModel model, List<DataSequence> sequences, boolean applyTraining, Loss lossTraining, Loss lossReporting) throws Exception {
 
         double numerLoss = 0;
         double denomLoss = 0;
@@ -115,7 +115,7 @@ public class Trainer {
         return numerLoss / denomLoss;
     }
 
-    public static void updateModelParams(Model model, double stepSize) throws Exception {
+    public static void updateModelParams(NNModel model, double stepSize) throws Exception {
         for (Matrix m : model.getParameters()) {
             for (int i = 0; i < m.w.length; i++) {
 

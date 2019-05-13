@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class FeedForwardLayer implements Model {
+public class FeedForwardLayer implements NNModel {
 
     private static final long serialVersionUID = 1L;
-    Matrix W;
-    Matrix b;
-    Nonlinearity f;
+    private Matrix W;
+    private Matrix b;
+    private Nonlinearity f;
 
     public FeedForwardLayer(int inputDimension, int outputDimension, Nonlinearity f, double initParamsStdDev, Random rng) {
         W = Matrix.rand(outputDimension, inputDimension, initParamsStdDev, rng);
@@ -23,8 +23,7 @@ public class FeedForwardLayer implements Model {
     @Override
     public Matrix forward(Matrix input, Graph g) throws Exception {
         Matrix sum = g.add(g.mul(W, input), b);
-        Matrix out = g.nonlin(f, sum);
-        return out;
+        return g.nonlin(f, sum);
     }
 
     @Override

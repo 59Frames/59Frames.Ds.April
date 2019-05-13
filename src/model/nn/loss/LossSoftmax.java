@@ -4,7 +4,7 @@ import model.nn.autodiff.Graph;
 import model.nn.datastructs.DataSequence;
 import model.nn.datastructs.DataStep;
 import model.nn.matrix.Matrix;
-import model.nn.model.Model;
+import model.nn.model.NNModel;
 import util.Util;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class LossSoftmax implements Loss {
         return -Math.log(probs.w[targetIndex]);
     }
 
-    public static double calculateMedianPerplexity(Model model, List<DataSequence> sequences) throws Exception {
+    public static double calculateMedianPerplexity(NNModel model, List<DataSequence> sequences) throws Exception {
         double temperature = 1.0;
         List<Double> ppls = new ArrayList<>();
         for (DataSequence seq : sequences) {

@@ -1,4 +1,4 @@
-package model.nn.util;
+package util;
 
 import model.nn.matrix.Matrix;
 
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Util {
+public class NetworkUtil {
 
     public static int pickIndexFromRandomVector(Matrix probs, Random r) throws Exception {
         double mass = 1.0;

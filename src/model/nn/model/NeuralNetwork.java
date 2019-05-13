@@ -6,19 +6,19 @@ import model.nn.matrix.Matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NeuralNetwork implements Model {
+public class NeuralNetwork implements NNModel {
 
     private static final long serialVersionUID = 1L;
-    List<Model> layers;
+    List<NNModel> layers;
 
-    public NeuralNetwork(List<Model> layers) {
+    public NeuralNetwork(List<NNModel> layers) {
         this.layers = layers;
     }
 
     @Override
     public Matrix forward(Matrix input, Graph g) throws Exception {
         Matrix prev = input;
-        for (Model layer : layers) {
+        for (NNModel layer : layers) {
             prev = layer.forward(prev, g);
         }
         return prev;
@@ -26,7 +26,7 @@ public class NeuralNetwork implements Model {
 
     @Override
     public void resetState() {
-        for (Model layer : layers) {
+        for (NNModel layer : layers) {
             layer.resetState();
         }
     }
@@ -34,7 +34,7 @@ public class NeuralNetwork implements Model {
     @Override
     public List<Matrix> getParameters() {
         List<Matrix> result = new ArrayList<>();
-        for (Model layer : layers) {
+        for (NNModel layer : layers) {
             result.addAll(layer.getParameters());
         }
         return result;

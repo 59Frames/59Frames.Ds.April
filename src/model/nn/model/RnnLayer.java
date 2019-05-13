@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RnnLayer implements Model {
+public class RnnLayer implements NNModel {
 
     private static final long serialVersionUID = 1L;
     int inputDimension;

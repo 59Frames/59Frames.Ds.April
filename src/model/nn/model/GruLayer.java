@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GruLayer implements Model {
+public class GruLayer implements NNModel {
 
     private static final long serialVersionUID = 1L;
-    int inputDimension;
-    int outputDimension;
+    private int inputDimension;
+    private int outputDimension;
 
-    Matrix IHmix, HHmix, Bmix;
-    Matrix IHnew, HHnew, Bnew;
-    Matrix IHreset, HHreset, Breset;
+    private Matrix IHmix, HHmix, Bmix;
+    private Matrix IHnew, HHnew, Bnew;
+    private Matrix IHreset, HHreset, Breset;
 
-    Matrix context;
+    private Matrix context;
 
-    Nonlinearity fMix = new SigmoidUnit();
-    Nonlinearity fReset = new SigmoidUnit();
-    Nonlinearity fNew = new TanhUnit();
+    private Nonlinearity fMix = new SigmoidUnit();
+    private Nonlinearity fReset = new SigmoidUnit();
+    private Nonlinearity fNew = new TanhUnit();
 
     public GruLayer(int inputDimension, int outputDimension, double initParamsStdDev, Random rng) {
         this.inputDimension = inputDimension;

@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class LinearLayer implements Model {
+public class LinearLayer implements NNModel {
 
     private static final long serialVersionUID = 1L;
-    Matrix W;
+
+    private Matrix W;
     //no biases
 
     public LinearLayer(int inputDimension, int outputDimension, double initParamsStdDev, Random rng) {
@@ -20,8 +21,7 @@ public class LinearLayer implements Model {
 
     @Override
     public Matrix forward(Matrix input, Graph g) throws Exception {
-        Matrix out = g.mul(W, input);
-        return out;
+        return g.mul(W, input);
     }
 
     @Override
