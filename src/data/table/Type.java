@@ -1,4 +1,4 @@
-package data.annotation;
+package data.table;
 
 /**
  * Type
@@ -8,6 +8,7 @@ package data.annotation;
  * @since 1.0.0
  */
 public enum Type {
+    UNDEFINED,
     CHAR,
     VARCHAR,
     TINYTEXT,
@@ -31,5 +32,15 @@ public enum Type {
     TIME,
     ENUM,
     SET,
-    BOOLEAN
+    BOOLEAN;
+
+    private int length = -1;
+
+    public int getLength() {
+        return this.length;
+    }
+
+    public void setLength(final int length) {
+        this.length = length;
+    }
 }

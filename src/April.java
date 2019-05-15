@@ -1,12 +1,9 @@
 import data.Database;
-import data.annotation.Table;
-import data.table.Person;
+import data.table.Blueprint;
+import model.database.Book;
+import model.database.Person;
 import org.json.JSONObject;
 import util.Debugger;
-
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -20,18 +17,12 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        Class<Person> personClass = Person.class;
-        Annotation a = personClass.getAnnotation(Table.class);
-        System.out.println(a);
+        String sql = Blueprint.of(Book.class).toString();
 
-        Field[] fields = personClass.getDeclaredFields();
+        System.out.println(sql);
 
-        for (Field f : fields) {
-            for (Annotation av : f.getAnnotations()) {
-                System.out.println(av);
-            }
-            System.out.println(f.getName());
-            System.out.println(f.getType());
-        }
+        Database.getInstance().runRawUpdateAsync(sql)
+                .then(System.out::println)
+                .catchException(Debugger::exception);
     }
 }
