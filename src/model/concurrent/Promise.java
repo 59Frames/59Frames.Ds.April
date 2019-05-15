@@ -25,7 +25,7 @@ public class Promise<T> {
 
     public Promise(final Processable<T> p) {
         this.processable = p;
-        ThreadService.execute(new Thread(() -> {
+        new Thread(() -> {
             isDone = false;
             isProcessing = true;
             try {
@@ -37,7 +37,7 @@ public class Promise<T> {
             notifyListeners();
             isDone = true;
             isProcessing = false;
-        }));
+        }).start();
     }
 
     public Promise(final Callable<T> c) {
