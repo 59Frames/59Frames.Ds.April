@@ -1,6 +1,12 @@
 import data.Database;
+import data.annotation.Table;
+import data.table.Person;
 import org.json.JSONObject;
 import util.Debugger;
+
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -14,21 +20,18 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        final String tableFormat = "| %-4s | %-15s | %-15s |%n";
+        Class<Person> personClass = Person.class;
+        Annotation a = personClass.getAnnotation(Table.class);
+        System.out.println(a);
 
-        Database database = Database.getInstance();
+        Field[] fields = personClass.getDeclaredFields();
 
-        database.runRawQueryAsync("SELECT * FROM april.people").then(arr -> {
-
-            System.out.format("+------+-----------------+-----------------+%n");
-            System.out.printf(tableFormat, "ID", "Firstname", "Lastname");
-            System.out.format("+------+-----------------+-----------------+%n");
-
-            arr.forEach(obj -> {
-                JSONObject object = (JSONObject) obj;
-                System.out.printf(tableFormat, object.getInt("id"), object.getString("firstname"), object.getString("lastname"));
-            });
-            System.out.format("+------+-----------------+-----------------+%n");
-        }).catchException(Debugger::exception);
+        for (Field f : fields) {
+            for (Annotation av : f.getAnnotations()) {
+                System.out.println(av);
+            }
+            System.out.println(f.getName());
+            System.out.println(f.getType());
+        }
     }
 }

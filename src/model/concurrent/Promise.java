@@ -1,7 +1,6 @@
 package model.concurrent;
 
 import model.interfaceable.Processable;
-import util.ThreadService;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -19,7 +18,7 @@ public class Promise<T> {
     private final Processable<T> processable;
     private Result<T> result = null;
     private ArrayList<Then<T>> thens = null;
-    private ArrayList<Catcher> catchers = null;
+    private ArrayList<Catch> catchers = null;
     private boolean isDone = false;
     private boolean isProcessing;
 
@@ -54,7 +53,7 @@ public class Promise<T> {
         return this;
     }
 
-    public void catchException(Catcher catcher) {
+    public void catchException(Catch catcher) {
         if (this.catchers == null) this.catchers = new ArrayList<>();
 
         this.catchers.add(catcher);

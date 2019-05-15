@@ -24,7 +24,7 @@ public class Database {
     private static final String RAW_HOST = Environment.get("db.host");
     private static final int PORT = Environment.getInteger("db.port");
     private static final String DATABASE = Environment.get("db.database");
-    private static final String HOST = forgeHost();
+    private static final String HOST = String.format("jdbc:mysql://%s:%d/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", RAW_HOST, PORT, DATABASE);
     private static final String USERNAME = Kryptonite.decrypt(Environment.get("db.username"), DB_ENCRYPTION_LEVEL);
     private static final String PASSWORD = Kryptonite.decrypt(Environment.get("db.password"), DB_ENCRYPTION_LEVEL);
 
@@ -34,10 +34,6 @@ public class Database {
         if (instance == null)
             instance = new Database();
         return instance;
-    }
-
-    private static String forgeHost() {
-        return String.format("jdbc:mysql://%s:%d/%s?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", Database.RAW_HOST, Database.PORT, Database.DATABASE);
     }
 
     private Database() {
