@@ -1,5 +1,8 @@
 package data;
 
+import data.annotation.Table;
+import data.exception.MissingAnnotationException;
+import data.table.JSONObjectMappable;
 import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
@@ -9,7 +12,9 @@ import org.json.JSONObject;
 import util.Debugger;
 import util.Kryptonite;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * {@link Database}
@@ -42,6 +47,32 @@ public class Database {
         } catch (ClassNotFoundException e) {
             Debugger.exception(e);
         }
+    }
+
+    public <T extends JSONObjectMappable> Promise<ArrayList<T>> getAllAsync(Class<T> tClass) {
+        return new Promise<>((Processable<ArrayList<T>>) () -> {
+            ArrayList<T> list = new ArrayList<>();
+
+            Table tableAnnotation = tClass.getDeclaredAnnotation(Table.class);
+
+            if (tableAnnotation == null)
+                throw new MissingAnnotationException("Table Annotation not found");
+
+            String sql = String.format("SELECT * FROM %s", tableAnnotation.name());
+
+            JSONArray result = runRawQuery(sql);
+
+            result.forEach(o -> {
+                try {
+                    T instance = tClass.getConstructor(JSONObject.class).newInstance((JSONObject) o);
+                    list.add(instance);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    Debugger.exception(e);
+                }
+            });
+
+            return list;
+        });
     }
 
     public JSONArray runRawQuery(String query) throws SQLException {

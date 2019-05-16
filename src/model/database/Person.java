@@ -1,6 +1,7 @@
 package model.database;
 
 import data.annotation.*;
+import data.table.JSONObjectMappable;
 import org.json.JSONObject;
 
 /**
@@ -11,7 +12,7 @@ import org.json.JSONObject;
  * @since 1.0
  */
 @Table(name = "people")
-public class Person {
+public class Person extends JSONObjectMappable {
     @Column
     @PrimaryKey
     @AutoIncrement
@@ -27,16 +28,23 @@ public class Person {
     @WithLength(length = 255)
     private String lastname;
 
-    public Person(int id, String firstname, String lastname) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-    }
-
     public Person(JSONObject object) {
+        super(object);
         this.id = object.getInt("id");
         this.firstname = object.getString("firstname");
         this.lastname = object.getString("lastname");
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
     }
 
     @Override

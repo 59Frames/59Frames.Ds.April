@@ -1,9 +1,12 @@
 import data.Database;
 import data.table.Blueprint;
+import model.concurrent.Promise;
 import model.database.Book;
 import model.database.Person;
+import model.interfaceable.Processable;
 import org.json.JSONObject;
 import util.Debugger;
+import util.Util;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -17,12 +20,12 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        String sql = Blueprint.of(Book.class).toString();
+        Database.getInstance().getAllAsync(Person.class).then(result -> {
+            result.forEach(person -> {
+                System.out.println(person.getFirstname());
+            });
+        });
 
-        System.out.println(sql);
-
-        Database.getInstance().runRawUpdateAsync(sql)
-                .then(System.out::println)
-                .catchException(Debugger::exception);
+        //Database.getInstance().runRawUpdateAsync(sql).then(System.out::println).catchException(Debugger::exception);
     }
 }

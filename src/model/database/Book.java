@@ -1,6 +1,8 @@
 package model.database;
 
 import data.annotation.*;
+import data.table.JSONObjectMappable;
+import org.json.JSONObject;
 
 /**
  * {@link Book}
@@ -10,7 +12,7 @@ import data.annotation.*;
  * @since 1.0
  */
 @Table(name = "books")
-public class Book {
+public class Book extends JSONObjectMappable {
     @Column
     @PrimaryKey
     @AutoIncrement
@@ -25,4 +27,11 @@ public class Book {
     @Column
     @Required
     private String title;
+
+    public Book(JSONObject object) {
+        super(object);
+        this.id = object.getInt("id");
+        this.ISBN = object.getString("ISBN");
+        this.title = object.getString("title");
+    }
 }
