@@ -21,11 +21,8 @@ public class April {
         // TODO: 28/04/2019 motorium
 
         Database.getInstance().getAllAsync(Person.class).then(result -> {
-            result.forEach(person -> {
-                System.out.println(person.getFirstname());
-            });
+            result.forEach(System.out::println);
         });
 
-        //Database.getInstance().runRawUpdateAsync(sql).then(System.out::println).catchException(Debugger::exception);
     }
 }

@@ -2,10 +2,12 @@ package data;
 
 import data.annotation.Table;
 import data.exception.MissingAnnotationException;
-import data.table.JSONObjectMappable;
+import data.table.Blueprint;
+import data.table.DatabaseObject;
 import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +51,15 @@ public class Database {
         }
     }
 
-    public <T extends JSONObjectMappable> Promise<ArrayList<T>> getAllAsync(Class<T> tClass) {
+    public <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) throws SQLException {
+        return runRawUpdate(Blueprint.of(tClass).toString());
+    }
+
+    public <T extends DatabaseObject> Promise<Integer> createTableAsync(@NotNull final Class<T> tClass) {
+        return new Promise<>((Processable<Integer>) () -> createTable(tClass));
+    }
+
+    public <T extends DatabaseObject> Promise<ArrayList<T>> getAllAsync(Class<T> tClass) {
         return new Promise<>((Processable<ArrayList<T>>) () -> {
             ArrayList<T> list = new ArrayList<>();
 

@@ -24,7 +24,7 @@ public class Blueprint {
         this.columns = columns;
     }
 
-    public static synchronized Blueprint of(Class<?> c) {
+    public static synchronized Blueprint of(Class<? extends DatabaseObject> c) {
         Table tableAnnotation = c.getDeclaredAnnotation(Table.class);
 
         if (tableAnnotation == null)
@@ -32,9 +32,19 @@ public class Blueprint {
 
         final ArrayList<BlueprintColumn> columns = new ArrayList<>();
 
-        Field[] declaredFields = c.getDeclaredFields();
+        Field[] declaredSuperclassFields = c.getSuperclass().getDeclaredFields();
+        Field[] declaredInheritedFields = c.getDeclaredFields();
 
-        for (Field f : declaredFields) {
+        columns.addAll(getBlueprintColumns(declaredSuperclassFields));
+        columns.addAll(getBlueprintColumns(declaredInheritedFields));
+
+        return new Blueprint(tableAnnotation.name(), columns);
+    }
+
+    private static ArrayList<BlueprintColumn> getBlueprintColumns(Field[] fields) {
+        final ArrayList<BlueprintColumn> columns = new ArrayList<>();
+
+        for (Field f : fields) {
             Column columnAnnotation = f.getAnnotation(Column.class);
 
             if (columnAnnotation == null)
@@ -67,7 +77,7 @@ public class Blueprint {
             columns.add(column);
         }
 
-        return new Blueprint(tableAnnotation.name(), columns);
+        return columns;
     }
 
     private static Type getFieldType(@NotNull final Field f) {

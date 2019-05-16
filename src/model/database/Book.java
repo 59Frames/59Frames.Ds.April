@@ -1,7 +1,7 @@
 package model.database;
 
 import data.annotation.*;
-import data.table.JSONObjectMappable;
+import data.table.DatabaseObject;
 import org.json.JSONObject;
 
 /**
@@ -12,7 +12,7 @@ import org.json.JSONObject;
  * @since 1.0
  */
 @Table(name = "books")
-public class Book extends JSONObjectMappable {
+public class Book extends DatabaseObject {
     @Column
     @PrimaryKey
     @AutoIncrement
