@@ -1,4 +1,5 @@
 import data.EntityContext;
+import model.database.Book;
 import model.database.Person;
 
 public class April {
@@ -13,7 +14,9 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        Person p = new Person("Maximilian", "Seifert");
+        Person p = EntityContext.find(Person.class, 3);
+
+        p.setFirstname("Frank");
 
         EntityContext.insertOrUpdate(p);
     }

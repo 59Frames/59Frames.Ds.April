@@ -36,8 +36,8 @@ public abstract class DatabaseObject {
 
     public DatabaseObject(JSONObject object) {
         this.id = object.getInt("id");
-        this.initialDate = new Date(DateUtil.parse(String.valueOf(object.get("initialDate")), "yyyy-mm-dd hh:mm:ss").getTime());
-        this.lastUpdate = new Date(DateUtil.parse(String.valueOf(object.get("lastUpdate")), "yyyy-mm-dd hh:mm:ss").getTime());
+        this.initialDate = new Date(DateUtil.parse(String.valueOf(object.get("initialDate")), "yyyy-MM-dd HH:mm:ss").getTime());
+        this.lastUpdate = new Date(DateUtil.parse(String.valueOf(object.get("lastUpdate")), "yyyy-MM-dd HH:mm:ss").getTime());
     }
 
     public int getId() {
@@ -66,7 +66,6 @@ public abstract class DatabaseObject {
 
     public JSONObject toJSON() {
         JSONObject object = new JSONObject();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         object.put("id", this.id);
         object.put("initialDate", this.initialDate);
         object.put("lastUpdate", this.lastUpdate);

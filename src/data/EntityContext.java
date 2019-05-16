@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import util.DateUtil;
+import util.Debugger;
 import util.SQLUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,9 +32,14 @@ public class EntityContext {
 
     private static final Database db = Database.getInstance();
 
-    public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) throws SQLException {
+    public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) {
         if (checkTableClass(tClass)) {
-            return db.runRawUpdate(Blueprint.of(tClass).toString());
+            try {
+                return db.runRawUpdate(Blueprint.of(tClass).toString());
+            } catch (SQLException e) {
+                Debugger.warning(String.format("Table %s already exists", tClass.getAnnotation(Table.class).name()));
+                return -1;
+            }
         }
         return -1;
     }

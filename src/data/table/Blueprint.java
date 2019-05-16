@@ -19,7 +19,7 @@ public class Blueprint {
     private final String tableName;
     private final ArrayList<BlueprintColumn> columns;
 
-    public Blueprint(String tableName, ArrayList<BlueprintColumn> columns) {
+    private Blueprint(String tableName, ArrayList<BlueprintColumn> columns) {
         this.tableName = tableName;
         this.columns = columns;
     }

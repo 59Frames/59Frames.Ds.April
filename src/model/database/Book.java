@@ -23,10 +23,31 @@ public class Book extends DatabaseObject {
     @Required
     private String title;
 
+    public Book(String title, String ISBN) {
+        this.title = title;
+        this.ISBN = ISBN;
+    }
+
     public Book(JSONObject object) {
         super(object);
         this.ISBN = object.getString("ISBN");
         this.title = object.getString("title");
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

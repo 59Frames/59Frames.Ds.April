@@ -1,6 +1,5 @@
 package util;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -16,7 +15,7 @@ public class SQLUtil {
 
         switch (fieldType) {
             case "Date":
-                return String.format("date('%s')", DateUtil.format((Date) o, "yyyy-MM-dd HH:mm:ss"));
+                return String.format("'%s'", DateUtil.format((Date) o, "yyyy-MM-dd HH:mm:ss"));
             case "char":
             case "String":
                 return String.format("'%s'", String.valueOf(o));

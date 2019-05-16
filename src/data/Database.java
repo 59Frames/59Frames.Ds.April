@@ -1,22 +1,15 @@
 package data;
 
-import data.annotation.Table;
-import data.exception.MissingAnnotationException;
-import data.table.Blueprint;
-import data.table.DatabaseObject;
 import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import util.Debugger;
 import util.Kryptonite;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.ArrayList;
 
 /**
  * {@link Database}
@@ -68,6 +61,7 @@ public class Database {
             else return -1;
         }
     }
+
     public int runRawInsert(String query) throws SQLException {
         try (Connection connection = ConnectionHandler.createConnection(HOST, USERNAME, PASSWORD); PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             if (validate(query)) {
