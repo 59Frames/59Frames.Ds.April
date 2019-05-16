@@ -24,10 +24,22 @@ public class Person extends DatabaseObject {
     @WithLength(length = 255)
     private String lastname;
 
+    public Person(String first, String last) {
+        super();
+        this.firstname = first;
+        this.lastname = last;
+    }
+
     public Person(JSONObject object) {
         super(object);
         this.firstname = object.getString("firstname");
         this.lastname = object.getString("lastname");
+    }
+
+    @Override
+    public void fillJSON(JSONObject object) {
+        object.put("firstname", this.firstname);
+        object.put("lastname", this.lastname);
     }
 
     public String getFirstname() {
@@ -36,6 +48,14 @@ public class Person extends DatabaseObject {
 
     public String getLastname() {
         return lastname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     @Override

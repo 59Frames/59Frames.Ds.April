@@ -51,43 +51,10 @@ public class Database {
         }
     }
 
-    public <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) throws SQLException {
-        return runRawUpdate(Blueprint.of(tClass).toString());
-    }
-
-    public <T extends DatabaseObject> Promise<Integer> createTableAsync(@NotNull final Class<T> tClass) {
-        return new Promise<>((Processable<Integer>) () -> createTable(tClass));
-    }
-
-    public <T extends DatabaseObject> Promise<ArrayList<T>> getAllAsync(Class<T> tClass) {
-        return new Promise<>((Processable<ArrayList<T>>) () -> {
-            ArrayList<T> list = new ArrayList<>();
-
-            Table tableAnnotation = tClass.getDeclaredAnnotation(Table.class);
-
-            if (tableAnnotation == null)
-                throw new MissingAnnotationException("Table Annotation not found");
-
-            String sql = String.format("SELECT * FROM %s", tableAnnotation.name());
-
-            JSONArray result = runRawQuery(sql);
-
-            result.forEach(o -> {
-                try {
-                    T instance = tClass.getConstructor(JSONObject.class).newInstance((JSONObject) o);
-                    list.add(instance);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    Debugger.exception(e);
-                }
-            });
-
-            return list;
-        });
-    }
-
     public JSONArray runRawQuery(String query) throws SQLException {
         try (Connection connection = ConnectionHandler.createConnection(HOST, USERNAME, PASSWORD); PreparedStatement statement = connection.prepareStatement(query); ResultSet result = statement.executeQuery()) {
-            return convert(result);
+            if (validate(query)) return convert(result);
+            else return new JSONArray();
         }
     }
 
@@ -97,7 +64,19 @@ public class Database {
 
     public int runRawUpdate(String query) throws SQLException {
         try (Connection connection = ConnectionHandler.createConnection(HOST, USERNAME, PASSWORD); PreparedStatement statement = connection.prepareStatement(query)) {
-            return statement.executeUpdate();
+            if (validate(query)) return statement.executeUpdate();
+            else return -1;
+        }
+    }
+    public int runRawInsert(String query) throws SQLException {
+        try (Connection connection = ConnectionHandler.createConnection(HOST, USERNAME, PASSWORD); PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            if (validate(query)) {
+                statement.executeUpdate();
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs != null && rs.next()) {
+                    return (int) rs.getLong(1);
+                } else return -1;
+            } else return -1;
         }
     }
 
@@ -151,5 +130,14 @@ public class Database {
         }
 
         return json;
+    }
+
+    private boolean validate(String sql) {
+        try (Connection connection = ConnectionHandler.createConnection(HOST, USERNAME, PASSWORD)) {
+            connection.prepareStatement(sql);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 }

@@ -14,11 +14,6 @@ import org.json.JSONObject;
 @Table(name = "books")
 public class Book extends DatabaseObject {
     @Column
-    @PrimaryKey
-    @AutoIncrement
-    private int id;
-
-    @Column
     @Unique
     @Required
     @WithLength(length = 255)
@@ -30,8 +25,13 @@ public class Book extends DatabaseObject {
 
     public Book(JSONObject object) {
         super(object);
-        this.id = object.getInt("id");
         this.ISBN = object.getString("ISBN");
         this.title = object.getString("title");
+    }
+
+    @Override
+    public void fillJSON(JSONObject object) {
+        object.put("ISBN", this.ISBN);
+        object.put("title", this.title);
     }
 }

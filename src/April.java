@@ -1,12 +1,5 @@
-import data.Database;
-import data.table.Blueprint;
-import model.concurrent.Promise;
-import model.database.Book;
+import data.EntityContext;
 import model.database.Person;
-import model.interfaceable.Processable;
-import org.json.JSONObject;
-import util.Debugger;
-import util.Util;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -20,9 +13,8 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        Database.getInstance().getAllAsync(Person.class).then(result -> {
-            result.forEach(System.out::println);
-        });
+        Person p = new Person("Maximilian", "Seifert");
 
+        EntityContext.insertOrUpdate(p);
     }
 }

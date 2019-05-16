@@ -5,12 +5,10 @@ import data.annotation.Column;
 import data.annotation.PrimaryKey;
 import org.json.JSONObject;
 import util.DateUtil;
-import util.Debugger;
-import util.Validator;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.sql.Date;
 
 /**
  * {@link DatabaseObject}
@@ -19,7 +17,7 @@ import java.util.Date;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DatabaseObject {
+public abstract class DatabaseObject {
     @Column
     @PrimaryKey
     @AutoIncrement
@@ -31,14 +29,15 @@ public class DatabaseObject {
     @Column
     protected Date lastUpdate;
 
+    protected DatabaseObject() {
+        this.initialDate = new Date(Calendar.getInstance().getTime().getTime());
+        this.lastUpdate = new Date(Calendar.getInstance().getTime().getTime());
+    }
+
     public DatabaseObject(JSONObject object) {
         this.id = object.getInt("id");
-        try {
-            this.initialDate = DateUtil.parse(String.valueOf(object.get("initialDate")), "yyyy-mm-dd hh:mm:ss");
-            this.lastUpdate = DateUtil.parse(String.valueOf(object.get("lastUpdate")), "yyyy-mm-dd hh:mm:ss");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.initialDate = new Date(DateUtil.parse(String.valueOf(object.get("initialDate")), "yyyy-mm-dd hh:mm:ss").getTime());
+        this.lastUpdate = new Date(DateUtil.parse(String.valueOf(object.get("lastUpdate")), "yyyy-mm-dd hh:mm:ss").getTime());
     }
 
     public int getId() {
@@ -52,4 +51,28 @@ public class DatabaseObject {
     public Date getLastUpdate() {
         return lastUpdate;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setInitialDate(Date initialDate) {
+        this.initialDate = initialDate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject object = new JSONObject();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        object.put("id", this.id);
+        object.put("initialDate", this.initialDate);
+        object.put("lastUpdate", this.lastUpdate);
+        fillJSON(object);
+        return object;
+    }
+
+    protected abstract void fillJSON(JSONObject object);
 }
