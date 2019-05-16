@@ -24,29 +24,22 @@ public class Person extends DatabaseObject {
     @WithLength(length = 255)
     private String lastname;
 
-    @Column
-    @Required
-    private boolean male;
-
-    public Person(String first, String last, boolean male) {
+    public Person(String first, String last) {
         super();
         this.firstname = first;
         this.lastname = last;
-        this.male = male;
     }
 
     public Person(JSONObject object) {
         super(object);
         this.firstname = object.getString("firstname");
         this.lastname = object.getString("lastname");
-        this.male = object.getInt("male") == 1;
     }
 
     @Override
     public void fillJSON(JSONObject object) {
         object.put("firstname", this.firstname);
         object.put("lastname", this.lastname);
-        object.put("male", this.male);
     }
 
     public String getFirstname() {
@@ -63,10 +56,6 @@ public class Person extends DatabaseObject {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public boolean isMale() {
-        return male;
     }
 
     @Override

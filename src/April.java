@@ -14,10 +14,14 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        Person p = EntityContext.find(Person.class, 3);
+        EntityContext.createTable(Person.class);
 
-        p.setFirstname("Frank");
+        Person p = EntityContext.insertOrUpdate(new Person("Jon", "Doe"));
+
+        p.setFirstname("John");
 
         EntityContext.insertOrUpdate(p);
+
+        System.out.println(p);
     }
 }

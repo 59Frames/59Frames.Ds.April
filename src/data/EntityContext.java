@@ -1,6 +1,7 @@
 package data;
 
 import data.annotation.Table;
+import data.sql.DeleteBuilder;
 import data.sql.InsertBuilder;
 import data.sql.SelectBuilder;
 import data.sql.UpdateBuilder;
@@ -15,11 +16,16 @@ import util.DateUtil;
 import util.Debugger;
 import util.SQLUtil;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * {@link EntityContext}
@@ -32,10 +38,14 @@ public class EntityContext {
 
     private static final Database db = Database.getInstance();
 
+    private static final HashMap<Class<?>, HashMap<Integer, DatabaseObject>> cache = new HashMap<>();
+
     public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) {
         if (checkTableClass(tClass)) {
             try {
-                return db.runRawUpdate(Blueprint.of(tClass).toString());
+                int result = db.runRawUpdate(Blueprint.of(tClass).toString());
+                cache.put(tClass, createCacheMap());
+                return result;
             } catch (SQLException e) {
                 Debugger.warning(String.format("Table %s already exists", tClass.getAnnotation(Table.class).name()));
                 return -1;
@@ -48,53 +58,42 @@ public class EntityContext {
         return new Promise<>((Processable<Integer>) () -> createTable(tClass));
     }
 
-    public static <T extends DatabaseObject> T insertOrUpdate(T t) throws SQLException {
+    public static <T extends DatabaseObject> T insertOrUpdate(@NotNull final T t) throws SQLException {
         if (checkTableClass(t.getClass())) {
-
-            String table = t.getClass().getAnnotation(Table.class).name();
-
-            if (checkObjectExists(t.getClass(), t.getId())) {
-                final UpdateBuilder builder = new UpdateBuilder(table);
-
-                t.setLastUpdate(new Date(DateUtil.now().getTime()));
-
-                Map<String, Object> map = t.toJSON().toMap();
-
-                map.forEach((key, value) -> builder.set(String.format("%s = %s", key, SQLUtil.getSQLSyntaxValue(value))));
-                builder.where("id = " + t.getId());
-
-                String sql = builder.toString();
-
-                db.runRawUpdate(sql);
-                return t;
-            } else {
-                final InsertBuilder builder = new InsertBuilder(table);
-                Map<String, Object> map = t.toJSON().toMap();
-
-                map.forEach((key, value) -> builder.set(key, SQLUtil.getSQLSyntaxValue(value)));
-
-                String sql = builder.toString();
-
-                final int id = db.runRawInsert(sql);
-
-                t.setId(id);
-
-                return t;
-            }
+            return checkObjectExists(t)
+                    ? update(t)
+                    : insert(t);
         }
 
         return t;
+    }
+
+    public static <T extends DatabaseObject> Promise<T> insertOrUpdateAsync(@NotNull final T t) {
+        if (checkTableClass(t.getClass())) {
+            return checkObjectExists(t)
+                    ? updateAsync(t)
+                    : insertAsync(t);
+        }
+
+        return new Promise<T>((Processable<T>) () -> t);
     }
 
     public static <T extends DatabaseObject> ArrayList<T> getAll(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         ArrayList<T> list = new ArrayList<>();
 
         if (checkTableClass(tClass)) {
+            checkCacheBase(tClass);
+
             String sql = new SelectBuilder().from(tClass.getDeclaredAnnotation(Table.class).name()).toString();
             JSONArray result = db.runRawQuery(sql);
 
             for (Object o : result) {
-                list.add(createDatabaseObject(tClass, (JSONObject) o));
+                T instance = createDatabaseObject(tClass, (JSONObject) o);
+                list.add(instance);
+
+                if (cache.containsKey(tClass)) {
+                    cache.get(tClass).put(instance.getId(), instance);
+                }
             }
         }
 
@@ -113,6 +112,7 @@ public class EntityContext {
         ArrayList<T> list = new ArrayList<>();
 
         if (checkTableClass(tClass)) {
+            checkCacheBase(tClass);
 
             String sql = new SelectBuilder()
                     .from(tClass.getDeclaredAnnotation(Table.class).name())
@@ -122,7 +122,12 @@ public class EntityContext {
             JSONArray result = db.runRawQuery(sql);
 
             for (Object o : result) {
-                list.add(createDatabaseObject(tClass, (JSONObject) o));
+                T instance = createDatabaseObject(tClass, (JSONObject) o);
+                list.add(instance);
+
+                if (cache.containsKey(tClass)) {
+                    cache.get(tClass).put(instance.getId(), instance);
+                }
             }
         }
 
@@ -150,6 +155,90 @@ public class EntityContext {
         return new Promise<>((Processable<T>) () -> findFirst(tClass, where));
     }
 
+    public static <T extends DatabaseObject> int delete(@NotNull final T t) throws SQLException {
+        return delete(t.getClass(), t.getId());
+    }
+
+    public static <T extends DatabaseObject> int delete(@NotNull final Class<T> tClass, int id) throws SQLException {
+        if (checkTableClass(tClass)) {
+            if (checkObjectExists(tClass, id)) {
+                checkCacheBase(tClass);
+
+                String sql = new DeleteBuilder(tClass.getAnnotation(Table.class).name()).where(String.format("id = %d", id)).toString();
+                int result = db.runRawUpdate(sql);
+
+                cache.get(tClass).remove(id);
+
+                return result;
+            }
+        }
+
+        return -1;
+    }
+
+    public static <T extends DatabaseObject> Promise<Integer> deleteAsync(@NotNull final Class<T> tClass, int id) {
+        return new Promise<>((Processable<Integer>) () -> delete(tClass, id));
+    }
+
+    public static <T extends DatabaseObject> Promise<Integer> deleteAsync(@NotNull final T t) {
+        return new Promise<>((Processable<Integer>) () -> delete(t));
+    }
+
+    private static <T extends DatabaseObject> T update(@NotNull final T t) throws SQLException {
+        if (checkObjectExists(t)) {
+            checkCacheBase(t.getClass());
+
+            if (cache.containsKey(t.getClass())) {
+                cache.get(t.getClass()).put(t.getId(), t);
+            }
+
+            final UpdateBuilder builder = new UpdateBuilder(t.getClass().getAnnotation(Table.class).name());
+
+            t.setLastUpdate(new Date(DateUtil.now().getTime()));
+
+            Map<String, Object> map = t.toJSON().toMap();
+
+            map.forEach((key, value) -> builder.set(String.format("%s = %s", key, SQLUtil.getSQLSyntaxValue(value))));
+            builder.where("id = " + t.getId());
+
+            String sql = builder.toString();
+
+            db.runRawUpdate(sql);
+        }
+        return t;
+    }
+
+    private static <T extends DatabaseObject> Promise<T> updateAsync(@NotNull final T t) {
+        return new Promise<>((Processable<T>) () -> update(t));
+    }
+
+    private static <T extends DatabaseObject> T insert(@NotNull final T t) throws SQLException {
+        if (!checkObjectExists(t)) {
+            checkCacheBase(t.getClass());
+
+            final InsertBuilder builder = new InsertBuilder(t.getClass().getAnnotation(Table.class).name());
+            Map<String, Object> map = t.toJSON().toMap();
+
+            map.forEach((key, value) -> builder.set(key, SQLUtil.getSQLSyntaxValue(value)));
+
+            String sql = builder.toString();
+
+            final int id = db.runRawInsert(sql);
+
+            t.setId(id);
+
+            if (cache.containsKey(t.getClass())) {
+                cache.get(t.getClass()).put(t.getId(), t);
+            }
+        }
+
+        return t;
+    }
+
+    private static <T extends DatabaseObject> Promise<T> insertAsync(@NotNull final T t) {
+        return new Promise<>((Processable<T>) () -> insert(t));
+    }
+
     private static <T extends DatabaseObject> T createDatabaseObject(@NotNull final Class<T> tClass, @NotNull final JSONObject object) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         return tClass.getConstructor(JSONObject.class).newInstance(object);
     }
@@ -158,7 +247,23 @@ public class EntityContext {
         return tClass.getDeclaredAnnotation(Table.class) != null;
     }
 
-    private static <T extends DatabaseObject> boolean checkObjectExists(@NotNull final Class<T> tClass, int id) {
+    private static void checkCacheBase(Class<? extends DatabaseObject> aClass) {
+        if (!cache.containsKey(aClass))
+            cache.put(aClass, createCacheMap());
+    }
+
+    private static <T extends DatabaseObject> HashMap<Integer, T> createCacheMap() {
+        return new HashMap<>();
+    }
+
+    private static <T extends DatabaseObject> boolean checkObjectExists(@NotNull final T t) {
+        return checkObjectExists(t.getClass(), t.getId());
+    }
+
+    private static <T extends DatabaseObject> boolean checkObjectExists(@NotNull final Class<T> tClass, final int id) {
+        if (cache.containsKey(tClass))
+            return cache.get(tClass).containsKey(id);
+
         try {
             findFirst(tClass, String.format("id = %d", id));
             return true;

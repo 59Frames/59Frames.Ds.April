@@ -55,4 +55,9 @@ public class Book extends DatabaseObject {
         object.put("ISBN", this.ISBN);
         object.put("title", this.title);
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

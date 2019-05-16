@@ -1,5 +1,6 @@
 package data;
 
+import data.table.DatabaseObject;
 import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
@@ -10,6 +11,7 @@ import util.Debugger;
 import util.Kryptonite;
 
 import java.sql.*;
+import java.util.HashMap;
 
 /**
  * {@link Database}
