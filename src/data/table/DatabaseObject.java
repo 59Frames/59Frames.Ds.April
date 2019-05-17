@@ -1,8 +1,6 @@
 package data.table;
 
-import data.annotation.AutoIncrement;
-import data.annotation.Column;
-import data.annotation.PrimaryKey;
+import data.annotation.*;
 import org.json.JSONObject;
 import util.DateUtil;
 
@@ -27,6 +25,8 @@ public abstract class DatabaseObject {
     protected Date initialDate;
 
     @Column
+    @Required
+    @Default(value = "CURRENT_TIMESTAMP")
     protected Date lastUpdate;
 
     protected DatabaseObject() {

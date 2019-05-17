@@ -1,6 +1,6 @@
-import data.EntityContext;
-import model.database.Book;
+import data.EntityManager;
 import model.database.Person;
+import util.Debugger;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -14,14 +14,10 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-        EntityContext.createTable(Person.class);
+        EntityManager.insertOrUpdateAsync(new Person("Justin", "Tscherrig")).then(person -> {
+            System.out.println(person.getFirstname());
+        }).catchException(Debugger::exception);
 
-        Person p = EntityContext.insertOrUpdate(new Person("Jon", "Doe"));
 
-        p.setFirstname("John");
-
-        EntityContext.insertOrUpdate(p);
-
-        System.out.println(p);
     }
 }

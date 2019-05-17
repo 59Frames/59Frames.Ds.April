@@ -16,29 +16,25 @@ import util.DateUtil;
 import util.Debugger;
 import util.SQLUtil;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * {@link EntityContext}
+ * {@link EntityManager}
  *
  * @author Daniel Seifert
  * @version 1.0.0
  * @since 1.0.0
  */
-public class EntityContext {
+public class EntityManager {
 
     private static final Database db = Database.getInstance();
 
-    private static final HashMap<Class<?>, HashMap<Integer, DatabaseObject>> cache = new HashMap<>();
+    private static volatile HashMap<Class<?>, HashMap<Integer, DatabaseObject>> cache = new HashMap<>();
 
     public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) {
         if (checkTableClass(tClass)) {
@@ -105,36 +101,28 @@ public class EntityContext {
     }
 
     public static <T extends DatabaseObject> T find(@NotNull final Class<T> tClass, int id) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        return findFirst(tClass, String.format("id = %d", id));
+        return findFirst(tClass, t -> t.getId() == id);
     }
 
-    public static <T extends DatabaseObject> ArrayList<T> find(@NotNull final Class<T> tClass, @NotNull final String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        ArrayList<T> list = new ArrayList<>();
+    public static <T extends DatabaseObject> ArrayList<T> find(@NotNull final Class<T> tClass, @NotNull final Predicate<T> where) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Set<T> set = new HashSet<>();
 
         if (checkTableClass(tClass)) {
             checkCacheBase(tClass);
 
-            String sql = new SelectBuilder()
-                    .from(tClass.getDeclaredAnnotation(Table.class).name())
-                    .where(where)
-                    .toString();
+            set = findPredicate(tClass, where);
 
-            JSONArray result = db.runRawQuery(sql);
+            if (set.isEmpty()) {
+                getAll(tClass);
 
-            for (Object o : result) {
-                T instance = createDatabaseObject(tClass, (JSONObject) o);
-                list.add(instance);
-
-                if (cache.containsKey(tClass)) {
-                    cache.get(tClass).put(instance.getId(), instance);
-                }
+                set = findPredicate(tClass, where);
             }
         }
 
-        return list;
+        return new ArrayList<>(set);
     }
 
-    public static <T extends DatabaseObject> Promise<ArrayList<T>> findAsync(@NotNull final Class<T> tClass, @NotNull final String where) {
+    public static <T extends DatabaseObject> Promise<ArrayList<T>> findAsync(@NotNull final Class<T> tClass, @NotNull final Predicate<T> where) {
         return new Promise<>((Processable<ArrayList<T>>) () -> find(tClass, where));
     }
 
@@ -142,7 +130,7 @@ public class EntityContext {
         return new Promise<>((Processable<T>) () -> find(tClass, id));
     }
 
-    public static <T extends DatabaseObject> T findFirst(@NotNull final Class<T> tClass, @NotNull final String where) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public static <T extends DatabaseObject> T findFirst(@NotNull final Class<T> tClass, @NotNull final Predicate<T> where) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         ArrayList<T> result = find(tClass, where);
 
         if (result.isEmpty())
@@ -151,7 +139,7 @@ public class EntityContext {
         return result.get(0);
     }
 
-    public static <T extends DatabaseObject> Promise<T> findFirstAsync(@NotNull final Class<T> tClass, @NotNull final String where) {
+    public static <T extends DatabaseObject> Promise<T> findFirstAsync(@NotNull final Class<T> tClass, @NotNull final Predicate<T> where) {
         return new Promise<>((Processable<T>) () -> findFirst(tClass, where));
     }
 
@@ -265,10 +253,20 @@ public class EntityContext {
             return cache.get(tClass).containsKey(id);
 
         try {
-            findFirst(tClass, String.format("id = %d", id));
+            findFirst(tClass, t -> t.getId() == id);
             return true;
         } catch (Exception ignore) {
             return false;
         }
+    }
+
+    private static <T extends DatabaseObject> Set<T> findPredicate(@NotNull final Class<T> tClass, @NotNull final Predicate<T> predicate) {
+        checkCacheBase(tClass);
+        return cache.get(tClass)
+                .values()
+                .parallelStream()
+                .map(tClass::cast)
+                .filter(predicate)
+                .collect(Collectors.toSet());
     }
 }

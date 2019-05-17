@@ -22,4 +22,16 @@ public final class StringUtil {
 
         return string;
     }
+
+    public static boolean like(@NotNull final String string, @NotNull final String like) {
+        if (like.startsWith("%") && like.endsWith("%")) {
+            return string.contains(like.substring(1, like.lastIndexOf("%")));
+        } else if (like.startsWith("%") && !like.endsWith("%")) {
+            return string.endsWith(like.substring(1));
+        } else if (!like.startsWith("%") && like.endsWith("%")) {
+            return string.startsWith(like.substring(0, like.lastIndexOf("%")));
+        }
+        
+        return false;
+    }
 }
