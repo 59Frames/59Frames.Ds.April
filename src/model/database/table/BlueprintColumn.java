@@ -1,4 +1,4 @@
-package data.table;
+package model.database.table;
 
 import org.jetbrains.annotations.NotNull;
 

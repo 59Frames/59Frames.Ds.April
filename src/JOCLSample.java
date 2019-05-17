@@ -24,7 +24,7 @@ public class JOCLSample {
      * @param args Not used
      */
     public static void main(String[] args) {
-        // Create input- and output data
+        // Create input- and output model.database
         int n = 5000;
         float[] srcArrayA = new float[n];
         float[] srcArrayB = new float[n];
@@ -72,7 +72,7 @@ public class JOCLSample {
         cl_command_queue commandQueue =
                 clCreateCommandQueue(context, device, 0, null);
 
-        // Allocate the memory objects for the input- and output data
+        // Allocate the memory objects for the input- and output model.database
         cl_mem[] memObjects = new cl_mem[3];
         memObjects[0] = clCreateBuffer(context,
                 CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
@@ -110,7 +110,7 @@ public class JOCLSample {
         clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,
                 global_work_size, local_work_size, 0, null, null);
 
-        // Read the output data
+        // Read the output model.database
         clEnqueueReadBuffer(commandQueue, memObjects[2], CL_TRUE, 0,
                 n * Sizeof.cl_float, dst, 0, null, null);
 

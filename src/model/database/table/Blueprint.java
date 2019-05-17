@@ -1,7 +1,7 @@
-package data.table;
+package model.database.table;
 
-import data.annotation.*;
-import data.exception.MissingAnnotationException;
+import model.annotation.*;
+import model.exception.MissingAnnotationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -45,9 +45,7 @@ public class Blueprint {
         final ArrayList<BlueprintColumn> columns = new ArrayList<>();
 
         for (Field f : fields) {
-            Column columnAnnotation = f.getAnnotation(Column.class);
-
-            if (columnAnnotation == null)
+            if (f.getAnnotation(Column.class) == null)
                 continue;
 
             String name = f.getName();
@@ -62,9 +60,13 @@ public class Blueprint {
                     ? f.getAnnotation(Default.class).value()
                     : "";
 
-            if (hasLength) {
-                fieldType = Type.VARCHAR;
-                fieldType.setLength(f.getAnnotation(WithLength.class).length());
+            if (isUnique) {
+                if (hasLength) {
+                    fieldType = Type.VARCHAR;
+                    fieldType.setLength(f.getAnnotation(WithLength.class).length());
+                } else {
+                    throw new MissingAnnotationException("Missing the @WithLength annotation");
+                }
             }
 
             BlueprintColumn column = BlueprintColumn.builderOf(name, fieldType)

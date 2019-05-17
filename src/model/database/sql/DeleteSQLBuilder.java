@@ -1,10 +1,10 @@
-package data.sql;
+package model.database.sql;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteBuilder extends AbstractSQLBuilder implements Serializable {
+public class DeleteSQLBuilder extends AbstractSQLBuilder implements Serializable {
 
     private static final long serialVersionUID = 1;
 
@@ -12,7 +12,7 @@ public class DeleteBuilder extends AbstractSQLBuilder implements Serializable {
 
     private final List<String> wheres = new ArrayList<String>();
 
-    public DeleteBuilder(String table) {
+    public DeleteSQLBuilder(String table) {
         this.table = table;
     }
 
@@ -23,7 +23,7 @@ public class DeleteBuilder extends AbstractSQLBuilder implements Serializable {
         return sql.toString();
     }
 
-    public DeleteBuilder where(String expr) {
+    public DeleteSQLBuilder where(String expr) {
         wheres.add(expr);
         return this;
     }

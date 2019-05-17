@@ -1,4 +1,4 @@
-package data.annotation;
+package model.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface WithLength {
-    int length();
+public @interface Unique {
 }

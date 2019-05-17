@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * Mapable is kind of an experimental interface
- * to simplify the database mapping
+ * to simplify the tables mapping
  *
  * @author Daniel Seifert
  * @version 1.0.0

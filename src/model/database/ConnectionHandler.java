@@ -1,4 +1,4 @@
-package data;
+package model.database;
 
 import org.jetbrains.annotations.NotNull;
 import util.Debugger;

@@ -1,4 +1,4 @@
-package data.sql;
+package model.database.sql;
 
 import java.util.List;
 

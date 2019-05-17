@@ -1,26 +1,26 @@
-package data.sql;
+package model.database.sql;
 
 /**
- * SelectBuilder that can be used as a sub-select in a column expression or FROM clause.
+ * SelectSQLBuilder that can be used as a sub-select in a column expression or FROM clause.
  *
  * @author <a href="mailto:john@krasnay.ca">John Krasnay</a>
  */
-public class SubSelectBuilder extends SelectBuilder {
+public class SubSelectSQLBuilder extends SelectSQLBuilder {
 
     private String alias;
 
-    public SubSelectBuilder(String alias) {
+    public SubSelectSQLBuilder(String alias) {
         this.alias = alias;
     }
 
-    protected SubSelectBuilder(SubSelectBuilder other) {
+    protected SubSelectSQLBuilder(SubSelectSQLBuilder other) {
         super(other);
         this.alias = other.alias;
     }
 
     @Override
-    public SubSelectBuilder clone() {
-        return new SubSelectBuilder(this);
+    public SubSelectSQLBuilder clone() {
+        return new SubSelectSQLBuilder(this);
     }
 
     @Override

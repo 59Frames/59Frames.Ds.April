@@ -1,4 +1,4 @@
-package data.exception;
+package model.exception;
 
 /**
  * {@link MissingAnnotationException}

@@ -1,6 +1,5 @@
-package data;
+package model.database;
 
-import data.table.DatabaseObject;
 import environment.Environment;
 import model.concurrent.Promise;
 import model.interfaceable.Processable;
@@ -11,7 +10,6 @@ import util.Debugger;
 import util.Kryptonite;
 
 import java.sql.*;
-import java.util.HashMap;
 
 /**
  * {@link Database}
@@ -110,7 +108,7 @@ public class Database {
                 } else if (metaData.getColumnType(i) == java.sql.Types.VARCHAR) {
                     obj.put(column_name, rs.getString(column_name));
                 } else if (metaData.getColumnType(i) == java.sql.Types.TINYINT) {
-                    obj.put(column_name, rs.getInt(column_name));
+                    obj.put(column_name, rs.getInt(column_name) == 1);
                 } else if (metaData.getColumnType(i) == java.sql.Types.SMALLINT) {
                     obj.put(column_name, rs.getInt(column_name));
                 } else if (metaData.getColumnType(i) == java.sql.Types.DATE) {

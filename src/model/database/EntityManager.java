@@ -1,13 +1,14 @@
-package data;
+package model.database;
 
-import data.annotation.Table;
-import data.sql.DeleteBuilder;
-import data.sql.InsertBuilder;
-import data.sql.SelectBuilder;
-import data.sql.UpdateBuilder;
-import data.table.Blueprint;
-import data.table.DatabaseObject;
+import model.annotation.Table;
+import model.database.sql.DeleteSQLBuilder;
+import model.database.sql.InsertSQLBuilder;
+import model.database.sql.SelectSQLBuilder;
+import model.database.sql.UpdateSQLBuilder;
+import model.database.table.Blueprint;
+import model.database.table.DatabaseObject;
 import model.concurrent.Promise;
+import model.exception.MissingAnnotationException;
 import model.interfaceable.Processable;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -30,11 +31,14 @@ import java.util.stream.Collectors;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class EntityManager {
+public final class EntityManager {
 
     private static final Database db = Database.getInstance();
 
     private static volatile HashMap<Class<?>, HashMap<Integer, DatabaseObject>> cache = new HashMap<>();
+
+    private EntityManager() {
+    }
 
     public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) {
         if (checkTableClass(tClass)) {
@@ -42,12 +46,13 @@ public class EntityManager {
                 int result = db.runRawUpdate(Blueprint.of(tClass).toString());
                 cache.put(tClass, createCacheMap());
                 return result;
-            } catch (SQLException e) {
+            } catch (SQLException ignore) {
                 Debugger.warning(String.format("Table %s already exists", tClass.getAnnotation(Table.class).name()));
                 return -1;
             }
+        } else {
+            throw new MissingAnnotationException(String.format("Class<%s> is missing the @Table annotation", tClass.getSimpleName()));
         }
-        return -1;
     }
 
     public static <T extends DatabaseObject> Promise<Integer> createTableAsync(@NotNull final Class<T> tClass) {
@@ -71,16 +76,16 @@ public class EntityManager {
                     : insertAsync(t);
         }
 
-        return new Promise<T>((Processable<T>) () -> t);
+        return new Promise<>((Processable<T>) () -> t);
     }
 
-    public static <T extends DatabaseObject> ArrayList<T> getAll(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static <T extends DatabaseObject> ArrayList<T> fetchAllFromDatabase(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         ArrayList<T> list = new ArrayList<>();
 
         if (checkTableClass(tClass)) {
             checkCacheBase(tClass);
 
-            String sql = new SelectBuilder().from(tClass.getDeclaredAnnotation(Table.class).name()).toString();
+            String sql = new SelectSQLBuilder().from(tClass.getDeclaredAnnotation(Table.class).name()).toString();
             JSONArray result = db.runRawQuery(sql);
 
             for (Object o : result) {
@@ -96,8 +101,8 @@ public class EntityManager {
         return list;
     }
 
-    public static <T extends DatabaseObject> Promise<ArrayList<T>> getAllAsync(@NotNull final Class<T> tClass) {
-        return new Promise<>((Processable<ArrayList<T>>) () -> getAll(tClass));
+    public static <T extends DatabaseObject> Promise<ArrayList<T>> fetchAllFromDatabaseAsync(@NotNull final Class<T> tClass) {
+        return new Promise<>((Processable<ArrayList<T>>) () -> fetchAllFromDatabase(tClass));
     }
 
     public static <T extends DatabaseObject> T find(@NotNull final Class<T> tClass, int id) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
@@ -110,12 +115,12 @@ public class EntityManager {
         if (checkTableClass(tClass)) {
             checkCacheBase(tClass);
 
-            set = findPredicate(tClass, where);
+            set = findCachedPredicate(tClass, where);
 
             if (set.isEmpty()) {
-                getAll(tClass);
+                fetchAllFromDatabase(tClass);
 
-                set = findPredicate(tClass, where);
+                set = findCachedPredicate(tClass, where);
             }
         }
 
@@ -126,7 +131,7 @@ public class EntityManager {
         return new Promise<>((Processable<ArrayList<T>>) () -> find(tClass, where));
     }
 
-    public static <T extends DatabaseObject> Promise<T> findAsync(@NotNull final Class<T> tClass, int id) {
+    public static <T extends DatabaseObject> Promise<T> findAsync(@NotNull final Class<T> tClass, final int id) {
         return new Promise<>((Processable<T>) () -> find(tClass, id));
     }
 
@@ -147,12 +152,12 @@ public class EntityManager {
         return delete(t.getClass(), t.getId());
     }
 
-    public static <T extends DatabaseObject> int delete(@NotNull final Class<T> tClass, int id) throws SQLException {
+    public static <T extends DatabaseObject> int delete(@NotNull final Class<T> tClass, final int id) throws SQLException {
         if (checkTableClass(tClass)) {
             if (checkObjectExists(tClass, id)) {
                 checkCacheBase(tClass);
 
-                String sql = new DeleteBuilder(tClass.getAnnotation(Table.class).name()).where(String.format("id = %d", id)).toString();
+                String sql = new DeleteSQLBuilder(tClass.getAnnotation(Table.class).name()).where(String.format("id = %d", id)).toString();
                 int result = db.runRawUpdate(sql);
 
                 cache.get(tClass).remove(id);
@@ -164,12 +169,12 @@ public class EntityManager {
         return -1;
     }
 
-    public static <T extends DatabaseObject> Promise<Integer> deleteAsync(@NotNull final Class<T> tClass, int id) {
+    public static <T extends DatabaseObject> Promise<Integer> deleteAsync(@NotNull final Class<T> tClass, final int id) {
         return new Promise<>((Processable<Integer>) () -> delete(tClass, id));
     }
 
     public static <T extends DatabaseObject> Promise<Integer> deleteAsync(@NotNull final T t) {
-        return new Promise<>((Processable<Integer>) () -> delete(t));
+        return deleteAsync(t.getClass(), t.getId());
     }
 
     private static <T extends DatabaseObject> T update(@NotNull final T t) throws SQLException {
@@ -180,7 +185,7 @@ public class EntityManager {
                 cache.get(t.getClass()).put(t.getId(), t);
             }
 
-            final UpdateBuilder builder = new UpdateBuilder(t.getClass().getAnnotation(Table.class).name());
+            final UpdateSQLBuilder builder = new UpdateSQLBuilder(t.getClass().getAnnotation(Table.class).name());
 
             t.setLastUpdate(new Date(DateUtil.now().getTime()));
 
@@ -204,7 +209,7 @@ public class EntityManager {
         if (!checkObjectExists(t)) {
             checkCacheBase(t.getClass());
 
-            final InsertBuilder builder = new InsertBuilder(t.getClass().getAnnotation(Table.class).name());
+            final InsertSQLBuilder builder = new InsertSQLBuilder(t.getClass().getAnnotation(Table.class).name());
             Map<String, Object> map = t.toJSON().toMap();
 
             map.forEach((key, value) -> builder.set(key, SQLUtil.getSQLSyntaxValue(value)));
@@ -235,7 +240,7 @@ public class EntityManager {
         return tClass.getDeclaredAnnotation(Table.class) != null;
     }
 
-    private static void checkCacheBase(Class<? extends DatabaseObject> aClass) {
+    private static <T extends DatabaseObject> void checkCacheBase(Class<T> aClass) {
         if (!cache.containsKey(aClass))
             cache.put(aClass, createCacheMap());
     }
@@ -249,6 +254,7 @@ public class EntityManager {
     }
 
     private static <T extends DatabaseObject> boolean checkObjectExists(@NotNull final Class<T> tClass, final int id) {
+        checkCacheBase(tClass);
         if (cache.containsKey(tClass))
             return cache.get(tClass).containsKey(id);
 
@@ -260,7 +266,7 @@ public class EntityManager {
         }
     }
 
-    private static <T extends DatabaseObject> Set<T> findPredicate(@NotNull final Class<T> tClass, @NotNull final Predicate<T> predicate) {
+    private static <T extends DatabaseObject> Set<T> findCachedPredicate(@NotNull final Class<T> tClass, @NotNull final Predicate<T> predicate) {
         checkCacheBase(tClass);
         return cache.get(tClass)
                 .values()

@@ -1,10 +1,10 @@
-package data.sql;
+package model.database.sql;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Serializable {
+public class SelectSQLBuilder extends AbstractSQLBuilder implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1;
 
@@ -24,7 +24,7 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
 
     private final List<String> havings = new ArrayList<String>();
 
-    private final List<SelectBuilder> unions = new ArrayList<SelectBuilder>();
+    private final List<SelectSQLBuilder> unions = new ArrayList<SelectSQLBuilder>();
 
     private final List<String> orderBys = new ArrayList<String>();
 
@@ -36,28 +36,28 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
 
     private boolean noWait;
 
-    public SelectBuilder() {
+    public SelectSQLBuilder() {
 
     }
 
-    public SelectBuilder(String table) {
+    public SelectSQLBuilder(String table) {
         tables.add(table);
     }
 
     /**
      * Copy constructor. Used by {@link #clone()}.
      *
-     * @param other SelectBuilder being cloned.
+     * @param other SelectSQLBuilder being cloned.
      */
-    protected SelectBuilder(SelectBuilder other) {
+    protected SelectSQLBuilder(SelectSQLBuilder other) {
 
         this.distinct = other.distinct;
         this.forUpdate = other.forUpdate;
         this.noWait = other.noWait;
 
         for (Object column : other.columns) {
-            if (column instanceof SubSelectBuilder) {
-                this.columns.add(((SubSelectBuilder) column).clone());
+            if (column instanceof SubSelectSQLBuilder) {
+                this.columns.add(((SubSelectSQLBuilder) column).clone());
             } else {
                 this.columns.add(column);
             }
@@ -70,7 +70,7 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
         this.groupBys.addAll(other.groupBys);
         this.havings.addAll(other.havings);
 
-        for (SelectBuilder sb : other.unions) {
+        for (SelectSQLBuilder sb : other.unions) {
             this.unions.add(sb.clone());
         }
 
@@ -80,21 +80,21 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
     /**
      * Alias for {@link #where(String)}.
      */
-    public SelectBuilder and(String expr) {
+    public SelectSQLBuilder and(String expr) {
         return where(expr);
     }
 
-    public SelectBuilder column(String name) {
+    public SelectSQLBuilder column(String name) {
         columns.add(name);
         return this;
     }
 
-    public SelectBuilder column(SubSelectBuilder subSelect) {
+    public SelectSQLBuilder column(SubSelectSQLBuilder subSelect) {
         columns.add(subSelect);
         return this;
     }
 
-    public SelectBuilder column(String name, boolean groupBy) {
+    public SelectSQLBuilder column(String name, boolean groupBy) {
         columns.add(name);
         if (groupBy) {
             groupBys.add(name);
@@ -102,61 +102,61 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
         return this;
     }
 
-    public SelectBuilder limit(int limit, int offset) {
+    public SelectSQLBuilder limit(int limit, int offset) {
         this.limit = limit;
         this.offset = offset;
         return this;
     }
 
-    public SelectBuilder limit(int limit) {
+    public SelectSQLBuilder limit(int limit) {
         return limit(limit, 0);
     }
 
     @Override
-    public SelectBuilder clone() {
-        return new SelectBuilder(this);
+    public SelectSQLBuilder clone() {
+        return new SelectSQLBuilder(this);
     }
 
-    public SelectBuilder distinct() {
+    public SelectSQLBuilder distinct() {
         this.distinct = true;
         return this;
     }
 
-    public SelectBuilder forUpdate() {
+    public SelectSQLBuilder forUpdate() {
         forUpdate = true;
         return this;
     }
 
-    public SelectBuilder from(String table) {
+    public SelectSQLBuilder from(String table) {
         tables.add(table);
         return this;
     }
 
-    public List<SelectBuilder> getUnions() {
+    public List<SelectSQLBuilder> getUnions() {
         return unions;
     }
 
-    public SelectBuilder groupBy(String expr) {
+    public SelectSQLBuilder groupBy(String expr) {
         groupBys.add(expr);
         return this;
     }
 
-    public SelectBuilder having(String expr) {
+    public SelectSQLBuilder having(String expr) {
         havings.add(expr);
         return this;
     }
 
-    public SelectBuilder join(String join) {
+    public SelectSQLBuilder join(String join) {
         joins.add(join);
         return this;
     }
 
-    public SelectBuilder leftJoin(String join) {
+    public SelectSQLBuilder leftJoin(String join) {
         leftJoins.add(join);
         return this;
     }
 
-    public SelectBuilder noWait() {
+    public SelectSQLBuilder noWait() {
         if (!forUpdate) {
             throw new RuntimeException("noWait without forUpdate cannot be called");
         }
@@ -164,7 +164,7 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
         return this;
     }
 
-    public SelectBuilder orderBy(String name) {
+    public SelectSQLBuilder orderBy(String name) {
         orderBys.add(name);
         return this;
     }
@@ -176,7 +176,7 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
      * @param ascending If true, specifies the direction "asc", otherwise, specifies
      *                  the direction "desc".
      */
-    public SelectBuilder orderBy(String name, boolean ascending) {
+    public SelectSQLBuilder orderBy(String name, boolean ascending) {
         if (ascending) {
             orderBys.add(name + " asc");
         } else {
@@ -230,12 +230,12 @@ public class SelectBuilder extends AbstractSQLBuilder implements Cloneable, Seri
      * same columns as the parent select builder and must not use "order by" or
      * "for update".
      */
-    public SelectBuilder union(SelectBuilder unionBuilder) {
+    public SelectSQLBuilder union(SelectSQLBuilder unionBuilder) {
         unions.add(unionBuilder);
         return this;
     }
 
-    public SelectBuilder where(String expr) {
+    public SelectSQLBuilder where(String expr) {
         wheres.add(expr);
         return this;
     }

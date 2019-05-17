@@ -1,4 +1,4 @@
-package data.sql;
+package model.database.sql;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author John Krasnay <john@krasnay.ca>
  */
-public class UpdateBuilder extends AbstractSQLBuilder implements Serializable {
+public class UpdateSQLBuilder extends AbstractSQLBuilder implements Serializable {
 
     private static final long serialVersionUID = 1;
 
@@ -19,11 +19,11 @@ public class UpdateBuilder extends AbstractSQLBuilder implements Serializable {
 
     private List<String> wheres = new ArrayList<String>();
 
-    public UpdateBuilder(String table) {
+    public UpdateSQLBuilder(String table) {
         this.table = table;
     }
 
-    public UpdateBuilder set(String expr) {
+    public UpdateSQLBuilder set(String expr) {
         sets.add(expr);
         return this;
     }
@@ -36,7 +36,7 @@ public class UpdateBuilder extends AbstractSQLBuilder implements Serializable {
         return sql.toString();
     }
 
-    public UpdateBuilder where(String expr) {
+    public UpdateSQLBuilder where(String expr) {
         wheres.add(expr);
         return this;
     }

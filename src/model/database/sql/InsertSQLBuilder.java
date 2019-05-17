@@ -1,10 +1,10 @@
-package data.sql;
+package model.database.sql;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertBuilder extends AbstractSQLBuilder implements Serializable {
+public class InsertSQLBuilder extends AbstractSQLBuilder implements Serializable {
 
     private static final long serialVersionUID = 1;
 
@@ -14,11 +14,11 @@ public class InsertBuilder extends AbstractSQLBuilder implements Serializable {
 
     private final List<String> values = new ArrayList<String>();
 
-    public InsertBuilder(String table) {
+    public InsertSQLBuilder(String table) {
         this.table = table;
     }
 
-    public InsertBuilder set(String column, String value) {
+    public InsertSQLBuilder set(String column, String value) {
         columns.add(column);
         values.add(value);
         return this;

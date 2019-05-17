@@ -1,7 +1,7 @@
-package model.database;
+package model.tables;
 
-import data.annotation.*;
-import data.table.DatabaseObject;
+import model.annotation.*;
+import model.database.table.DatabaseObject;
 import org.json.JSONObject;
 
 /**

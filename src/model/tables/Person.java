@@ -1,7 +1,10 @@
-package model.database;
+package model.tables;
 
-import data.annotation.*;
-import data.table.DatabaseObject;
+import model.annotation.Column;
+import model.annotation.Required;
+import model.annotation.Table;
+import model.annotation.WithLength;
+import model.database.table.DatabaseObject;
 import org.json.JSONObject;
 
 /**

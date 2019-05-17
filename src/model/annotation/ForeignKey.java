@@ -1,6 +1,6 @@
-package data.annotation;
+package model.annotation;
 
-import data.table.ConstraintRule;
+import model.database.table.ConstraintRule;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

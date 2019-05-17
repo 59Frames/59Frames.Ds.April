@@ -1,10 +1,9 @@
-package data.table;
+package model.database.table;
 
-import data.annotation.*;
+import model.annotation.*;
 import org.json.JSONObject;
 import util.DateUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.sql.Date;
 
