@@ -140,7 +140,7 @@ public class TextGenerationUnbroken extends DataSet {
         System.out.println("========================================");
         System.out.println("REPORT:");
         if (reportPerplexity) {
-            System.out.println("\ncalculating perplexity over entire model.database set...");
+            System.out.println("\ncalculating perplexity over entire model.persistence set...");
             double perplexity = LossSoftmax.calculateMedianPerplexity(model, training);
             System.out.println("\nMedian Perplexity = " + String.format("%.4f", perplexity));
         }

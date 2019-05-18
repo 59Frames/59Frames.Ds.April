@@ -1,4 +1,4 @@
-package model.database.sql;
+package model.persistence.sql;
 
 import java.io.Serializable;
 import java.util.ArrayList;

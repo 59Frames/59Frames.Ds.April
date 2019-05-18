@@ -1,4 +1,4 @@
-package model.database;
+package model.persistence;
 
 import org.jetbrains.annotations.NotNull;
 import util.Debugger;

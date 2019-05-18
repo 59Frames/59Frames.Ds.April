@@ -4,7 +4,7 @@ import model.annotation.Column;
 import model.annotation.Required;
 import model.annotation.Table;
 import model.annotation.WithLength;
-import model.database.table.DatabaseObject;
+import model.persistence.table.DatabaseObject;
 import org.json.JSONObject;
 
 /**

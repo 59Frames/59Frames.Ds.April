@@ -1,4 +1,4 @@
-package model.database.table;
+package model.persistence.table;
 
 import model.annotation.*;
 import model.exception.MissingAnnotationException;
@@ -55,18 +55,20 @@ public class Blueprint {
             boolean isRequired = f.getAnnotation(Required.class) != null;
             boolean isAutoIncrement = f.getAnnotation(AutoIncrement.class) != null;
             boolean hasLength = f.getAnnotation(WithLength.class) != null;
+            int length = -1;
 
             final String defaultValue = f.getAnnotation(Default.class) != null
                     ? f.getAnnotation(Default.class).value()
                     : "";
 
             if (isUnique) {
-                if (hasLength) {
-                    fieldType = Type.VARCHAR;
-                    fieldType.setLength(f.getAnnotation(WithLength.class).length());
-                } else {
+                if (!hasLength)
                     throw new MissingAnnotationException("Missing the @WithLength annotation");
-                }
+            }
+
+            if (hasLength) {
+                fieldType = Type.VARCHAR;
+                length = f.getAnnotation(WithLength.class).length();
             }
 
             BlueprintColumn column = BlueprintColumn.builderOf(name, fieldType)
@@ -75,6 +77,7 @@ public class Blueprint {
                     .defaultValue(defaultValue)
                     .required(isRequired)
                     .unique(isUnique)
+                    .length(length)
                     .build();
             columns.add(column);
         }
@@ -105,6 +108,8 @@ public class Blueprint {
             case "java.util.Date":
             case "java.sql.Date":
                 return Type.DATETIME;
+            case "java.sql.Timestamp":
+                return Type.TIMESTAMP;
             default: {
                 if (f.getType().getSuperclass() != null) {
                     if (f.getType().getSuperclass().getSimpleName().equals("Enum"))

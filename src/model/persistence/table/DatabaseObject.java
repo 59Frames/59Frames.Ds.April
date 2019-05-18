@@ -1,9 +1,12 @@
-package model.database.table;
+package model.persistence.table;
 
 import model.annotation.*;
 import org.json.JSONObject;
 import util.DateUtil;
+import util.Util;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Calendar;
 import java.sql.Date;
 
@@ -24,13 +27,11 @@ public abstract class DatabaseObject {
     protected Date initialDate;
 
     @Column
-    @Required
-    @Default(value = "CURRENT_TIMESTAMP")
     protected Date lastUpdate;
 
     protected DatabaseObject() {
-        this.initialDate = new Date(Calendar.getInstance().getTime().getTime());
-        this.lastUpdate = new Date(Calendar.getInstance().getTime().getTime());
+        this.initialDate = new Date(System.currentTimeMillis());
+        this.lastUpdate = new Date(System.currentTimeMillis());
     }
 
     public DatabaseObject(JSONObject object) {

@@ -1,4 +1,4 @@
-package model.database.sql;
+package model.persistence.sql;
 
 /**
  * {@link CreateSQLBuilder}

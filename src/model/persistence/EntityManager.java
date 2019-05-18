@@ -1,12 +1,12 @@
-package model.database;
+package model.persistence;
 
 import model.annotation.Table;
-import model.database.sql.DeleteSQLBuilder;
-import model.database.sql.InsertSQLBuilder;
-import model.database.sql.SelectSQLBuilder;
-import model.database.sql.UpdateSQLBuilder;
-import model.database.table.Blueprint;
-import model.database.table.DatabaseObject;
+import model.persistence.sql.DeleteSQLBuilder;
+import model.persistence.sql.InsertSQLBuilder;
+import model.persistence.sql.SelectSQLBuilder;
+import model.persistence.sql.UpdateSQLBuilder;
+import model.persistence.table.Blueprint;
+import model.persistence.table.DatabaseObject;
 import model.concurrent.Promise;
 import model.exception.MissingAnnotationException;
 import model.interfaceable.Processable;
@@ -20,6 +20,8 @@ import util.SQLUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -46,8 +48,8 @@ public final class EntityManager {
                 int result = db.runRawUpdate(Blueprint.of(tClass).toString());
                 cache.put(tClass, createCacheMap());
                 return result;
-            } catch (SQLException ignore) {
-                Debugger.warning(String.format("Table %s already exists", tClass.getAnnotation(Table.class).name()));
+            } catch (SQLException e) {
+                Debugger.exception(e);
                 return -1;
             }
         } else {
@@ -187,7 +189,7 @@ public final class EntityManager {
 
             final UpdateSQLBuilder builder = new UpdateSQLBuilder(t.getClass().getAnnotation(Table.class).name());
 
-            t.setLastUpdate(new Date(DateUtil.now().getTime()));
+            t.setLastUpdate(new Date(System.currentTimeMillis()));
 
             Map<String, Object> map = t.toJSON().toMap();
 

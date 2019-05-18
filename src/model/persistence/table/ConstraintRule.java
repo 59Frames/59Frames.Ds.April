@@ -1,4 +1,4 @@
-package model.database.table;
+package model.persistence.table;
 
 public enum ConstraintRule {
     CASCADE,

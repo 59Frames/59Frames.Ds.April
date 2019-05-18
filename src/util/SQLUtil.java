@@ -1,7 +1,5 @@
 package util;
 
-import java.util.Date;
-
 /**
  * {@link SQLUtil}
  *
@@ -14,10 +12,10 @@ public class SQLUtil {
         String fieldType = o.getClass().getSimpleName();
 
         switch (fieldType) {
-            case "Date":
-                return String.format("'%s'", DateUtil.format((Date) o, "yyyy-MM-dd HH:mm:ss"));
             case "char":
             case "String":
+            case "Timestamp":
+            case "Date":
                 return String.format("'%s'", String.valueOf(o));
             case "boolean":
                 return Boolean.parseBoolean(String.valueOf(o)) ? "1" : "0";

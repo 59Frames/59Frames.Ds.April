@@ -1,4 +1,4 @@
-package model.database;
+package model.persistence;
 
 import environment.Environment;
 import model.concurrent.Promise;

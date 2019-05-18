@@ -1,4 +1,4 @@
-package model.database.sql;
+package model.persistence.sql;
 
 /**
  * SelectSQLBuilder that can be used as a sub-select in a column expression or FROM clause.

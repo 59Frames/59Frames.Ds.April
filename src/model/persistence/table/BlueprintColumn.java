@@ -1,4 +1,4 @@
-package model.database.table;
+package model.persistence.table;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,15 +13,17 @@ public class BlueprintColumn {
     private final String name;
     private final Type type;
     private final String defaultValue;
+    private final int length;
     private final boolean notNull;
     private final boolean autoIncrement;
     private final boolean unique;
     private final boolean primaryKey;
 
-    private BlueprintColumn(String name, Type type, String defaultValue, boolean notNull, boolean autoIncrement, boolean unique, boolean primaryKey) {
+    private BlueprintColumn(String name, Type type, String defaultValue, int length, boolean notNull, boolean autoIncrement, boolean unique, boolean primaryKey) {
         this.name = name;
         this.type = type;
         this.defaultValue = defaultValue;
+        this.length = length;
         this.notNull = notNull;
         this.autoIncrement = autoIncrement;
         this.unique = unique;
@@ -62,12 +64,13 @@ public class BlueprintColumn {
 
         builder.append(this.name);
 
-        if (this.type.getLength() == -1) builder.append(" ").append(this.type.name());
-        else builder.append(" ").append(this.type.name()).append("(").append(this.type.getLength()).append(")");
+        if (this.length == -1) builder.append(" ").append(this.type.name());
+        else builder.append(" ").append(this.type.name()).append("(").append(this.length).append(")");
+
+        if (autoIncrement) builder.append(" ").append("auto_increment");
 
         if (!defaultValue.isEmpty() || !defaultValue.isBlank())
             builder.append(" ").append("DEFAULT").append(" ").append(this.defaultValue);
-        if (autoIncrement) builder.append(" ").append("auto_increment");
 
         return builder.toString();
     }
@@ -80,6 +83,7 @@ public class BlueprintColumn {
         private final String name;
         private final Type type;
 
+        private int length;
         private String defaultValue;
         private boolean notNull;
         private boolean autoIncrement;
@@ -90,10 +94,16 @@ public class BlueprintColumn {
             this.name = name;
             this.type = type;
             this.defaultValue = "";
+            this.length = -1;
             this.notNull = false;
             this.autoIncrement = false;
             this.unique = false;
             this.primaryKey = false;
+        }
+
+        public Builder length(final int length) {
+            this.length = length;
+            return this;
         }
 
         public Builder defaultValue(@NotNull final String value) {
@@ -122,7 +132,7 @@ public class BlueprintColumn {
         }
 
         public BlueprintColumn build() {
-            return new BlueprintColumn(name, type, defaultValue, notNull, autoIncrement, unique, primaryKey);
+            return new BlueprintColumn(name, type, defaultValue, length, notNull, autoIncrement, unique, primaryKey);
         }
     }
 }
