@@ -10,9 +10,9 @@ public class InsertSQLBuilder extends AbstractSQLBuilder implements Serializable
 
     private final String table;
 
-    private final List<String> columns = new ArrayList<String>();
+    private final List<String> columns = new ArrayList<>();
 
-    private final List<String> values = new ArrayList<String>();
+    private final List<String> values = new ArrayList<>();
 
     public InsertSQLBuilder(String table) {
         this.table = table;

@@ -2,13 +2,9 @@ package model.persistence.table;
 
 import model.annotation.*;
 import org.json.JSONObject;
-import util.DateUtil;
-import util.Util;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Calendar;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * {@link DatabaseObject}
@@ -36,8 +32,8 @@ public abstract class DatabaseObject {
 
     public DatabaseObject(JSONObject object) {
         this.id = object.getInt("id");
-        this.initialDate = new Date(DateUtil.parse(String.valueOf(object.get("initialDate")), "yyyy-MM-dd HH:mm:ss").getTime());
-        this.lastUpdate = new Date(DateUtil.parse(String.valueOf(object.get("lastUpdate")), "yyyy-MM-dd HH:mm:ss").getTime());
+        this.initialDate = new Date(((Timestamp) object.get("initialDate")).getTime());
+        this.lastUpdate = new Date(((Timestamp) object.get("lastUpdate")).getTime());
     }
 
     public int getId() {
