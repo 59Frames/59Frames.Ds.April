@@ -1,22 +1,21 @@
 package util;
 
-import model.nn.matrix.Matrix;
+import java.net.*;
+import java.util.Enumeration;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
-public class NetworkUtil {
-
-    public static int pickIndexFromRandomVector(Matrix probs, Random r) throws Exception {
-        double mass = 1.0;
-        for (int i = 0; i < probs.w.length; i++) {
-            double prob = probs.w[i] / mass;
-            if (r.nextDouble() < prob) {
-                return i;
+public final class NetworkUtil {
+    public static boolean isConnected() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            NetworkInterface networkInterface;
+            while (interfaces.hasMoreElements()) {
+                if ((networkInterface = interfaces.nextElement()) != null && networkInterface.isUp() && !networkInterface.isLoopback())
+                    return true;
             }
-            mass -= probs.w[i];
+        } catch (Exception ignore) {
+            return false;
         }
-        throw new Exception("no target index selected");
+
+        return false;
     }
 }

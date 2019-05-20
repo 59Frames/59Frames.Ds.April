@@ -3,6 +3,7 @@ import model.persistence.EntityManager;
 import model.persistence.table.Blueprint;
 import model.tables.Person;
 import util.DateUtil;
+import util.NetworkUtil;
 import util.StringUtil;
 
 import java.sql.Date;
@@ -20,6 +21,6 @@ public class April {
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
 
-
+        Database.getInstance();
     }
 }

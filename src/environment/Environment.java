@@ -5,10 +5,18 @@ import util.Debugger;
 import util.FileUtil;
 import util.Validator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@link Environment}
@@ -20,7 +28,6 @@ import java.util.Properties;
 public class Environment {
 
     private static final HashMap<String, Properties> PROPERTIES = new HashMap<>();
-    private static final String[] PROPERTIES_FILE_NAMES = {"april", "bootstrap", "emotion", "knowledge", "motorium", "sensorium", "speech", "volition"};
 
     private static boolean loaded = false;
 
@@ -33,10 +40,13 @@ public class Environment {
 
         try {
             Properties tmpProps;
-            for (String key : PROPERTIES_FILE_NAMES) {
+            for (File file : Objects.requireNonNull(FileUtil.load("config").listFiles())) {
+                if (!FileUtil.getExtension(file).equals("properties"))
+                    continue;
+
                 tmpProps = new Properties();
-                tmpProps.load(new FileInputStream(FileUtil.load(String.format("config/%s.properties", key))));
-                PROPERTIES.put(key.toLowerCase(), tmpProps);
+                tmpProps.load(new FileInputStream(file));
+                PROPERTIES.put(FileUtil.removeExtension(file), tmpProps);
             }
             loaded = true;
         } catch (IOException e) {
