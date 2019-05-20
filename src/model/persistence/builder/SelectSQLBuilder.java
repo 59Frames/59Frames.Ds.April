@@ -1,32 +1,40 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectSQLBuilder extends AbstractSQLBuilder implements Cloneable, Serializable {
+/**
+ * {@link SelectSQLBuilder}
+ *
+ * @author Daniel Seifert
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+@SuppressWarnings("unused")
+public class SelectSQLBuilder extends AbstractBuilder implements Cloneable, Serializable {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
 
     private boolean distinct;
 
-    private final List<Object> columns = new ArrayList<Object>();
+    private final List<Object> columns = new ArrayList<>();
 
-    private final List<String> tables = new ArrayList<String>();
+    private final List<String> tables = new ArrayList<>();
 
-    private final List<String> joins = new ArrayList<String>();
+    private final List<String> joins = new ArrayList<>();
 
-    private final List<String> leftJoins = new ArrayList<String>();
+    private final List<String> leftJoins = new ArrayList<>();
 
-    private final List<String> wheres = new ArrayList<String>();
+    private final List<String> wheres = new ArrayList<>();
 
-    private final List<String> groupBys = new ArrayList<String>();
+    private final List<String> groupBys = new ArrayList<>();
 
-    private final List<String> havings = new ArrayList<String>();
+    private final List<String> havings = new ArrayList<>();
 
-    private final List<SelectSQLBuilder> unions = new ArrayList<SelectSQLBuilder>();
+    private final List<SelectSQLBuilder> unions = new ArrayList<>();
 
-    private final List<String> orderBys = new ArrayList<String>();
+    private final List<String> orderBys = new ArrayList<>();
 
     private int limit = 0;
 

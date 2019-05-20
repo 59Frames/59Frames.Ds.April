@@ -1,8 +1,7 @@
 package model.persistence;
 
 import environment.Environment;
-import model.persistence.sql.ConnectionBuilder;
-import model.persistence.sql.MySQLConnectionBuilder;
+import model.persistence.builder.MySQLConnectionBuilder;
 import util.Kryptonite;
 
 /**
@@ -15,7 +14,7 @@ import util.Kryptonite;
 public class Database extends BaseContext {
     private static final int DB_ENCRYPTION_LEVEL = Environment.getInteger("db.encryption.level");
 
-    private static final String RAW_HOST = Environment.get("db.host");
+    private static final String DOMAIN = Environment.get("db.host");
     private static final int PORT = Environment.getInteger("db.port");
     private static final String DATABASE = Environment.get("db.database");
     private static final String HOST = buildHost();
@@ -35,7 +34,7 @@ public class Database extends BaseContext {
     }
 
     private static String buildHost() {
-        return new MySQLConnectionBuilder(RAW_HOST, PORT)
+        return new MySQLConnectionBuilder(DOMAIN, PORT)
                 .databaseName(DATABASE)
                 .set("useUnicode", "true")
                 .set("useJDBCCompliantTimezoneShift", "true")

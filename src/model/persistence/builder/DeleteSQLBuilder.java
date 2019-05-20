@@ -1,10 +1,17 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteSQLBuilder extends AbstractSQLBuilder implements Serializable {
+/**
+ * {@link DeleteSQLBuilder}
+ *
+ * @author Daniel Seifert
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public class DeleteSQLBuilder extends AbstractBuilder implements Serializable {
 
     private static final long serialVersionUID = 1;
 

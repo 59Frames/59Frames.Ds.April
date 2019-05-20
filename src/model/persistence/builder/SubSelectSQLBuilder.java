@@ -1,10 +1,5 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
-/**
- * SelectSQLBuilder that can be used as a sub-select in a column expression or FROM clause.
- *
- * @author <a href="mailto:john@krasnay.ca">John Krasnay</a>
- */
 public class SubSelectSQLBuilder extends SelectSQLBuilder {
 
     private String alias;

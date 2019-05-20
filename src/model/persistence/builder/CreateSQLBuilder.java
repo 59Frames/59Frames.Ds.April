@@ -1,4 +1,4 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 /**
  * {@link CreateSQLBuilder}
@@ -7,6 +7,6 @@ package model.persistence.sql;
  * @version 1.0
  * @since 1.0
  */
-public class CreateSQLBuilder extends AbstractSQLBuilder {
+public class CreateSQLBuilder extends AbstractBuilder {
 
 }

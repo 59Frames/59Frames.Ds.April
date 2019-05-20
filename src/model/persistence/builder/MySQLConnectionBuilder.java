@@ -1,4 +1,6 @@
-package model.persistence.sql;
+package model.persistence.builder;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * {@link MySQLConnectionBuilder}
@@ -8,7 +10,7 @@ package model.persistence.sql;
  * @since 1.0.0
  */
 public class MySQLConnectionBuilder extends ConnectionBuilder {
-    public MySQLConnectionBuilder(String host, int port) {
+    public MySQLConnectionBuilder(@NotNull final String host, final int port) {
         super("jdbc", "mysql", host, port);
     }
 }

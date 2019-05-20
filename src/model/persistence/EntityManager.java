@@ -1,10 +1,10 @@
 package model.persistence;
 
 import model.annotation.Table;
-import model.persistence.sql.DeleteSQLBuilder;
-import model.persistence.sql.InsertSQLBuilder;
-import model.persistence.sql.SelectSQLBuilder;
-import model.persistence.sql.UpdateSQLBuilder;
+import model.persistence.builder.DeleteSQLBuilder;
+import model.persistence.builder.InsertSQLBuilder;
+import model.persistence.builder.SelectSQLBuilder;
+import model.persistence.builder.UpdateSQLBuilder;
 import model.persistence.table.Blueprint;
 import model.persistence.table.DatabaseObject;
 import model.concurrent.Promise;
@@ -13,15 +13,12 @@ import model.interfaceable.Processable;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import util.DateUtil;
 import util.Debugger;
 import util.SQLUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

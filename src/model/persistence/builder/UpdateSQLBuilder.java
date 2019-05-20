@@ -1,23 +1,21 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder for creating SQL update statements.
  *
- * @author John Krasnay <john@krasnay.ca>
  */
-public class UpdateSQLBuilder extends AbstractSQLBuilder implements Serializable {
+public class UpdateSQLBuilder extends AbstractBuilder implements Serializable {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
 
     private String table;
 
-    private List<String> sets = new ArrayList<String>();
+    private List<String> sets = new ArrayList<>();
 
-    private List<String> wheres = new ArrayList<String>();
+    private List<String> wheres = new ArrayList<>();
 
     public UpdateSQLBuilder(String table) {
         this.table = table;

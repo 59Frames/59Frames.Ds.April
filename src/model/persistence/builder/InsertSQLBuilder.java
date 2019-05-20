@@ -1,12 +1,19 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertSQLBuilder extends AbstractSQLBuilder implements Serializable {
+/**
+ * {@link InsertSQLBuilder}
+ *
+ * @author Daniel Seifert
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public class InsertSQLBuilder extends AbstractBuilder implements Serializable {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 1L;
 
     private final String table;
 

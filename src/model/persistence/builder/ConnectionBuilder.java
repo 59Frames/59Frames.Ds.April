@@ -1,4 +1,4 @@
-package model.persistence.sql;
+package model.persistence.builder;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,8 +11,8 @@ import java.util.HashMap;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class ConnectionBuilder {
-    private static final long serialVersionUID = 1;
+public class ConnectionBuilder extends AbstractBuilder {
+    private static final long serialVersionUID = 1L;
 
     private final String host;
     private final int port;
@@ -55,15 +55,7 @@ public class ConnectionBuilder {
 
         if (!getters.isEmpty()) {
             builder.append("?");
-            final boolean[] first = new boolean[1];
-            first[0] = true;
-
-            getters.forEach((key, value) -> {
-                if (!first[0])
-                    builder.append("&");
-                builder.append(key).append("=").append(value);
-                first[0] = false;
-            });
+            appendMap(builder, getters, "=", "", "&");
         }
 
 
