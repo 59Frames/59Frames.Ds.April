@@ -10,7 +10,7 @@ public class DeleteSQLBuilder extends AbstractSQLBuilder implements Serializable
 
     private final String table;
 
-    private final List<String> wheres = new ArrayList<String>();
+    private final List<String> wheres = new ArrayList<>();
 
     public DeleteSQLBuilder(String table) {
         this.table = table;

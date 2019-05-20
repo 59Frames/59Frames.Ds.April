@@ -1,3 +1,4 @@
+import model.persistence.Database;
 import model.persistence.EntityManager;
 import model.persistence.table.Blueprint;
 import model.tables.Person;
@@ -18,5 +19,11 @@ public class April {
         // TODO: 28/04/2019 knowledge
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
+
+        EntityManager.findAsync(Person.class, person -> StringUtil.like(person.getFirstname(), "%an%")).then(people -> {
+            people.forEach(person -> {
+                System.out.println(person.getFirstname());
+            });
+        });
     }
 }
