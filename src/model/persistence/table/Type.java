@@ -33,14 +33,4 @@ public enum Type {
     ENUM,
     SET,
     BOOLEAN;
-
-    private int length = -1;
-
-    public int getLength() {
-        return this.length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
-    }
 }

@@ -34,15 +34,17 @@ public class BaseContext {
 
     public JSONArray runRawQuery(String query) throws SQLException {
         try (Connection connection = ConnectionHandler.createConnection(this.host, this.username, this.password); PreparedStatement statement = connection.prepareStatement(query); ResultSet result = statement.executeQuery()) {
-            if (validate(query)) return convert(result);
-            else return new JSONArray();
+            if (validate(query)) {
+                return convert(result);
+            } else return new JSONArray();
         }
     }
 
     public int runRawUpdate(String query) throws SQLException {
         try (Connection connection = ConnectionHandler.createConnection(this.host, this.username, this.password); PreparedStatement statement = connection.prepareStatement(query)) {
-            if (validate(query)) return statement.executeUpdate();
-            else return -1;
+            if (validate(query)) {
+                return statement.executeUpdate();
+            } else return -1;
         }
     }
 

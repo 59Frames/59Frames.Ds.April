@@ -10,6 +10,9 @@ import java.sql.Date;
  * @since 1.0.0
  */
 public class SQLUtil {
+
+    public static final String SQL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     public static String getSQLSyntaxValue(Object o) {
         String fieldType = o.getClass().getSimpleName();
 
@@ -19,7 +22,7 @@ public class SQLUtil {
                 return String.format("'%s'", String.valueOf(o));
             case "Timestamp":
             case "Date":
-                return String.format("'%s'", DateUtil.format(((Date) o), "yyyy-MM-dd HH:mm:ss"));
+                return String.format("'%s'", DateUtil.format(((Date) o), SQL_DATE_FORMAT));
             case "boolean":
                 return Boolean.parseBoolean(String.valueOf(o)) ? "1" : "0";
             default:

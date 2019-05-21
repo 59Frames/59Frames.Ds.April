@@ -79,7 +79,7 @@ public final class EntityManager {
     }
 
     public static <T extends DatabaseObject> ArrayList<T> fetchAllFromDatabase(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        ArrayList<T> list = new ArrayList<>();
+        HashSet<T> set = new HashSet<>();
 
         if (checkTableClass(tClass)) {
             checkCacheBase(tClass);
@@ -89,7 +89,7 @@ public final class EntityManager {
 
             for (Object o : result) {
                 T instance = createDatabaseObject(tClass, (JSONObject) o);
-                list.add(instance);
+                set.add(instance);
 
                 if (cache.containsKey(tClass)) {
                     cache.get(tClass).put(instance.getId(), instance);
@@ -97,7 +97,7 @@ public final class EntityManager {
             }
         }
 
-        return list;
+        return new ArrayList<>(set);
     }
 
     public static <T extends DatabaseObject> Promise<ArrayList<T>> fetchAllFromDatabaseAsync(@NotNull final Class<T> tClass) {

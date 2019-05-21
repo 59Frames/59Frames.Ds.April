@@ -71,6 +71,10 @@ public final class Validator {
         return isPositiveNumber(number) || isNegativeNumber(number);
     }
 
+    public static boolean isInteger(@NotNull final String number) {
+        return number.matches("-?\\d+");
+    }
+
     public static boolean isIpv4(@NotNull final String str) {
         return IPV4_PATTERN.matcher(str).matches();
     }
