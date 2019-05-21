@@ -1,5 +1,6 @@
 package model.persistence.builder;
 
+import model.persistence.Driver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -11,22 +12,23 @@ import java.util.HashMap;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class ConnectionBuilder extends AbstractBuilder {
+public class ConnectionBuilder extends AbstractSQLBuilder {
     private static final long serialVersionUID = 1L;
 
-    private final String host;
-    private final int port;
-    private final String persistenceType;
-    private final String databaseType;
+    private final Driver driver;
     private final HashMap<String, String> getters = new HashMap<>();
 
+    private String host;
     private String database = "";
+    private int port = -1;
 
-    public ConnectionBuilder(String persistenceType, String databaseType, String host, int port) {
+    protected ConnectionBuilder(@NotNull final Driver driver) {
+        this(driver, "localhost");
+    }
+
+    protected ConnectionBuilder(@NotNull final Driver driver, @NotNull final String host) {
         this.host = host;
-        this.port = port;
-        this.persistenceType = persistenceType;
-        this.databaseType = databaseType;
+        this.driver = driver;
     }
 
     public ConnectionBuilder set(@NotNull final String key, @NotNull final String value) {
@@ -39,16 +41,31 @@ public class ConnectionBuilder extends AbstractBuilder {
         return this;
     }
 
+    public ConnectionBuilder port(final int port) {
+        this.port = port;
+        return this;
+    }
+
+    public ConnectionBuilder host(@NotNull final String host) {
+        this.host = host;
+        return this;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(persistenceType)
-                .append(":")
-                .append(databaseType)
-                .append("://")
-                .append(host)
-                .append(":")
-                .append(port);
+        final StringBuilder builder = new StringBuilder("jdbc:");
+        builder.append(driver).append(":");
+
+        switch (driver) {
+            case MYSQL:
+                builder.append("//").append(host).append(":").append(port == -1 ? 3306 : port);
+                break;
+            case H2:
+                builder.append("tcp://").append(host).append(":").append(port == -1 ? 9092 : port);
+                break;
+            case SQLITE:
+                return builder.append(host).toString();
+        }
 
         if (!database.isEmpty() && !database.isBlank())
             builder.append("/").append(database);

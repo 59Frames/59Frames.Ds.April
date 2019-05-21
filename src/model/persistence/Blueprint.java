@@ -1,4 +1,4 @@
-package model.persistence.table;
+package model.persistence;
 
 import model.annotation.*;
 import model.exception.MissingAnnotationException;
@@ -86,7 +86,7 @@ public class Blueprint {
     }
 
     private static Type getFieldType(@NotNull final Field f) {
-        String fieldType = f.getGenericType().getTypeName();
+        String fieldType = f.getType().getTypeName();
 
         switch (fieldType) {
             case "java.lang.String":
@@ -107,9 +107,8 @@ public class Blueprint {
                 return Type.CHAR;
             case "java.util.Date":
             case "java.sql.Date":
-                return Type.DATETIME;
             case "java.sql.Timestamp":
-                return Type.TIMESTAMP;
+                return Type.DATETIME;
             default: {
                 if (f.getType().getSuperclass() != null) {
                     if (f.getType().getSuperclass().getSimpleName().equals("Enum"))
@@ -124,7 +123,7 @@ public class Blueprint {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("CREATE TABLE");
-        builder.append(" ").append(this.tableName).append("(").append("\n");
+        builder.append(" ").append(this.tableName).append(" (");
 
         ArrayList<BlueprintColumn> uniqueColumns = new ArrayList<>();
         BlueprintColumn currentColumn = null;
@@ -140,11 +139,11 @@ public class Blueprint {
                 uniqueColumns.add(currentColumn);
 
             if (i != columns.size() - 1)
-                builder.append(",\n");
+                builder.append(", ");
         }
 
         if (primaryKeyColumn != null) {
-            builder.append(",\n")
+            builder.append(", ")
                     .append("CONSTRAINT")
                     .append(" ")
                     .append(this.tableName)
@@ -157,7 +156,7 @@ public class Blueprint {
                     .append(")");
         }
 
-        builder.append("\n").append(");");
+        builder.append(");");
 
         for (BlueprintColumn column : uniqueColumns) {
             builder.append("\n").append("\n")

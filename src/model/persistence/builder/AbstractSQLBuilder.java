@@ -1,18 +1,25 @@
 package model.persistence.builder;
 
+import model.persistence.Driver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * {@link AbstractBuilder}
+ * {@link AbstractSQLBuilder}
  *
  * @author Daniel Seifert
  * @version 1.0.0
  * @since 1.0.0
  */
-public abstract class AbstractBuilder {
+public abstract class AbstractSQLBuilder {
+
+    protected Driver dialect;
+
+    public void dialect(Driver dialect) {
+        this.dialect = dialect;
+    }
 
     protected void appendList(@NotNull final StringBuilder builder, @NotNull final List<?> list, @NotNull final String init, @NotNull final String sep) {
 

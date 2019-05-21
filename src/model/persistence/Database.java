@@ -1,7 +1,7 @@
 package model.persistence;
 
 import environment.Environment;
-import model.persistence.builder.MySQLConnectionBuilder;
+import model.persistence.builder.conn.MySQLConnectionBuilder;
 import util.Kryptonite;
 
 /**
@@ -30,11 +30,12 @@ public class Database extends BaseContext {
     }
 
     private Database() {
-        super(HOST, USERNAME, PASSWORD);
+        super(Driver.MYSQL, HOST, USERNAME, PASSWORD);
     }
 
     private static String buildHost() {
-        return new MySQLConnectionBuilder(DOMAIN, PORT)
+        return new MySQLConnectionBuilder(DOMAIN)
+                .port(PORT)
                 .databaseName(DATABASE)
                 .set("useUnicode", "true")
                 .set("useJDBCCompliantTimezoneShift", "true")

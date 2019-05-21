@@ -8,13 +8,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * {@link ConnectionHandler}
+ * {@link ConnectionManager}
  *
  * @author Daniel Seifert
  * @version 1.0.0
  * @since 1.0.0
  */
-public class ConnectionHandler {
+public class ConnectionManager {
     public static synchronized Connection createConnection(@NotNull final String host, @NotNull final String username, @NotNull final String password) {
         Connection connection;
 

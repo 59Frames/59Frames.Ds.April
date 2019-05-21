@@ -1,9 +1,8 @@
-package model.persistence.table;
+package model.persistence;
 
 import model.annotation.*;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -20,31 +19,35 @@ public abstract class DatabaseObject {
     protected int id;
 
     @Column
-    protected Date initialDate;
+    protected Timestamp initialDate;
 
     @Column
-    protected Date lastUpdate;
+    protected Timestamp lastUpdate;
 
     protected DatabaseObject() {
-        this.initialDate = new Date(System.currentTimeMillis());
-        this.lastUpdate = new Date(System.currentTimeMillis());
+        this.initialDate = new Timestamp(System.currentTimeMillis());
+        this.lastUpdate = new Timestamp(System.currentTimeMillis());
     }
 
     public DatabaseObject(JSONObject object) {
         this.id = object.getInt("id");
-        this.initialDate = new Date(((Timestamp) object.get("initialDate")).getTime());
-        this.lastUpdate = new Date(((Timestamp) object.get("lastUpdate")).getTime());
+        this.initialDate = (Timestamp) object.get("initialDate");
+        this.lastUpdate = (Timestamp) object.get("lastUpdate");
+    }
+
+    public void update() {
+        this.lastUpdate = new Timestamp(System.currentTimeMillis());
     }
 
     public int getId() {
         return id;
     }
 
-    public Date getInitialDate() {
+    public Timestamp getInitialDate() {
         return initialDate;
     }
 
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
@@ -52,11 +55,11 @@ public abstract class DatabaseObject {
         this.id = id;
     }
 
-    public void setInitialDate(Date initialDate) {
+    public void setInitialDate(Timestamp initialDate) {
         this.initialDate = initialDate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

@@ -1,4 +1,6 @@
-package model.persistence.builder;
+package model.persistence.builder.sql;
+
+import model.persistence.builder.AbstractSQLBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @SuppressWarnings("unused")
-public class SelectSQLBuilder extends AbstractBuilder implements Cloneable, Serializable {
+public class SelectSQLBuilder extends AbstractSQLBuilder implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,39 +55,6 @@ public class SelectSQLBuilder extends AbstractBuilder implements Cloneable, Seri
     }
 
     /**
-     * Copy constructor. Used by {@link #clone()}.
-     *
-     * @param other SelectSQLBuilder being cloned.
-     */
-    protected SelectSQLBuilder(SelectSQLBuilder other) {
-
-        this.distinct = other.distinct;
-        this.forUpdate = other.forUpdate;
-        this.noWait = other.noWait;
-
-        for (Object column : other.columns) {
-            if (column instanceof SubSelectSQLBuilder) {
-                this.columns.add(((SubSelectSQLBuilder) column).clone());
-            } else {
-                this.columns.add(column);
-            }
-        }
-
-        this.tables.addAll(other.tables);
-        this.joins.addAll(other.joins);
-        this.leftJoins.addAll(other.leftJoins);
-        this.wheres.addAll(other.wheres);
-        this.groupBys.addAll(other.groupBys);
-        this.havings.addAll(other.havings);
-
-        for (SelectSQLBuilder sb : other.unions) {
-            this.unions.add(sb.clone());
-        }
-
-        this.orderBys.addAll(other.orderBys);
-    }
-
-    /**
      * Alias for {@link #where(String)}.
      */
     public SelectSQLBuilder and(String expr) {
@@ -94,11 +63,6 @@ public class SelectSQLBuilder extends AbstractBuilder implements Cloneable, Seri
 
     public SelectSQLBuilder column(String name) {
         columns.add(name);
-        return this;
-    }
-
-    public SelectSQLBuilder column(SubSelectSQLBuilder subSelect) {
-        columns.add(subSelect);
         return this;
     }
 
@@ -122,7 +86,11 @@ public class SelectSQLBuilder extends AbstractBuilder implements Cloneable, Seri
 
     @Override
     public SelectSQLBuilder clone() {
-        return new SelectSQLBuilder(this);
+        try {
+            return (SelectSQLBuilder) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new SelectSQLBuilder();
+        }
     }
 
     public SelectSQLBuilder distinct() {

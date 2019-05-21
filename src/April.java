@@ -1,7 +1,8 @@
+import model.persistence.Blueprint;
 import model.persistence.EntityManager;
-import model.persistence.builder.UpdateSQLBuilder;
 import model.tables.Person;
-import util.Kryptonite;
+
+import java.nio.file.Paths;
 
 public class April {
     public static void main(String[] args) throws Exception {
@@ -22,5 +23,7 @@ public class April {
             System.out.println(person.getLastname());
             System.out.println(person.getInitialDate());
         });
+
+        System.out.println(Blueprint.of(Person.class));
     }
 }

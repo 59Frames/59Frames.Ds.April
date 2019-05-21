@@ -1,4 +1,4 @@
-package model.persistence.table;
+package model.persistence;
 
 import org.jetbrains.annotations.NotNull;
 

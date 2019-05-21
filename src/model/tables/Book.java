@@ -1,7 +1,7 @@
 package model.tables;
 
 import model.annotation.*;
-import model.persistence.table.DatabaseObject;
+import model.persistence.DatabaseObject;
 import org.json.JSONObject;
 
 /**

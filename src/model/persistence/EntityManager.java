@@ -1,12 +1,9 @@
 package model.persistence;
 
 import model.annotation.Table;
-import model.persistence.builder.DeleteSQLBuilder;
-import model.persistence.builder.InsertSQLBuilder;
-import model.persistence.builder.SelectSQLBuilder;
-import model.persistence.builder.UpdateSQLBuilder;
-import model.persistence.table.Blueprint;
-import model.persistence.table.DatabaseObject;
+import model.persistence.builder.sql.DeleteSQLBuilder;
+import model.persistence.builder.sql.InsertSQLBuilder;
+import model.persistence.builder.sql.UpdateSQLBuilder;
 import model.concurrent.Promise;
 import model.exception.MissingAnnotationException;
 import model.interfaceable.Processable;
@@ -14,11 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import util.Debugger;
-import util.SQLUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -84,7 +82,7 @@ public final class EntityManager {
         if (checkTableClass(tClass)) {
             checkCacheBase(tClass);
 
-            String sql = new SelectSQLBuilder().from(tClass.getDeclaredAnnotation(Table.class).name()).toString();
+            String sql = db.createSelectBuilder(tClass.getDeclaredAnnotation(Table.class).name()).toString();
             JSONArray result = db.runRawQuery(sql);
 
             for (Object o : result) {
@@ -156,8 +154,11 @@ public final class EntityManager {
             if (checkObjectExists(tClass, id)) {
                 checkCacheBase(tClass);
 
-                String sql = new DeleteSQLBuilder(tClass.getAnnotation(Table.class).name()).where(String.format("id = %d", id)).toString();
-                int result = db.runRawUpdate(sql);
+                final DeleteSQLBuilder builder = db.createDeleteBuilder(tClass.getAnnotation(Table.class).name());
+                builder.where("id", "=", id);
+                final String sql = builder.toString();
+
+                int result = db.runRawUpdate(sql, statement -> statement.setInt(1, (int) builder.getValues().get(0)));
 
                 cache.get(tClass).remove(id);
 
@@ -184,18 +185,27 @@ public final class EntityManager {
                 cache.get(t.getClass()).put(t.getId(), t);
             }
 
-            final UpdateSQLBuilder builder = new UpdateSQLBuilder(t.getClass().getAnnotation(Table.class).name());
+            final UpdateSQLBuilder builder = db.createUpdateBuilder(t.getClass().getAnnotation(Table.class).name());
 
-            t.setLastUpdate(new Date(System.currentTimeMillis()));
+            t.update();
 
             Map<String, Object> map = t.toJSON().toMap();
 
-            map.forEach((key, value) -> builder.set(String.format("%s = %s", key, SQLUtil.getSQLSyntaxValue(value))));
-            builder.where("id = " + t.getId());
+            map.forEach(builder::set);
+            builder.where("id", "=", t.getId());
 
-            String sql = builder.toString();
+            final String sql = builder.toString();
 
-            db.runRawUpdate(sql);
+            db.runRawUpdate(sql, statement -> {
+                int index = 1;
+
+                for (Object o : builder.getSetValues()) {
+                    bindParam(statement, index, o);
+                    index++;
+                }
+
+                statement.setInt(index, (int) builder.getWhereValues().get(0));
+            });
         }
         return t;
     }
@@ -208,14 +218,20 @@ public final class EntityManager {
         if (!checkObjectExists(t)) {
             checkCacheBase(t.getClass());
 
-            final InsertSQLBuilder builder = new InsertSQLBuilder(t.getClass().getAnnotation(Table.class).name());
+            final InsertSQLBuilder builder = db.createInsertBuilder(t.getClass().getAnnotation(Table.class).name());
             Map<String, Object> map = t.toJSON().toMap();
 
-            map.forEach((key, value) -> builder.set(key, SQLUtil.getSQLSyntaxValue(value)));
+            map.forEach(builder::set);
 
-            String sql = builder.toString();
+            final String sql = builder.toString();
 
-            final int id = db.runRawInsert(sql);
+            final int id = db.runRawInsert(sql, statement -> {
+                int index = 1;
+                for (Object o : builder.getValues()) {
+                    bindParam(statement, index, o);
+                    index++;
+                }
+            });
 
             t.setId(id);
 
@@ -229,6 +245,26 @@ public final class EntityManager {
 
     private static <T extends DatabaseObject> Promise<T> insertAsync(@NotNull final T t) {
         return new Promise<>((Processable<T>) () -> insert(t));
+    }
+
+    private static void bindParam(PreparedStatement statement, int index, Object o) throws SQLException {
+        if (o instanceof Integer) {
+            statement.setInt(index, (int) o);
+        } else if (o instanceof Double) {
+            statement.setDouble(index, (double) o);
+        } else if (o instanceof Boolean) {
+            statement.setBoolean(index, (boolean) o);
+        } else if (o instanceof String) {
+            statement.setString(index, (String) o);
+        } else if (o instanceof Date) {
+            statement.setDate(index, (Date) o);
+        } else if (o instanceof Timestamp) {
+            statement.setTimestamp(index, (Timestamp) o);
+        } else if (o instanceof Float) {
+            statement.setFloat(index, (float) o);
+        } else {
+            statement.setObject(index, o);
+        }
     }
 
     private static <T extends DatabaseObject> T createDatabaseObject(@NotNull final Class<T> tClass, @NotNull final JSONObject object) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {

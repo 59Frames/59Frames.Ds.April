@@ -1,7 +1,10 @@
-package model.persistence.builder;
+package model.persistence.builder.sql;
+
+import model.persistence.builder.AbstractSQLBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,7 +14,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class InsertSQLBuilder extends AbstractBuilder implements Serializable {
+public class InsertSQLBuilder extends AbstractSQLBuilder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,16 +22,20 @@ public class InsertSQLBuilder extends AbstractBuilder implements Serializable {
 
     private final List<String> columns = new ArrayList<>();
 
-    private final List<String> values = new ArrayList<>();
+    private final List<Object> values = new ArrayList<>();
 
     public InsertSQLBuilder(String table) {
         this.table = table;
     }
 
-    public InsertSQLBuilder set(String column, String value) {
+    public InsertSQLBuilder set(String column, Object value) {
         columns.add(column);
         values.add(value);
         return this;
+    }
+
+    public List<Object> getValues() {
+        return values;
     }
 
     @Override
@@ -36,7 +43,7 @@ public class InsertSQLBuilder extends AbstractBuilder implements Serializable {
         StringBuilder sql = new StringBuilder("insert into ").append(table).append(" (");
         appendList(sql, columns, "", ", ");
         sql.append(") values (");
-        appendList(sql, values, "", ", ");
+        appendList(sql, Collections.nCopies(values.size(), "?"), "", ", ");
         sql.append(");");
         return sql.toString();
     }
