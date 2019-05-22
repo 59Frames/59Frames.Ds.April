@@ -98,7 +98,7 @@ public class Blueprint {
         Class<?> fClass = f.getType();
 
         if (fClass.isAssignableFrom(Integer.class) || fClass.isAssignableFrom(int.class)) {
-            return Type.INT;
+            return Type.INTEGER;
         } else if (fClass.isAssignableFrom(Double.class) || fClass.isAssignableFrom(double.class)) {
             return Type.DOUBLE;
         } else if (fClass.isAssignableFrom(Float.class) || fClass.isAssignableFrom(float.class)) {

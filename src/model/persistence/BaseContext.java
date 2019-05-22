@@ -156,7 +156,7 @@ public class BaseContext {
                 } else if (metaData.getColumnType(i) == java.sql.Types.SMALLINT) {
                     obj.put(column_name, rs.getInt(column_name));
                 } else if (metaData.getColumnType(i) == java.sql.Types.DATE) {
-                    obj.put(column_name, rs.getDate(column_name));
+                    obj.put(column_name, new Timestamp(rs.getDate(column_name).getTime()));
                 } else if (metaData.getColumnType(i) == java.sql.Types.TIMESTAMP) {
                     obj.put(column_name, rs.getTimestamp(column_name));
                 } else {

@@ -45,8 +45,6 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
                 break;
         }
 
-
-        builder.append(");");
         return builder.toString();
     }
 
@@ -67,6 +65,8 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
 
             if (!fieldColumn.isPrimaryKey() && fieldColumn.isUnique())
                 uniqueColumns.add(fieldColumn);
+
+            first[0] = false;
         });
 
         if (primaryKeyColumn[0] != null) {
@@ -85,21 +85,25 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
 
         builder.append(");");
 
-        for (FieldColumn column : uniqueColumns) {
-            builder.append("\n").append("\n")
-                    .append("CREATE UNIQUE INDEX")
-                    .append(" ")
-                    .append(this.tableName)
-                    .append("_")
-                    .append(column.getName())
-                    .append("_uindex")
-                    .append(" ")
-                    .append("ON")
-                    .append(" ")
-                    .append(this.tableName)
-                    .append(" ")
-                    .append("(")
-                    .append(column.getName());
+        if (!uniqueColumns.isEmpty()) {
+            for (FieldColumn column : uniqueColumns) {
+                builder.append("\n").append("\n")
+                        .append("CREATE UNIQUE INDEX")
+                        .append(" ")
+                        .append(this.tableName)
+                        .append("_")
+                        .append(column.getName())
+                        .append("_uindex")
+                        .append(" ")
+                        .append("ON")
+                        .append(" ")
+                        .append(this.tableName)
+                        .append(" ")
+                        .append("(")
+                        .append(column.getName());
+            }
+
+            builder.append(");");
         }
     }
 
@@ -116,6 +120,8 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
 
             if (fieldColumn.isPrimaryKey())
                 primaryKeyColumn[0] = fieldColumn;
+
+            first[0] = false;
         });
 
         if (primaryKeyColumn[0] != null) {
@@ -125,6 +131,8 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
                     .append(primaryKeyColumn[0].getName())
                     .append(")");
         }
+
+        builder.append(");");
     }
 
     private void createSQLITETable(StringBuilder builder) {
@@ -138,5 +146,7 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
 
             first[0] = false;
         });
+
+        builder.append(");");
     }
 }

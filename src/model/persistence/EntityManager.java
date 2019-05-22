@@ -79,7 +79,7 @@ public final class EntityManager {
         return new Promise<>((Processable<T>) () -> t);
     }
 
-    public static <T extends DatabaseObject> ArrayList<T> fetchAllFromDatabase(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static <T extends DatabaseObject> ArrayList<T> fetchAll(@NotNull final Class<T> tClass) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         HashSet<T> set = new HashSet<>();
 
         if (checkTableClass(tClass)) {
@@ -101,8 +101,8 @@ public final class EntityManager {
         return new ArrayList<>(set);
     }
 
-    public static <T extends DatabaseObject> Promise<ArrayList<T>> fetchAllFromDatabaseAsync(@NotNull final Class<T> tClass) {
-        return new Promise<>((Processable<ArrayList<T>>) () -> fetchAllFromDatabase(tClass));
+    public static <T extends DatabaseObject> Promise<ArrayList<T>> fetchAllAsync(@NotNull final Class<T> tClass) {
+        return new Promise<>((Processable<ArrayList<T>>) () -> fetchAll(tClass));
     }
 
     public static <T extends DatabaseObject> T find(@NotNull final Class<T> tClass, int id) throws SQLException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
@@ -118,7 +118,7 @@ public final class EntityManager {
             set = findCachedPredicate(tClass, where);
 
             if (set.isEmpty()) {
-                fetchAllFromDatabase(tClass);
+                fetchAll(tClass);
 
                 set = findCachedPredicate(tClass, where);
             }
@@ -292,9 +292,16 @@ public final class EntityManager {
     }
 
     private static <T extends DatabaseObject> boolean checkObjectExists(@NotNull final Class<T> tClass, final int id) {
+        if (id == 0)
+            return false;
+
         checkCacheBase(tClass);
+        boolean result = false;
         if (cache.containsKey(tClass))
-            return cache.get(tClass).containsKey(id);
+            result = cache.get(tClass).containsKey(id);
+
+        if (result)
+            return true;
 
         try {
             findFirst(tClass, t -> t.getId() == id);

@@ -60,27 +60,23 @@ public class FieldColumn {
 
     public String stringFor(Driver driver) {
         StringBuilder builder = new StringBuilder();
+        builder.append(this.name);
+
+        if (this.length == -1) builder.append(" ").append(this.type.name());
+        else builder.append(" ").append(this.type.name()).append("(").append(this.length).append(")");
+
+        if (notNull)
+            builder.append(" ").append("not null");
 
         switch (driver) {
             case H2:
             case MYSQL: {
-                builder.append(this.name);
-
-                if (this.length == -1) builder.append(" ").append(this.type.name());
-                else builder.append(" ").append(this.type.name()).append("(").append(this.length).append(")");
-
                 if (autoIncrement) builder.append(" ").append("auto_increment");
                 break;
             }
             case SQLITE: {
-                builder.append(this.name);
-
-                if (this.length == -1) builder.append(" ").append(this.type.name());
-                else builder.append(" ").append(this.type.name()).append("(").append(this.length).append(")");
-
-                if (primaryKey) builder.append(" ").append("PRIMARY KEY");
-
-                if (autoIncrement) builder.append(" ").append("AUTOINCREMENT");
+                if (primaryKey)
+                    builder.append(" ").append("primary key");
                 break;
             }
         }

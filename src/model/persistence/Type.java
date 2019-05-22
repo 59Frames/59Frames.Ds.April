@@ -21,7 +21,7 @@ public enum Type {
     TINYINT,
     SMALLINT,
     MEDIUMINT,
-    INT,
+    INTEGER,
     BIGINT,
     FLOAT,
     DOUBLE,

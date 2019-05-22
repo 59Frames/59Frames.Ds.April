@@ -4,6 +4,9 @@ import model.annotation.*;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 
 /**
  * {@link DatabaseObject}
@@ -35,10 +38,6 @@ public abstract class DatabaseObject {
         this.lastUpdate = (Timestamp) object.get("lastUpdate");
     }
 
-    public void update() {
-        this.lastUpdate = new Timestamp(System.currentTimeMillis());
-    }
-
     public int getId() {
         return id;
     }
@@ -51,15 +50,27 @@ public abstract class DatabaseObject {
         return lastUpdate;
     }
 
-    public void setId(int id) {
+    public int getDaysPastSinceInitialized() {
+        return Period.between(LocalDate.ofInstant(initialDate.toInstant(), ZoneId.systemDefault()), LocalDate.now()).getDays();
+    }
+
+    public int getDaysPastSinceLastUpdate() {
+        return Period.between(LocalDate.ofInstant(lastUpdate.toInstant(), ZoneId.systemDefault()), LocalDate.now()).getDays();
+    }
+
+    void update() {
+        this.lastUpdate = new Timestamp(System.currentTimeMillis());
+    }
+
+    void setId(int id) {
         this.id = id;
     }
 
-    public void setInitialDate(Timestamp initialDate) {
+    void setInitialDate(Timestamp initialDate) {
         this.initialDate = initialDate;
     }
 
-    public void setLastUpdate(Timestamp lastUpdate) {
+    void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 

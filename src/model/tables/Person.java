@@ -7,6 +7,12 @@ import model.annotation.WithLength;
 import model.persistence.DatabaseObject;
 import org.json.JSONObject;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+
 /**
  * {@link Person}
  *
@@ -20,49 +26,63 @@ public class Person extends DatabaseObject {
     @Column
     @Required
     @WithLength(length = 255)
-    private String firstname;
+    private String firstName;
 
     @Column
     @Required
     @WithLength(length = 255)
-    private String lastname;
+    private String lastName;
 
-    public Person(String first, String last) {
+    @Column
+    private Timestamp birthday;
+
+    public Person(String first, String last, Timestamp birthday) {
         super();
-        this.firstname = first;
-        this.lastname = last;
+        this.firstName = first;
+        this.lastName = last;
+        this.birthday = birthday;
     }
 
     public Person(JSONObject object) {
         super(object);
-        this.firstname = object.getString("firstname");
-        this.lastname = object.getString("lastname");
+        this.firstName = object.getString("firstName");
+        this.lastName = object.getString("lastName");
+        this.birthday = (Timestamp) object.get("birthday");
     }
 
     @Override
     public void fillJSON(JSONObject object) {
-        object.put("firstname", this.firstname);
-        object.put("lastname", this.lastname);
+        object.put("firstName", this.firstName);
+        object.put("lastName", this.lastName);
+        object.put("birthday", this.birthday);
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return Period.between(LocalDate.ofInstant(birthday.toInstant(), ZoneId.systemDefault()), LocalDate.now()).getYears();
+    }
+
+    public Timestamp getBirthday() {
+        return birthday;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s with Id: %d | Last Update: %s | Initialized: %s", this.firstname, this.lastname, this.id, this.lastUpdate, this.initialDate);
+        return String.format("Person[%d]: %s %s is %d years old. Initialized the %s and last updated %d days ago.", this.getId(), this.firstName, this.lastName, this.getAge(), this.initialDate, this.getDaysPastSinceLastUpdate());
     }
 }

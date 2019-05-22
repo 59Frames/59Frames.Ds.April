@@ -126,6 +126,70 @@ public final class CollectionUtil {
         return clearedList;
     }
 
+    public static boolean[] toPrimitive(@NotNull final Boolean[] arr) {
+        boolean[] result = new boolean[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static byte[] toPrimitive(@NotNull final Byte[] arr) {
+        byte[] result = new byte[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static double[] toPrimitive(@NotNull final Double[] arr) {
+        double[] result = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static int[] toPrimitive(@NotNull final Integer[] arr) {
+        int[] result = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static float[] toPrimitive(@NotNull final Float[] arr) {
+        float[] result = new float[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static long[] toPrimitive(@NotNull final Long[] arr) {
+        long[] result = new long[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static short[] toPrimitive(@NotNull final Short[] arr) {
+        short[] result = new short[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
+    public static char[] toPrimitive(@NotNull final Character[] arr) {
+        char[] result = new char[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+        return result;
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T[] asArray(@NotNull final List<T> list) {
         if (list.isEmpty())

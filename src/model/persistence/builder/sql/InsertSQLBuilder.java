@@ -29,6 +29,9 @@ public class InsertSQLBuilder extends AbstractSQLBuilder implements Serializable
     }
 
     public InsertSQLBuilder set(String column, Object value) {
+        if (column.equals("id"))
+            return this;
+
         columns.add(column);
         values.add(value);
         return this;
