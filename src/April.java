@@ -2,6 +2,7 @@ import model.persistence.Blueprint;
 import model.persistence.EntityManager;
 import model.tables.Person;
 
+import java.lang.reflect.Field;
 import java.nio.file.Paths;
 
 public class April {
@@ -15,15 +16,5 @@ public class April {
         // TODO: 28/04/2019 knowledge
         // TODO: 28/04/2019 emotion
         // TODO: 28/04/2019 motorium
-
-
-        EntityManager.findFirstAsync(Person.class, p -> p.getFirstname().equals("Daniel")).then(person -> {
-            System.out.println(person.getId());
-            System.out.println(person.getFirstname());
-            System.out.println(person.getLastname());
-            System.out.println(person.getInitialDate());
-        });
-
-        System.out.println(Blueprint.of(Person.class));
     }
 }

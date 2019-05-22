@@ -2,6 +2,7 @@ package model.persistence;
 
 import model.annotation.*;
 import model.exception.MissingAnnotationException;
+import model.persistence.builder.sql.CreateSQLBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -17,11 +18,14 @@ import java.util.ArrayList;
 public class Blueprint {
 
     private final String tableName;
-    private final ArrayList<BlueprintColumn> columns;
+    private final ArrayList<FieldColumn> columns;
 
-    private Blueprint(String tableName, ArrayList<BlueprintColumn> columns) {
+    private CreateSQLBuilder builder;
+
+    private Blueprint(String tableName, ArrayList<FieldColumn> columns) {
         this.tableName = tableName;
         this.columns = columns;
+        this.builder = new CreateSQLBuilder(tableName);
     }
 
     public static synchronized Blueprint of(Class<? extends DatabaseObject> c) {
@@ -30,7 +34,7 @@ public class Blueprint {
         if (tableAnnotation == null)
             throw new MissingAnnotationException("Table Annotation not found");
 
-        final ArrayList<BlueprintColumn> columns = new ArrayList<>();
+        final ArrayList<FieldColumn> columns = new ArrayList<>();
 
         Field[] declaredSuperclassFields = c.getSuperclass().getDeclaredFields();
         Field[] declaredInheritedFields = c.getDeclaredFields();
@@ -41,11 +45,16 @@ public class Blueprint {
         return new Blueprint(tableAnnotation.name(), columns);
     }
 
-    private static ArrayList<BlueprintColumn> getBlueprintColumns(Field[] fields) {
-        final ArrayList<BlueprintColumn> columns = new ArrayList<>();
+    public synchronized Blueprint with(CreateSQLBuilder builder) {
+        this.builder = builder;
+        return this;
+    }
+
+    private static ArrayList<FieldColumn> getBlueprintColumns(Field[] fields) {
+        final ArrayList<FieldColumn> columns = new ArrayList<>();
 
         for (Field f : fields) {
-            if (f.getAnnotation(Column.class) == null)
+            if (f.getAnnotation(model.annotation.Column.class) == null)
                 continue;
 
             String name = f.getName();
@@ -71,7 +80,7 @@ public class Blueprint {
                 length = f.getAnnotation(WithLength.class).length();
             }
 
-            BlueprintColumn column = BlueprintColumn.builderOf(name, fieldType)
+            FieldColumn column = FieldColumn.builderOf(name, fieldType)
                     .primaryKey(isPrimaryKey)
                     .autoIncrement(isAutoIncrement)
                     .defaultValue(defaultValue)
@@ -86,96 +95,36 @@ public class Blueprint {
     }
 
     private static Type getFieldType(@NotNull final Field f) {
-        String fieldType = f.getType().getTypeName();
+        Class<?> fClass = f.getType();
 
-        switch (fieldType) {
-            case "java.lang.String":
-                return Type.TEXT;
-            case "boolean":
-                return Type.TINYINT;
-            case "int":
-                return Type.INT;
-            case "short":
-                return Type.MEDIUMINT;
-            case "long":
-                return Type.BIGINT;
-            case "double":
-                return Type.DOUBLE;
-            case "float":
-                return Type.FLOAT;
-            case "char":
-                return Type.CHAR;
-            case "java.util.Date":
-            case "java.sql.Date":
-            case "java.sql.Timestamp":
-                return Type.DATETIME;
-            default: {
-                if (f.getType().getSuperclass() != null) {
-                    if (f.getType().getSuperclass().getSimpleName().equals("Enum"))
-                        return Type.ENUM;
-                }
-            }
+        if (fClass.isAssignableFrom(Integer.class) || fClass.isAssignableFrom(int.class)) {
+            return Type.INT;
+        } else if (fClass.isAssignableFrom(Double.class) || fClass.isAssignableFrom(double.class)) {
+            return Type.DOUBLE;
+        } else if (fClass.isAssignableFrom(Float.class) || fClass.isAssignableFrom(float.class)) {
+            return Type.FLOAT;
+        } else if (fClass.isAssignableFrom(String.class)) {
+            return Type.TEXT;
+        } else if (fClass.isAssignableFrom(Boolean.class) || fClass.isAssignableFrom(boolean.class)) {
+            return Type.BOOLEAN;
+        } else if (fClass.isAssignableFrom(Character.class) || fClass.isAssignableFrom(char.class)) {
+            return Type.CHAR;
+        } else if (fClass.isAssignableFrom(Short.class) || fClass.isAssignableFrom(short.class)) {
+            return Type.SMALLINT;
+        } else if (fClass.isAssignableFrom(Long.class) || fClass.isAssignableFrom(long.class)) {
+            return Type.BIGINT;
+        } else if (fClass.isAssignableFrom(java.util.Date.class) || fClass.isAssignableFrom(java.sql.Date.class) || fClass.isAssignableFrom(java.sql.Timestamp.class)) {
+            return Type.DATETIME;
+        } else if (fClass.isAssignableFrom(Enum.class)) {
+            return Type.ENUM;
+        } else {
+            return Type.UNDEFINED;
         }
-
-        return Type.UNDEFINED;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("CREATE TABLE");
-        builder.append(" ").append(this.tableName).append(" (");
-
-        ArrayList<BlueprintColumn> uniqueColumns = new ArrayList<>();
-        BlueprintColumn currentColumn = null;
-        BlueprintColumn primaryKeyColumn = null;
-        for (int i = 0; i < columns.size(); i++) {
-            currentColumn = columns.get(i);
-            builder.append(currentColumn.toString());
-
-            if (currentColumn.isPrimaryKey())
-                primaryKeyColumn = currentColumn;
-
-            if (!currentColumn.isPrimaryKey() && currentColumn.isUnique())
-                uniqueColumns.add(currentColumn);
-
-            if (i != columns.size() - 1)
-                builder.append(", ");
-        }
-
-        if (primaryKeyColumn != null) {
-            builder.append(", ")
-                    .append("CONSTRAINT")
-                    .append(" ")
-                    .append(this.tableName)
-                    .append("_pk")
-                    .append(" ")
-                    .append("primary key")
-                    .append(" ")
-                    .append("(")
-                    .append(primaryKeyColumn.getName())
-                    .append(")");
-        }
-
-        builder.append(");");
-
-        for (BlueprintColumn column : uniqueColumns) {
-            builder.append("\n").append("\n")
-                    .append("CREATE UNIQUE INDEX")
-                    .append(" ")
-                    .append(this.tableName)
-                    .append("_")
-                    .append(column.getName())
-                    .append("_uindex")
-                    .append(" ")
-                    .append("ON")
-                    .append(" ")
-                    .append(this.tableName)
-                    .append(" ")
-                    .append("(")
-                    .append(column.getName())
-                    .append(");");
-        }
-
+        columns.forEach(builder::add);
         return builder.toString();
     }
 }

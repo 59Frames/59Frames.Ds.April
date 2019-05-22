@@ -1,10 +1,7 @@
 package model.persistence;
 
 import model.interfaceable.Binder;
-import model.persistence.builder.sql.DeleteSQLBuilder;
-import model.persistence.builder.sql.InsertSQLBuilder;
-import model.persistence.builder.sql.SelectSQLBuilder;
-import model.persistence.builder.sql.UpdateSQLBuilder;
+import model.persistence.builder.sql.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +32,12 @@ public class BaseContext {
         this.host = host;
         this.username = username;
         this.password = password;
+    }
+
+    public CreateSQLBuilder createCreateSQLBuilder(@NotNull final String table) {
+        CreateSQLBuilder builder = new CreateSQLBuilder(table);
+        builder.dialect(this.driver);
+        return builder;
     }
 
     public DeleteSQLBuilder createDeleteBuilder(@NotNull final String table) {

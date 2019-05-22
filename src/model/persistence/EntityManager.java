@@ -1,6 +1,7 @@
 package model.persistence;
 
 import model.annotation.Table;
+import model.persistence.builder.sql.CreateSQLBuilder;
 import model.persistence.builder.sql.DeleteSQLBuilder;
 import model.persistence.builder.sql.InsertSQLBuilder;
 import model.persistence.builder.sql.UpdateSQLBuilder;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public final class EntityManager {
 
-    private static final Database db = Database.getInstance();
+    private static final BaseContext db = Database.getInstance();
 
     private static volatile HashMap<Class<?>, HashMap<Integer, DatabaseObject>> cache = new HashMap<>();
 
@@ -40,7 +41,9 @@ public final class EntityManager {
     public static <T extends DatabaseObject> int createTable(@NotNull final Class<T> tClass) {
         if (checkTableClass(tClass)) {
             try {
-                int result = db.runRawUpdate(Blueprint.of(tClass).toString());
+                CreateSQLBuilder builder = db.createCreateSQLBuilder(tClass.getAnnotation(Table.class).name());
+                String sql = Blueprint.of(tClass).with(builder).toString();
+                int result = db.runRawUpdate(sql);
                 cache.put(tClass, createCacheMap());
                 return result;
             } catch (SQLException e) {

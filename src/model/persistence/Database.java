@@ -1,7 +1,11 @@
 package model.persistence;
 
 import environment.Environment;
+import model.persistence.builder.ConnectionBuilder;
+import model.persistence.builder.conn.H2ConnectionBuilder;
 import model.persistence.builder.conn.MySQLConnectionBuilder;
+import model.persistence.builder.conn.SQLiteConnectionBuilder;
+import util.FileUtil;
 import util.Kryptonite;
 
 /**
@@ -14,6 +18,7 @@ import util.Kryptonite;
 public class Database extends BaseContext {
     private static final int DB_ENCRYPTION_LEVEL = Environment.getInteger("db.encryption.level");
 
+    private static final Driver DRIVER = Driver.valueOf(Environment.get("db.driver").toUpperCase());
     private static final String DOMAIN = Environment.get("db.host");
     private static final int PORT = Environment.getInteger("db.port");
     private static final String DATABASE = Environment.get("db.database");
@@ -30,18 +35,31 @@ public class Database extends BaseContext {
     }
 
     private Database() {
-        super(Driver.MYSQL, HOST, USERNAME, PASSWORD);
+        super(DRIVER, HOST, USERNAME, PASSWORD);
     }
 
     private static String buildHost() {
-        return new MySQLConnectionBuilder(DOMAIN)
-                .port(PORT)
+        ConnectionBuilder builder = new MySQLConnectionBuilder(DOMAIN);
+        switch (DRIVER) {
+            case MYSQL:
+                builder = new MySQLConnectionBuilder(DOMAIN);
+                break;
+            case H2:
+                builder = new H2ConnectionBuilder(DOMAIN);
+                break;
+            case SQLITE:
+                builder = new SQLiteConnectionBuilder(FileUtil.load("persistence/april.db").getAbsolutePath());
+                break;
+        }
+
+        builder.port(PORT)
                 .databaseName(DATABASE)
                 .set("useUnicode", "true")
                 .set("useJDBCCompliantTimezoneShift", "true")
                 .set("useLegacyDatetimeCode", "false")
                 .set("serverTimezone", "Europe/Zurich")
-                .set("allowMultiQueries", "true")
-                .toString();
+                .set("allowMultiQueries", "true");
+
+        return builder.toString();
     }
 }

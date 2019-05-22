@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public abstract class AbstractSQLBuilder {
 
-    protected Driver dialect;
+    protected Driver dialect = Driver.MYSQL;
 
     public void dialect(Driver dialect) {
         this.dialect = dialect;

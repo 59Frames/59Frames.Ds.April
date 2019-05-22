@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * BlueprintColumn
+ * FieldColumn
  *
  * @author Daniel Seifert
  * @version 1.0.0
