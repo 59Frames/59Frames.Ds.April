@@ -60,9 +60,6 @@ public class ConnectionBuilder extends AbstractSQLBuilder {
             case MYSQL:
                 builder.append("//").append(host).append(":").append(port == -1 ? 3306 : port);
                 break;
-            case H2:
-                builder.append("tcp://").append(host).append(":").append(port == -1 ? 9092 : port);
-                break;
             case SQLITE:
                 return builder.append(host).toString();
         }

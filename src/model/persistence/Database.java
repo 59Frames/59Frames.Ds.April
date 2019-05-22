@@ -2,7 +2,6 @@ package model.persistence;
 
 import environment.Environment;
 import model.persistence.builder.ConnectionBuilder;
-import model.persistence.builder.conn.H2ConnectionBuilder;
 import model.persistence.builder.conn.MySQLConnectionBuilder;
 import model.persistence.builder.conn.SQLiteConnectionBuilder;
 import util.FileUtil;
@@ -43,9 +42,6 @@ public class Database extends BaseContext {
         switch (DRIVER) {
             case MYSQL:
                 builder = new MySQLConnectionBuilder(DOMAIN);
-                break;
-            case H2:
-                builder = new H2ConnectionBuilder(DOMAIN);
                 break;
             case SQLITE:
                 builder = new SQLiteConnectionBuilder(FileUtil.load("persistence/april.db").getAbsolutePath());

@@ -4,8 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public enum Driver {
     MYSQL("com.mysql.cj.jdbc.Driver"),
-    SQLITE("org.sqlite.JDBC"),
-    H2("org.h2.Driver");
+    SQLITE("org.sqlite.JDBC");
 
     public final String _class;
 

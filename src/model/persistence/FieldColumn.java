@@ -69,7 +69,6 @@ public class FieldColumn {
             builder.append(" ").append("not null");
 
         switch (driver) {
-            case H2:
             case MYSQL: {
                 if (autoIncrement) builder.append(" ").append("auto_increment");
                 break;

@@ -37,9 +37,6 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
             case SQLITE:
                 createSQLITETable(builder);
                 break;
-            case H2:
-                createH2Table(builder);
-                break;
             case MYSQL:
                 createMYSQLTable(builder);
                 break;
@@ -105,34 +102,6 @@ public class CreateSQLBuilder extends AbstractSQLBuilder {
 
             builder.append(");");
         }
-    }
-
-    private void createH2Table(StringBuilder builder) {
-        final FieldColumn[] primaryKeyColumn = new FieldColumn[1];
-        primaryKeyColumn[0] = null;
-        final boolean[] first = new boolean[1];
-        first[0] = true;
-        columns.forEach(fieldColumn -> {
-            if (!first[0])
-                builder.append(", ");
-
-            builder.append(fieldColumn.stringFor(dialect));
-
-            if (fieldColumn.isPrimaryKey())
-                primaryKeyColumn[0] = fieldColumn;
-
-            first[0] = false;
-        });
-
-        if (primaryKeyColumn[0] != null) {
-            builder.append(", ")
-                    .append("PRIMARY KEY")
-                    .append("(")
-                    .append(primaryKeyColumn[0].getName())
-                    .append(")");
-        }
-
-        builder.append(");");
     }
 
     private void createSQLITETable(StringBuilder builder) {
