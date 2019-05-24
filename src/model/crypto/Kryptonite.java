@@ -1,4 +1,4 @@
-package util;
+package model.crypto;
 
 import environment.Environment;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +15,7 @@ import java.util.Base64;
 public final class Kryptonite {
 
     private static final String KEY = Environment.get("kryptonite.key");
+    private static final String PEPPER = Environment.get("kryptonite.pepper");
     private static final char[] KEYS = KEY.toCharArray();
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
     private static final Base64.Decoder DECODER = Base64.getDecoder();

@@ -5,7 +5,7 @@ import model.persistence.builder.ConnectionBuilder;
 import model.persistence.builder.conn.MySQLConnectionBuilder;
 import model.persistence.builder.conn.SQLiteConnectionBuilder;
 import util.FileUtil;
-import util.Kryptonite;
+import model.crypto.Kryptonite;
 
 /**
  * {@link Database}
